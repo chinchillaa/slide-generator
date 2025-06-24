@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主要クラウドサービス比較 2024年版</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .purple-accent {
+            background-color: #8a2be2;
+        }
+        .title-box {
+            border-left: 8px solid #8a2be2;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #8a2be2;
+        }
+        .improvement {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .decrease {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(138, 43, 226, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .data-item {
+            margin-bottom: 25px;
+            padding-left: 15px;
+        }
+        .service-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.15);
+            border-color: #8a2be2;
+        }
+        .feature-box {
+            background-color: rgba(138, 43, 226, 0.05);
+            border-left: 4px solid #8a2be2;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .nav-button {
+            padding: 8px 16px;
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #7a1fd2;
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .slide-number {
+            padding: 8px 16px;
+            font-weight: bold;
+            color: #8a2be2;
+        }
+        .comparison-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .comparison-table th {
+            background-color: #8a2be2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .comparison-table tr:hover {
+            background-color: rgba(138, 43, 226, 0.05);
+        }
+        .share-badge {
+            display: inline-block;
+            background-color: #8a2be2;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .price-highlight {
+            background-color: #22c55e;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active">
+        <div class="flex flex-col justify-center items-center h-screen p-10">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold mb-4">主要クラウドサービス比較</h1>
+                <h2 class="text-4xl text-purple-800 mb-8">2024年版</h2>
+                <div class="mt-12 p-8 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg">
+                    <div class="flex justify-center gap-12 mb-6">
+                        <div class="text-center">
+                            <i class="fab fa-aws text-6xl text-orange-500 mb-2"></i>
+                            <p class="font-bold">AWS</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fab fa-microsoft text-6xl text-blue-500 mb-2"></i>
+                            <p class="font-bold">Azure</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fab fa-google text-6xl text-red-500 mb-2"></i>
+                            <p class="font-bold">GCP</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-cloud text-6xl text-red-700 mb-2"></i>
+                            <p class="font-bold">OCI</p>
+                        </div>
+                    </div>
+                    <p class="text-xl text-gray-700">4大クラウドプロバイダーの包括的比較分析</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: 市場シェアと概要 -->
+    <div class="slide-container">
+        <div class="logo flex items-center">
+            <i class="fas fa-cloud text-purple-700 mr-2"></i>
+            Cloud Services
+        </div>
+        
+        <div class="p-10">
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">市場シェアと概要</h1>
+                <p class="text-lg text-gray-600 mt-2">2024年第3四半期 グローバル市場</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-chart-pie text-purple-700 mr-3"></i>
+                        市場シェア
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-orange-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fab fa-aws text-orange-500 text-2xl mr-3"></i>
+                                <span class="font-bold">AWS</span>
+                            </div>
+                            <span class="share-badge">31%</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fab fa-microsoft text-blue-500 text-2xl mr-3"></i>
+                                <span class="font-bold">Azure</span>
+                            </div>
+                            <span class="share-badge">20%</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fab fa-google text-red-500 text-2xl mr-3"></i>
+                                <span class="font-bold">GCP</span>
+                            </div>
+                            <span class="share-badge">12%</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-cloud text-red-700 text-2xl mr-3"></i>
+                                <span class="font-bold">OCI</span>
+                            </div>
+                            <span class="share-badge">3%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-globe-asia text-purple-700 mr-3"></i>
+                        日本市場の動向
+                    </h3>
+                    <div class="feature-box">
+                        <p class="mb-3"><i class="fas fa-building text-purple-700 mr-2"></i>
+                            大企業の<span class="highlight-number text-2xl">87.2%</span>がクラウド利用
+                        </p>
+                        <p class="mb-3"><i class="fas fa-chart-line text-purple-700 mr-2"></i>
+                            市場規模：<span class="highlight-number text-2xl">5兆円超</span>（2024年予測）
+                        </p>
+                        <p><i class="fas fa-rocket text-purple-700 mr-2"></i>
+                            年平均成長率（CAGR）：<span class="improvement">18.4%</span>
+                        </p>
+                    </div>
+                    <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                        <p class="text-sm text-gray-700">
+                            <i class="fas fa-info-circle text-purple-700 mr-2"></i>
+                            4大プロバイダーで世界市場の約69%を占有
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 各サービスの特徴 -->
+    <div class="slide-container">
+        <div class="logo flex items-center">
+            <i class="fas fa-cloud text-purple-700 mr-2"></i>
+            Cloud Services
+        </div>
+        
+        <div class="p-10">
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">各クラウドサービスの特徴</h1>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6">
+                <div class="service-card">
+                    <div class="flex items-start">
+                        <div class="icon-circle mr-4">
+                            <i class="fab fa-aws text-orange-500 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg mb-2">Amazon Web Services (AWS)</h3>
+                            <p class="text-sm text-gray-600 mb-2">開始: 2006年 | サービス数: 200+</p>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>市場シェアNo.1</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>最も豊富なサービスラインナップ</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>245以上の国と地域で利用可能</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>豊富な実績とユースケース</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="flex items-start">
+                        <div class="icon-circle mr-4">
+                            <i class="fab fa-microsoft text-blue-500 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg mb-2">Microsoft Azure</h3>
+                            <p class="text-sm text-gray-600 mb-2">Microsoft製品との強力な連携</p>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Office 365/SharePoint統合</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>エンタープライズ向け高セキュリティ</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>ハイブリッドクラウドに最適</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>大企業・官公庁での採用実績</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="flex items-start">
+                        <div class="icon-circle mr-4">
+                            <i class="fab fa-google text-red-500 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg mb-2">Google Cloud Platform (GCP)</h3>
+                            <p class="text-sm text-gray-600 mb-2">AI/ML・ビッグデータのリーダー</p>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Googleの技術力を活用</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>AI・機械学習サービスが充実</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>ビッグデータ分析に優れる</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>事例: ポケモンGO、Spotify</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="flex items-start">
+                        <div class="icon-circle mr-4">
+                            <i class="fas fa-cloud text-red-700 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg mb-2">Oracle Cloud Infrastructure (OCI)</h3>
+                            <p class="text-sm text-gray-600 mb-2">開始: 2016年 | サービス数: 50+</p>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i><span class="price-highlight">他社の1/3の価格</span></li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Oracle DBとの最適統合</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>シンプルな価格体系</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>円建て対応（為替リスクなし）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 主要サービス比較 -->
+    <div class="slide-container">
+        <div class="logo flex items-center">
+            <i class="fas fa-cloud text-purple-700 mr-2"></i>
+            Cloud Services
+        </div>
+        
+        <div class="p-10">
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">主要サービス比較</h1>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>カテゴリ</th>
+                            <th>AWS</th>
+                            <th>Azure</th>
+                            <th>GCP</th>
+                            <th>OCI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-bold">仮想マシン</td>
+                            <td>EC2</td>
+                            <td>Virtual Machines</td>
+                            <td>Compute Engine</td>
+                            <td>Compute</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">オブジェクトストレージ</td>
+                            <td>S3</td>
+                            <td>Blob Storage</td>
+                            <td>Cloud Storage</td>
+                            <td>Object Storage</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">サーバーレス</td>
+                            <td>Lambda</td>
+                            <td>Functions</td>
+                            <td>Cloud Functions</td>
+                            <td>Functions</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">RDB</td>
+                            <td>RDS</td>
+                            <td>SQL Database</td>
+                            <td>Cloud SQL</td>
+                            <td>DB System</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">NoSQL</td>
+                            <td>DynamoDB</td>
+                            <td>Cosmos DB</td>
+                            <td>Firestore</td>
+                            <td>NoSQL Database</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">データウェアハウス</td>
+                            <td>Redshift</td>
+                            <td>Synapse Analytics</td>
+                            <td>BigQuery</td>
+                            <td>Autonomous DW</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">AI/ML</td>
+                            <td>SageMaker</td>
+                            <td>Machine Learning</td>
+                            <td>Vertex AI</td>
+                            <td>Data Science</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-6 grid grid-cols-2 gap-4">
+                <div class="p-4 bg-purple-50 rounded-lg">
+                    <h4 class="font-bold mb-2 flex items-center">
+                        <i class="fas fa-database text-purple-700 mr-2"></i>
+                        データベースの使い分け
+                    </h4>
+                    <p class="text-sm">
+                        <span class="font-bold">RDS/SQL系</span>: 構造化データ、ACID特性が必要な場合<br>
+                        <span class="font-bold">NoSQL系</span>: 非構造化データ、高速処理、柔軟なスケーリング
+                    </p>
+                </div>
+                <div class="p-4 bg-green-50 rounded-lg">
+                    <h4 class="font-bold mb-2 flex items-center">
+                        <i class="fas fa-dollar-sign text-green-600 mr-2"></i>
+                        コスト最適化のポイント
+                    </h4>
+                    <p class="text-sm">
+                        <span class="font-bold">OCI</span>: 最も安価（他社の約1/3）<br>
+                        <span class="font-bold">その他</span>: 予約インスタンス、自動スケーリングを活用
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド5: AI/MLサービス比較 -->
+    <div class="slide-container">
+        <div class="logo flex items-center">
+            <i class="fas fa-cloud text-purple-700 mr-2"></i>
+            Cloud Services
+        </div>
+        
+        <div class="p-10">
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">AI/機械学習サービスの比較</h1>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6">
+                <div class="feature-box">
+                    <h3 class="font-bold text-lg mb-3 flex items-center">
+                        <i class="fab fa-aws text-orange-500 mr-3"></i>
+                        AWS SageMaker
+                    </h3>
+                    <ul class="text-sm space-y-2">
+                        <li><i class="fas fa-robot text-purple-700 mr-2"></i>エンドツーエンドMLプラットフォーム</li>
+                        <li><i class="fas fa-magic text-purple-700 mr-2"></i>AutoPilot（AutoML）機能</li>
+                        <li><i class="fas fa-paint-brush text-purple-700 mr-2"></i>Canvas（ノーコード）対応</li>
+                        <li><i class="fas fa-users text-purple-700 mr-2"></i>導入企業: Goldman Sachs、AstraZeneca</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-box">
+                    <h3 class="font-bold text-lg mb-3 flex items-center">
+                        <i class="fab fa-microsoft text-blue-500 mr-3"></i>
+                        Azure Machine Learning
+                    </h3>
+                    <ul class="text-sm space-y-2">
+                        <li><i class="fas fa-shield-alt text-purple-700 mr-2"></i>責任あるAI（InterpretML）</li>
+                        <li><i class="fas fa-code text-purple-700 mr-2"></i>Visual Studio統合</li>
+                        <li><i class="fas fa-brain text-purple-700 mr-2"></i>OpenAI GPT/DALL-E深い統合</li>
+                        <li><i class="fas fa-users text-purple-700 mr-2"></i>導入企業: BMW、Nestle、PepsiCo</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-box">
+                    <h3 class="font-bold text-lg mb-3 flex items-center">
+                        <i class="fab fa-google text-red-500 mr-3"></i>
+                        Google Cloud Vertex AI
+                    </h3>
+                    <ul class="text-sm space-y-2">
+                        <li><i class="fas fa-language text-purple-700 mr-2"></i>100以上の言語翻訳サポート</li>
+                        <li><i class="fas fa-table text-purple-700 mr-2"></i>AutoML（表形式、テキスト、画像、動画）</li>
+                        <li><i class="fas fa-dollar-sign text-green-600 mr-2"></i><span class="price-highlight">最も費用対効果が高い</span></li>
+                        <li><i class="fas fa-chart-line text-purple-700 mr-2"></i>特にNLP分野で強み</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-box">
+                    <h3 class="font-bold text-lg mb-3 flex items-center">
+                        <i class="fas fa-cloud text-red-700 mr-3"></i>
+                        OCI Data Science
+                    </h3>
+                    <ul class="text-sm space-y-2">
+                        <li><i class="fas fa-book text-purple-700 mr-2"></i>JupyterLab統合</li>
+                        <li><i class="fas fa-robot text-purple-700 mr-2"></i>AutoMLツール</li>
+                        <li><i class="fas fa-database text-purple-700 mr-2"></i>Oracle Databaseとの深い統合</li>
+                        <li><i class="fas fa-box text-purple-700 mr-2"></i>モデルカタログ機能</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド6: セキュリティとコンプライアンス -->
+    <div class="slide-container">
+        <div class="logo flex items-center">
+            <i class="fas fa-cloud text-purple-700 mr-2"></i>
+            Cloud Services
+        </div>
+        
+        <div class="p-10">
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">セキュリティとコンプライアンス</h1>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-certificate text-purple-700 mr-3"></i>
+                        主要認証の取得状況
+                    </h3>
+                    <table class="comparison-table text-sm">
+                        <thead>
+                            <tr>
+                                <th>認証</th>
+                                <th>AWS</th>
+                                <th>Azure</th>
+                                <th>GCP</th>
+                                <th>OCI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ISO 27001</td>
+                                <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                            <tr>
+                                <td>SOC 1/2/3</td>
+                                <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                            <tr>
+                                <td>ISMAP</td>
+                                <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-shield-alt text-purple-700 mr-3"></i>
+                        特徴的なセキュリティ機能
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-orange-50 rounded">
+                            <p class="text-sm"><span class="font-bold">AWS:</span> 最多のコンプライアンス認証、171サービスがISMAP対象</p>
+                        </div>
+                        <div class="p-3 bg-blue-50 rounded">
+                            <p class="text-sm"><span class="font-bold">Azure:</span> 1990年代からの実績、大企業・官公庁での高い信頼性</p>
+                        </div>
+                        <div class="p-3 bg-red-50 rounded">
+                            <p class="text-sm"><span class="font-bold">GCP:</span> Googleのセキュリティインフラを活用</p>
+                        </div>
+                        <div class="p-3 bg-red-50 rounded">
+                            <p class="text-sm"><span class="font-bold">OCI:</span> ゼロトラストアプローチ、デフォルトで暗号化</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-purple-50 rounded-lg">
+                <p class="text-sm">
+                    <i class="fas fa-info-circle text-purple-700 mr-2"></i>
+                    <span class="font-bold">ISMAP（政府情報システムのためのセキュリティ評価制度）</span>: 
+                    日本政府調達の基本要件。AWSは2024年12月31日まで更新済み
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド7: 価格比較 -->
+    <div class="slide-container">
+        <div class="logo flex items-center">
+            <i class="fas fa-cloud text-purple-700 mr-2"></i>
+            Cloud Services
+        </div>
+        
+        <div class="p-10">
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">価格比較とコスト最適化</h1>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-dollar-sign text-purple-700 mr-3"></i>
+                        価格体系の特徴
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="service-card">
+                            <h4 class="font-bold flex items-center mb-2">
+                                <i class="fab fa-aws text-orange-500 mr-2"></i>AWS
+                            </h4>
+                            <p class="text-sm">従量課金制、予約インスタンスで割引</p>
+                            <p class="text-sm text-gray-600">無料枠: 12ヶ月間、一部は常時無料</p>
+                        </div>
+                        
+                        <div class="service-card">
+                            <h4 class="font-bold flex items-center mb-2">
+                                <i class="fab fa-microsoft text-blue-500 mr-2"></i>Azure
+                            </h4>
+                            <p class="text-sm">ハイブリッド特典、最大80%割引可能</p>
+                            <p class="text-sm decrease">2024年4月: 日本円17.1%値上げ</p>
+                        </div>
+                        
+                        <div class="service-card">
+                            <h4 class="font-bold flex items-center mb-2">
+                                <i class="fab fa-google text-red-500 mr-2"></i>GCP
+                            </h4>
+                            <p class="text-sm">継続利用割引、秒単位課金</p>
+                            <p class="text-sm decrease">BigQuery: オンデマンド+25%値上げ</p>
+                        </div>
+                        
+                        <div class="service-card bg-green-50">
+                            <h4 class="font-bold flex items-center mb-2">
+                                <i class="fas fa-cloud text-red-700 mr-2"></i>OCI
+                            </h4>
+                            <p class="text-sm"><span class="price-highlight">他社の約1/3の価格</span></p>
+                            <p class="text-sm improvement">円建て対応（為替リスクなし）</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-gift text-purple-700 mr-3"></i>
+                        無料枠の比較
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="feature-box">
+                            <h4 class="font-bold mb-2">コンピュート</h4>
+                            <ul class="text-sm space-y-1">
+                                <li><span class="font-bold">AWS:</span> t2.micro 月750時間</li>
+                                <li><span class="font-bold">OCI:</span> Ampere A1 月3,000 OCPU時間</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-box">
+                            <h4 class="font-bold mb-2">ストレージ</h4>
+                            <ul class="text-sm space-y-1">
+                                <li><span class="font-bold">AWS S3:</span> 5GB（12ヶ月）</li>
+                                <li><span class="font-bold">OCI:</span> 200GB（永年無料）</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-box">
+                            <h4 class="font-bold mb-2">データ転送</h4>
+                            <ul class="text-sm space-y-1">
+                                <li><span class="font-bold">OCI:</span> アウトバウンド月10TBまで無料</li>
+                                <li><span class="font-bold">その他:</span> 従量課金</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド8: 選定ガイドライン -->
+    <div class="slide-container">
+        <div class="logo flex items-center">
+            <i class="fas fa-cloud text-purple-700 mr-2"></i>
+            Cloud Services
+        </div>
+        
+        <div class="p-10">
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">選定ガイドライン</h1>
+                <p class="text-lg text-gray-600 mt-2">要件に応じた最適なクラウドサービスの選び方</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div class="p-4 bg-orange-50 rounded-lg">
+                        <h4 class="font-bold mb-2 flex items-center">
+                            <i class="fab fa-aws text-orange-500 mr-2"></i>
+                            AWSを選ぶべきケース
+                        </h4>
+                        <ul class="text-sm space-y-1">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>幅広いサービスラインナップが必要</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>豊富な実績とドキュメントを重視</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>グローバル展開を計画</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>クラウド初心者</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="p-4 bg-blue-50 rounded-lg">
+                        <h4 class="font-bold mb-2 flex items-center">
+                            <i class="fab fa-microsoft text-blue-500 mr-2"></i>
+                            Azureを選ぶべきケース
+                        </h4>
+                        <ul class="text-sm space-y-1">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Microsoft製品を使用中</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>ハイブリッドクラウドが必要</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>大企業・官公庁</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>高いセキュリティ要件</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="p-4 bg-red-50 rounded-lg">
+                        <h4 class="font-bold mb-2 flex items-center">
+                            <i class="fab fa-google text-red-500 mr-2"></i>
+                            GCPを選ぶべきケース
+                        </h4>
+                        <ul class="text-sm space-y-1">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>AI/機械学習プロジェクト</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>ビッグデータ分析が中心</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>最新技術を活用したい</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Googleエコシステム利用中</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="p-4 bg-green-50 rounded-lg">
+                        <h4 class="font-bold mb-2 flex items-center">
+                            <i class="fas fa-cloud text-red-700 mr-2"></i>
+                            OCIを選ぶべきケース
+                        </h4>
+                        <ul class="text-sm space-y-1">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i><span class="price-highlight">コスト削減が最優先</span></li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Oracle Database使用中</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>シンプルな運用を希望</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>為替リスクを避けたい</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-purple-50 rounded-lg">
+                <p class="text-sm">
+                    <i class="fas fa-lightbulb text-purple-700 mr-2"></i>
+                    <span class="font-bold">推奨アプローチ:</span> 
+                    ハイブリッドクラウドやマルチクラウド戦略も視野に入れ、各サービスの強みを活かした最適な組み合わせを検討
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド9: 2024年の重要な変更点 -->
+    <div class="slide-container">
+        <div class="logo flex items-center">
+            <i class="fas fa-cloud text-purple-700 mr-2"></i>
+            Cloud Services
+        </div>
+        
+        <div class="p-10">
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">2024年の重要な変更点</h1>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 mr-3"></i>
+                        料金改定
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                            <p class="font-bold mb-1">Azure</p>
+                            <p class="text-sm">2024年4月1日より日本円価格<span class="decrease">17.1%値上げ</span></p>
+                        </div>
+                        
+                        <div class="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                            <p class="font-bold mb-1">GCP BigQuery</p>
+                            <p class="text-sm">オンデマンド利用<span class="decrease">+25%値上げ</span></p>
+                        </div>
+                        
+                        <div class="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                            <p class="font-bold mb-1">GCP Storage</p>
+                            <p class="text-sm">9月1日: soft delete機能の有料化<br>
+                            10月1日: リージョン間転送の課金開始</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-rocket text-green-600 mr-3"></i>
+                        新機能・サービス
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="p-4 bg-green-50 rounded-lg">
+                            <p class="font-bold mb-1">Azure Functions</p>
+                            <p class="text-sm">Flex Consumption Plan（プレビュー）<br>
+                            最大1000インスタンスまでスケール可能</p>
+                        </div>
+                        
+                        <div class="p-4 bg-green-50 rounded-lg">
+                            <p class="font-bold mb-1">OCI</p>
+                            <p class="text-sm">Generative AI Agents<br>
+                            Container Instances等の新サービス追加</p>
+                        </div>
+                        
+                        <div class="p-4 bg-green-50 rounded-lg">
+                            <p class="font-bold mb-1">全般</p>
+                            <p class="text-sm improvement">AI/ML機能の大幅強化<br>
+                            生成AIサービスの拡充</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド10: まとめ -->
+    <div class="slide-container">
+        <div class="logo flex items-center">
+            <i class="fas fa-cloud text-purple-700 mr-2"></i>
+            Cloud Services
+        </div>
+        
+        <div class="p-10">
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">まとめ</h1>
+            </div>
+            
+            <div class="mt-8">
+                <div class="p-6 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg mb-6">
+                    <h3 class="text-xl font-bold mb-4 text-center">2024年クラウド市場の要点</h3>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <p class="mb-3"><i class="fas fa-chart-line text-purple-700 mr-2"></i>
+                                4大プロバイダーで世界市場の<span class="highlight-number text-xl">69%</span>を占有</p>
+                            <p class="mb-3"><i class="fas fa-building text-purple-700 mr-2"></i>
+                                日本の大企業<span class="highlight-number text-xl">87.2%</span>がクラウド利用</p>
+                            <p><i class="fas fa-rocket text-purple-700 mr-2"></i>
+                                市場成長率（CAGR）<span class="improvement">18.4%</span></p>
+                        </div>
+                        <div>
+                            <p class="mb-3"><i class="fas fa-brain text-purple-700 mr-2"></i>
+                                AI/ML機能が各社で大幅強化</p>
+                            <p class="mb-3"><i class="fas fa-dollar-sign text-purple-700 mr-2"></i>
+                                OCIが価格面で圧倒的優位</p>
+                            <p><i class="fas fa-cloud text-purple-700 mr-2"></i>
+                                マルチクラウド戦略が主流に</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-bold mb-3 flex items-center">
+                            <i class="fas fa-tasks text-purple-700 mr-2"></i>
+                            選定時の重要ポイント
+                        </h4>
+                        <ul class="text-sm space-y-2">
+                            <li>1. 自社の要件と既存システムとの親和性</li>
+                            <li>2. 総所有コスト（TCO）の詳細な検討</li>
+                            <li>3. セキュリティとコンプライアンス要件</li>
+                            <li>4. 将来の拡張性とスケーラビリティ</li>
+                            <li>5. 社内スキルセットとトレーニング</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-bold mb-3 flex items-center">
+                            <i class="fas fa-forward text-purple-700 mr-2"></i>
+                            今後の展望
+                        </h4>
+                        <ul class="text-sm space-y-2">
+                            <li>• ハイブリッドクラウドの更なる進化</li>
+                            <li>• エッジコンピューティングの本格化</li>
+                            <li>• 生成AIサービスの競争激化</li>
+                            <li>• グリーンクラウドへの移行</li>
+                            <li>• サーバーレスアーキテクチャの普及</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-lg font-bold text-purple-800">
+                        最適なクラウド戦略は、各サービスの強みを活かした組み合わせにある
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" onclick="previousSlide()">
+            <i class="fas fa-chevron-left mr-2"></i>前へ
+        </button>
+        <span class="slide-number" id="slideNumber">1 / 10</span>
+        <button class="nav-button" onclick="nextSlide()">
+            次へ<i class="fas fa-chevron-right ml-2"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-container');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            updateSlideNumber();
+            updateNavigationButtons();
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        function updateSlideNumber() {
+            document.getElementById('slideNumber').textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function updateNavigationButtons() {
+            const prevButton = document.querySelector('.nav-button');
+            const nextButton = document.querySelectorAll('.nav-button')[1];
+            
+            prevButton.disabled = currentSlide === 0;
+            nextButton.disabled = currentSlide === totalSlides - 1;
+        }
+
+        // キーボードナビゲーション
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // 初期化
+        updateSlideNumber();
+        updateNavigationButtons();
+    </script>
+</body>
+</html>
