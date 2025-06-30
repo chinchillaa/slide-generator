@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini CLI vs Claude Code - AIコーディングアシスタント比較分析</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+            z-index: 10;
+        }
+        .purple-accent {
+            background-color: #8a2be2;
+        }
+        .title-box {
+            border-left: 8px solid #8a2be2;
+            padding-left: 20px;
+            margin-bottom: 25px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #8a2be2, #d8bfd8);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #8a2be2;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #8a2be2;
+        }
+        .improvement {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .data-item {
+            margin-bottom: 20px;
+            padding-left: 15px;
+        }
+        .data-subitem {
+            padding-left: 40px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(138, 43, 226, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            height: 100%;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(138, 43, 226, 0.1);
+            border-color: #8a2be2;
+        }
+        .segment-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: rgba(138, 43, 226, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .segment-title {
+            color: #8a2be2;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        .comparison-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .comparison-table th {
+            background-color: #8a2be2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        .comparison-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .comparison-table tr:hover {
+            background-color: #f9fafb;
+        }
+        .feature-item {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: start;
+            font-size: 0.85rem;
+        }
+        .price-box {
+            background-color: #f9fafb;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .price-box:hover {
+            border-color: #8a2be2;
+            box-shadow: 0 4px 8px rgba(138, 43, 226, 0.1);
+        }
+        .free-badge {
+            background-color: #22c55e;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+        .paid-badge {
+            background-color: #e53e3e;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+        .highlight-text {
+            color: #8a2be2;
+            font-weight: bold;
+        }
+        .recommendation-box {
+            background-color: rgba(138, 43, 226, 0.05);
+            border-left: 4px solid #8a2be2;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+        }
+        
+        /* ナビゲーション */
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.1);
+        }
+        .nav-button {
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #7a1fd2;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .indicator-dot.active {
+            background-color: #8a2be2;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        /* サイドバー目次 */
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 60vh;
+            overflow-y: auto;
+            z-index: 10;
+            width: 220px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        
+        /* コンテンツラッパー */
+        .content-wrapper {
+            min-height: calc(100vh - 100px);
+            padding-left: 260px;
+            padding-top: 40px;
+            padding-bottom: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* サイドバー非表示時 */
+        .content-wrapper.full-width {
+            padding-left: 0;
+        }
+        
+        /* サイドバートグルボタン */
+        .sidebar-toggle {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 15;
+            transition: all 0.3s ease;
+        }
+        .sidebar-toggle:hover {
+            background-color: #7a1fd2;
+        }
+        .sidebar.hidden {
+            transform: translateX(-100%) translateY(-50%);
+            opacity: 0;
+        }
+        .sidebar-title {
+            font-weight: bold;
+            color: #8a2be2;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .toc-item {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .toc-item:hover {
+            background-color: #f3f4f6;
+            padding-left: 16px;
+        }
+        .toc-item.active {
+            background-color: #8a2be2;
+            color: white;
+        }
+        
+        /* 全画面表示ボタン */
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+        .fullscreen-btn:hover {
+            background-color: #7a1fd2;
+        }
+
+        /* スライド内のパディング調整 */
+        .slide-content {
+            padding: 30px 40px;
+            height: 100%;
+            box-sizing: border-box;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        /* 機能比較スライドの特別なスタイル */
+        .feature-comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .feature-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            box-shadow: 0 4px 6px rgba(138, 43, 226, 0.1);
+            border-color: #8a2be2;
+        }
+
+        .feature-box h3 {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #8a2be2;
+            margin-bottom: 8px;
+        }
+
+        .feature-box .feature-item {
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+        }
+
+        /* スライド5専用スタイル - より圧縮された表示 */
+        #slide-5 .slide-content {
+            padding: 25px;
+            height: calc(100% - 50px);
+            overflow-y: auto;
+        }
+        #slide-5 .title-box {
+            margin-bottom: 15px;
+        }
+        #slide-5 .title-box h1 {
+            font-size: 1.5rem;
+        }
+        #slide-5 .segment-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 8px;
+        }
+        #slide-5 .segment-icon i {
+            font-size: 0.875rem;
+        }
+        #slide-5 .feature-item {
+            font-size: 0.65rem;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: flex-start;
+        }
+        #slide-5 .feature-item i {
+            font-size: 0.5rem;
+            margin-top: 2px;
+        }
+        #slide-5 .feature-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+        #slide-5 .segment-title {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        #slide-5 h3 {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            margin-bottom: 3px;
+        }
+        #slide-5 .feature-comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        #slide-5 .ml-12 {
+            margin-left: 38px;
+        }
+        
+        /* スライド6専用スタイル - より圧縮された表示 */
+        #slide-6 .slide-content {
+            padding: 25px;
+            height: calc(100% - 50px);
+            overflow-y: auto;
+        }
+        #slide-6 .title-box {
+            margin-bottom: 15px;
+        }
+        #slide-6 .title-box h1 {
+            font-size: 1.5rem;
+        }
+        #slide-6 .recommendation-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+        #slide-6 h2 {
+            font-size: 0.75rem;
+        }
+        #slide-6 h4 {
+            font-size: 0.65rem;
+        }
+        #slide-6 ul li {
+            font-size: 0.6rem;
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+        #slide-6 .icon-circle {
+            width: 25px;
+            height: 25px;
+        }
+        #slide-6 .icon-circle i {
+            font-size: 0.75rem;
+        }
+        #slide-6 .ml-10 {
+            margin-left: 33px;
+        }
+        #slide-6 .grid {
+            gap: 8px;
+        }
+        #slide-6 .text-xs {
+            font-size: 0.6rem;
+            line-height: 1.2;
+        }
+        #slide-6 .text-sm {
+            font-size: 0.65rem;
+        }
+        #slide-6 .p-3 {
+            padding: 10px;
+        }
+        #slide-6 .p-1 {
+            padding: 3px;
+        }
+        #slide-6 .mt-4 {
+            margin-top: 10px;
+        }
+        #slide-6 .mt-2 {
+            margin-top: 5px;
+        }
+        #slide-6 .mb-2 {
+            margin-bottom: 5px;
+        }
+        #slide-6 .mb-1 {
+            margin-bottom: 3px;
+        }
+        
+        /* スライド7専用スタイル - より圧縮された表示 */
+        #slide-7 .slide-content {
+            padding: 20px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+        #slide-7 .title-box {
+            margin-bottom: 10px;
+        }
+        #slide-7 .title-box h1 {
+            font-size: 1.25rem;
+        }
+        #slide-7 .data-item {
+            margin-bottom: 8px;
+        }
+        #slide-7 .segment-box {
+            padding: 6px;
+            margin-bottom: 6px;
+        }
+        #slide-7 h2 {
+            font-size: 0.75rem;
+            margin-bottom: 6px;
+        }
+        #slide-7 h3 {
+            font-size: 0.65rem;
+            margin-bottom: 2px;
+        }
+        #slide-7 .feature-item {
+            font-size: 0.55rem;
+            margin-bottom: 1px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.1;
+        }
+        #slide-7 .feature-item i {
+            font-size: 0.45rem;
+            margin-top: 1px;
+        }
+        #slide-7 .text-xs {
+            font-size: 0.55rem;
+            line-height: 1.1;
+        }
+        #slide-7 .text-sm {
+            font-size: 0.6rem;
+        }
+        #slide-7 .text-lg {
+            font-size: 0.75rem;
+        }
+        #slide-7 .text-xl {
+            font-size: 0.875rem;
+        }
+        #slide-7 .gap-x-6 {
+            column-gap: 0.75rem;
+        }
+        #slide-7 .p-3 {
+            padding: 8px;
+        }
+        #slide-7 .p-2 {
+            padding: 6px;
+        }
+        #slide-7 .mt-4 {
+            margin-top: 8px;
+        }
+        #slide-7 .mt-3 {
+            margin-top: 6px;
+        }
+        #slide-7 .mb-3 {
+            margin-bottom: 6px;
+        }
+        #slide-7 .mb-1 {
+            margin-bottom: 2px;
+        }
+        #slide-7 .ml-5 {
+            margin-left: 0.75rem;
+        }
+        #slide-7 .icon-circle {
+            flex-shrink: 0;
+        }
+        #slide-7 ul li {
+            line-height: 1.1;
+        }
+
+        #slide-5 .segment-box {
+            padding: 10px;
+        }
+
+        #slide-5 h3 {
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            margin-top: 8px;
+        }
+
+        /* スライド6専用スタイル */
+        #slide-6 .recommendation-box {
+            padding: 10px;
+        }
+
+        #slide-6 .recommendation-box h2 {
+            font-size: 1.1rem;
+        }
+
+        #slide-6 .recommendation-box ul {
+            font-size: 0.75rem;
+        }
+
+        #slide-6 .recommendation-box .text-sm {
+            font-size: 0.7rem;
+        }
+
+        /* スライド7専用スタイル */
+        #slide-7 .data-item {
+            margin-bottom: 15px;
+        }
+
+        #slide-7 .segment-box {
+            padding: 10px;
+        }
+
+        #slide-7 .feature-item {
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+        }
+
+        #slide-7 h3 {
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+    <!-- サイドバートグルボタン -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- 全画面表示ボタン -->
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">
+        <i class="fas fa-expand"></i> 全画面表示
+    </button>
+
+    <!-- サイドバー目次 -->
+    <div class="sidebar">
+        <div class="sidebar-title">目次</div>
+        <div class="toc-item active" onclick="goToSlide(1)">1. タイトル</div>
+        <div class="toc-item" onclick="goToSlide(2)">2. エグゼクティブサマリー</div>
+        <div class="toc-item" onclick="goToSlide(3)">3. 基本仕様比較</div>
+        <div class="toc-item" onclick="goToSlide(4)">4. 価格分析</div>
+        <div class="toc-item" onclick="goToSlide(5)">5. 機能比較</div>
+        <div class="toc-item" onclick="goToSlide(6)">6. ユースケース別推奨</div>
+        <div class="toc-item" onclick="goToSlide(7)">7. 市場への影響</div>
+        <div class="toc-item" onclick="goToSlide(8)">8. まとめと推奨事項</div>
+    </div>
+
+    <!-- コンテンツラッパー -->
+    <div class="content-wrapper">
+    
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <!-- 紫のアクセントライン -->
+            <div class="purple-accent h-1 w-full mb-10"></div>
+            
+            <!-- タイトルエリア -->
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">Gemini CLI vs Claude Code</h1>
+                <h2 class="text-4xl font-bold text-purple-800">AIコーディングアシスタント徹底比較</h2>
+            </div>
+            
+            <!-- サブタイトル -->
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-robot mr-3 text-purple-700"></i>
+                開発者の生産性を革新する最新AIツールの比較分析
+            </div>
+            
+            <!-- 作成日 -->
+            <div class="subtitle text-xl mt-6">
+                <i class="far fa-calendar-alt mr-3 text-purple-700"></i>
+                作成日: 2025年6月26日
+            </div>
+            
+            <!-- 下部のグラデーションライン -->
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: エグゼクティブサマリー -->
+    <div class="slide-container" id="slide-2">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="slide-content">
+            <!-- ヘッダー -->
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">エグゼクティブサマリー</h1>
+            </div>
+            
+            <!-- メインコンテンツ -->
+            <div class="mt-4">
+                <!-- 主要な調査結果 -->
+                <div class="data-item flex items-start">
+                    <div class="icon-circle">
+                        <i class="fas fa-chart-line text-purple-700 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-baseline">
+                            <span class="text-xl font-bold mr-3">価格競争力:</span>
+                        </div>
+                        <div class="data-subitem flex items-center">
+                            <i class="fas fa-angle-right text-purple-700 mr-2"></i>
+                            <span>Gemini CLI: <span class="free-badge">完全無料</span> 1日1,000リクエスト</span>
+                        </div>
+                        <div class="data-subitem flex items-center">
+                            <i class="fas fa-angle-right text-purple-700 mr-2"></i>
+                            <span>Claude Code: <span class="paid-badge">有料のみ</span> 最低$20/月〜</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 技術的優位性 -->
+                <div class="data-item flex items-start mt-6">
+                    <div class="icon-circle">
+                        <i class="fas fa-microchip text-purple-700 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-baseline">
+                            <span class="text-xl font-bold mr-3">技術的優位性:</span>
+                        </div>
+                        <div class="data-subitem">
+                            <i class="fas fa-angle-right text-purple-700 mr-2"></i>
+                            <span>コンテキストウィンドウ: Gemini CLI <span class="highlight-number-medium">100万トークン</span> vs Claude Code <span class="font-semibold">20万トークン</span></span>
+                        </div>
+                        <div class="data-subitem">
+                            <i class="fas fa-angle-right text-purple-700 mr-2"></i>
+                            <span>オープンソース: Gemini CLI <span class="positive">Apache 2.0ライセンス</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- エンタープライズ機能 -->
+                <div class="data-item flex items-start mt-6">
+                    <div class="icon-circle">
+                        <i class="fas fa-building text-purple-700 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-baseline">
+                            <span class="text-xl font-bold mr-3">エンタープライズ機能:</span>
+                        </div>
+                        <div class="data-subitem">
+                            <i class="fas fa-angle-right text-purple-700 mr-2"></i>
+                            <span>Claude Code: <span class="font-semibold">高度なセキュリティ、チーム管理、GitHub/GitLab統合</span></span>
+                        </div>
+                        <div class="data-subitem">
+                            <i class="fas fa-angle-right text-purple-700 mr-2"></i>
+                            <span>Gemini CLI: <span class="font-semibold">オープンソースの柔軟性とカスタマイズ性</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 市場への影響 -->
+                <div class="recommendation-box mt-8">
+                    <h3 class="text-lg font-bold mb-2">
+                        <i class="fas fa-globe text-purple-700 mr-2"></i>
+                        市場への影響
+                    </h3>
+                    <p class="text-gray-700">Gemini CLIの無料提供により、AIコーディングアシスタント市場は大きな転換点を迎えています。
+                    開発者にとっては選択肢の拡大と実質的なコスト削減をもたらし、有料サービスのビジネスモデルに疑問を投げかけています。</p>
+                </div>
+            </div>
+            
+            <!-- 下部の注釈 -->
+            <div class="absolute bottom-5 left-10 text-sm text-gray-600">
+                <p>※2025年6月時点の調査結果に基づく</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 基本仕様比較 -->
+    <div class="slide-container" id="slide-3">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="slide-content">
+            <!-- ヘッダー -->
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">基本仕様比較</h1>
+            </div>
+            
+            <!-- メインコンテンツ -->
+            <div>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%;">機能</th>
+                            <th style="width: 35%;">Gemini CLI</th>
+                            <th style="width: 35%;">Claude Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>提供元</strong></td>
+                            <td>Google</td>
+                            <td>Anthropic</td>
+                        </tr>
+                        <tr>
+                            <td><strong>リリース形態</strong></td>
+                            <td><span class="positive">オープンソース（Apache 2.0）</span></td>
+                            <td>プロプライエタリ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>使用モデル</strong></td>
+                            <td>Gemini 2.5 Pro</td>
+                            <td>Claude Opus 4, Sonnet 4, Haiku 3.5</td>
+                        </tr>
+                        <tr>
+                            <td><strong>コンテキストウィンドウ</strong></td>
+                            <td><span class="highlight-text">100万トークン</span></td>
+                            <td>20万トークン</td>
+                        </tr>
+                        <tr>
+                            <td><strong>プラットフォーム</strong></td>
+                            <td>Mac, Linux, Windows（ネイティブ）</td>
+                            <td>Mac, Linux, Windows（WSL）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>価格</strong></td>
+                            <td><span class="free-badge">無料</span> 60 RPM, 1000/日</td>
+                            <td><span class="paid-badge">有料</span> Pro: $20/月, Max: $200/月</td>
+                        </tr>
+                        <tr>
+                            <td><strong>主な統合</strong></td>
+                            <td>Google検索、MCP、Deep Research</td>
+                            <td>GitHub、GitLab、VS Code</td>
+                        </tr>
+                        <tr>
+                            <td><strong>セキュリティ</strong></td>
+                            <td>サンドボックス（Seatbelt/Docker）</td>
+                            <td>エンタープライズグレード</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- ポイント解説 -->
+                <div class="grid grid-cols-2 gap-6 mt-6">
+                    <div class="segment-box">
+                        <h3 class="font-bold text-purple-800 mb-2">
+                            <i class="fas fa-star text-purple-700 mr-2"></i>
+                            Gemini CLIの強み
+                        </h3>
+                        <ul class="list-disc ml-6 text-gray-700">
+                            <li>圧倒的なコンテキストサイズ（100万トークン）</li>
+                            <li>完全無料での利用が可能</li>
+                            <li>オープンソースによる透明性</li>
+                            <li>Google検索との統合</li>
+                        </ul>
+                    </div>
+                    <div class="segment-box">
+                        <h3 class="font-bold text-purple-800 mb-2">
+                            <i class="fas fa-shield-alt text-purple-700 mr-2"></i>
+                            Claude Codeの強み
+                        </h3>
+                        <ul class="list-disc ml-6 text-gray-700">
+                            <li>高度なGitHub/GitLab統合</li>
+                            <li>エンタープライズ向けセキュリティ</li>
+                            <li>チーム管理機能</li>
+                            <li>自動PR作成・レビュー機能</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 価格分析 -->
+    <div class="slide-container" id="slide-4">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="slide-content">
+            <!-- ヘッダー -->
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">価格分析</h1>
+            </div>
+            
+            <!-- メインコンテンツ -->
+            <div class="grid grid-cols-2 gap-x-10">
+                <!-- 左側：価格モデル -->
+                <div>
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-dollar-sign text-purple-700 mr-3"></i>
+                        価格モデル比較
+                    </h2>
+                    
+                    <!-- Gemini CLI -->
+                    <div class="price-box">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-bold">Gemini CLI</h3>
+                            <span class="free-badge">完全無料</span>
+                        </div>
+                        <ul class="list-disc ml-6 text-gray-700">
+                            <li>1日あたり<span class="highlight-text">1,000リクエスト</span></li>
+                            <li>分間<span class="highlight-text">60リクエスト</span>（RPM）</li>
+                            <li>追加費用なし</li>
+                            <li>機能制限なし</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Claude Code -->
+                    <div class="price-box">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-bold">Claude Code</h3>
+                            <span class="paid-badge">有料のみ</span>
+                        </div>
+                        <div class="mb-3">
+                            <h4 class="font-semibold text-purple-800">Pro プラン: $20/月</h4>
+                            <ul class="list-disc ml-6 text-gray-700 text-sm">
+                                <li>5倍のメッセージ量</li>
+                                <li>Claude Opus 4へのアクセス</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-purple-800">Max プラン: $200/月</h4>
+                            <ul class="list-disc ml-6 text-gray-700 text-sm">
+                                <li>10倍のメッセージ量</li>
+                                <li>全モデルへの完全アクセス</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 右側：コスト比較 -->
+                <div>
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-chart-bar text-purple-700 mr-3"></i>
+                        年間コスト比較
+                    </h2>
+                    
+                    <!-- コスト比較チャート -->
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-semibold">個人開発者（1人）</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-600">Gemini CLI</div>
+                                    <div class="highlight-number">$0</div>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-600">Claude Code Pro</div>
+                                    <div class="text-2xl font-bold text-red-600">$240</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-semibold">スタートアップ（5人）</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-600">Gemini CLI</div>
+                                    <div class="highlight-number">$0</div>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-600">Claude Code Pro</div>
+                                    <div class="text-2xl font-bold text-red-600">$1,200</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-semibold">エンタープライズ（50人）</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-600">Gemini CLI</div>
+                                    <div class="highlight-number">$0</div>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-600">Claude Code Max</div>
+                                    <div class="text-2xl font-bold text-red-600">$120,000</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ROI分析 -->
+                    <div class="recommendation-box mt-6">
+                        <h3 class="font-bold mb-2">
+                            <i class="fas fa-calculator text-purple-700 mr-2"></i>
+                            ROI分析
+                        </h3>
+                        <p class="text-sm text-gray-700">Gemini CLIの無料提供により、個人開発者は年間$240〜$2,400、
+                        企業は年間数万〜数十万ドルの節約が可能。特にスタートアップにとって、
+                        この差額は貴重な開発リソースへの投資に回すことができます。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド5: 機能比較 -->
+    <div class="slide-container" id="slide-5">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="slide-content">
+            <!-- ヘッダー -->
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">機能比較</h1>
+            </div>
+            
+            <!-- メインコンテンツ：機能カテゴリ別比較 -->
+            <div class="feature-comparison-grid">
+                <!-- コード理解と編集 -->
+                <div class="feature-box">
+                    <div class="flex items-start mb-2">
+                        <div class="segment-icon">
+                            <i class="fas fa-code text-purple-700 text-xl"></i>
+                        </div>
+                        <h2 class="segment-title">コード理解と編集</h2>
+                    </div>
+                    <div class="ml-12">
+                        <h3 class="font-bold text-purple-800">Gemini CLI</h3>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>自然言語によるコード理解</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>Google検索統合でリアルタイム情報</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>MCPによる拡張機能</span>
+                        </div>
+                        
+                        <h3 class="font-bold text-purple-800">Claude Code</h3>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>エージェント型プロジェクト分析</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>Git履歴の検索とマージ解決</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>自動テスト実行と修正</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 開発ワークフロー統合 -->
+                <div class="feature-box">
+                    <div class="flex items-start mb-2">
+                        <div class="segment-icon">
+                            <i class="fas fa-cogs text-purple-700 text-xl"></i>
+                        </div>
+                        <h2 class="segment-title">開発ワークフロー統合</h2>
+                    </div>
+                    <div class="ml-12">
+                        <h3 class="font-bold text-purple-800">Gemini CLI</h3>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>ターミナルベースの操作</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>Deep Researchによる調査機能</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>カスタムプロンプト設定</span>
+                        </div>
+                        
+                        <h3 class="font-bold text-purple-800">Claude Code</h3>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>GitHub/GitLab深い統合</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>自動PR作成とレビュー</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>VS Code統合</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- セキュリティとサンドボックス -->
+                <div class="feature-box">
+                    <div class="flex items-start mb-2">
+                        <div class="segment-icon">
+                            <i class="fas fa-shield-alt text-purple-700 text-xl"></i>
+                        </div>
+                        <h2 class="segment-title">セキュリティ</h2>
+                    </div>
+                    <div class="ml-12">
+                        <h3 class="font-bold text-purple-800">Gemini CLI</h3>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>アクション承認プロンプト</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>サンドボックス実行環境</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>オープンソースで監査可能</span>
+                        </div>
+                        
+                        <h3 class="font-bold text-purple-800">Claude Code</h3>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>エンタープライズグレード</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>プロンプトインジェクション防止</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>組織向けユーザー管理</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- エンタープライズ機能 -->
+                <div class="feature-box">
+                    <div class="flex items-start mb-2">
+                        <div class="segment-icon">
+                            <i class="fas fa-building text-purple-700 text-xl"></i>
+                        </div>
+                        <h2 class="segment-title">エンタープライズ機能</h2>
+                    </div>
+                    <div class="ml-12">
+                        <h3 class="font-bold text-purple-800">Gemini CLI</h3>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>完全なカスタマイズ性</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>Vertex AI経由の利用可能</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-times-circle text-gray-400 mr-1 flex-shrink-0"></i>
+                            <span class="text-gray-500">チーム管理機能なし</span>
+                        </div>
+                        
+                        <h3 class="font-bold text-purple-800">Claude Code</h3>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>組織向けロール管理</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>Amazon Bedrock/Vertex AI統合</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle text-green-600 mr-1 flex-shrink-0"></i>
+                            <span>コンプライアンス対応</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド6: ユースケース別推奨 -->
+    <div class="slide-container" id="slide-6">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="slide-content">
+            <!-- ヘッダー -->
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">ユースケース別推奨</h1>
+            </div>
+            
+            <!-- メインコンテンツ -->
+            <div class="grid grid-cols-2 gap-4">
+                <!-- 個人開発者 -->
+                <div class="recommendation-box">
+                    <div class="flex items-center mb-2">
+                        <div class="icon-circle">
+                            <i class="fas fa-user text-purple-700 text-lg"></i>
+                        </div>
+                        <h2 class="font-bold">個人開発者・学習者</h2>
+                    </div>
+                    <div class="ml-10">
+                        <div class="mb-1">
+                            <span class="font-bold text-purple-800 text-sm">推奨: </span>
+                            <span class="highlight-text text-sm">Gemini CLI</span>
+                        </div>
+                        <h4 class="font-semibold mb-1 text-sm">理由:</h4>
+                        <ul class="list-disc ml-5 text-gray-700">
+                            <li>完全無料で利用開始可能</li>
+                            <li>1日1,000リクエストの十分な無料枠</li>
+                            <li>オープンソースによる学習機会</li>
+                            <li>カスタマイズ・拡張の自由度</li>
+                        </ul>
+                        <div class="mt-2 p-1 bg-green-50 rounded">
+                            <span class="text-green-700 text-xs">
+                                <i class="fas fa-piggy-bank mr-1"></i>
+                                年間節約額: $240〜$2,400
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- スタートアップ -->
+                <div class="recommendation-box">
+                    <div class="flex items-center mb-2">
+                        <div class="icon-circle">
+                            <i class="fas fa-rocket text-purple-700 text-lg"></i>
+                        </div>
+                        <h2 class="font-bold">スタートアップ</h2>
+                    </div>
+                    <div class="ml-10">
+                        <div class="mb-1">
+                            <span class="font-bold text-purple-800 text-sm">推奨: </span>
+                            <span class="highlight-text text-sm">Gemini CLI（初期）</span>
+                        </div>
+                        <h4 class="font-semibold mb-1 text-sm">理由:</h4>
+                        <ul class="list-disc ml-5 text-gray-700">
+                            <li>キャッシュフロー改善</li>
+                            <li>必要に応じて従量課金へ移行可能</li>
+                            <li>MCPによる拡張性</li>
+                            <li>Google検索統合でリアルタイム情報</li>
+                        </ul>
+                        <div class="mt-2 p-1 bg-gray-100 rounded">
+                            <span class="text-gray-700 text-xs">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                成長に応じてClaude Codeへの移行も検討
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- エンタープライズ -->
+                <div class="recommendation-box">
+                    <div class="flex items-center mb-2">
+                        <div class="icon-circle">
+                            <i class="fas fa-building text-purple-700 text-lg"></i>
+                        </div>
+                        <h2 class="font-bold">エンタープライズ</h2>
+                    </div>
+                    <div class="ml-10">
+                        <div class="mb-1">
+                            <span class="font-bold text-purple-800 text-sm">推奨: </span>
+                            <span class="highlight-text text-sm">要件に応じて選択</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <h4 class="font-semibold mb-1">Claude Code選択時:</h4>
+                                <ul class="list-disc ml-3 text-gray-700">
+                                    <li>セキュリティ要件が高い</li>
+                                    <li>チーム管理機能が必要</li>
+                                    <li>GitHub/GitLab統合必須</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Gemini CLI選択時:</h4>
+                                <ul class="list-disc ml-3 text-gray-700">
+                                    <li>大幅なコスト削減</li>
+                                    <li>カスタマイズ性重視</li>
+                                    <li>ベンダーロックイン回避</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- オープンソースプロジェクト -->
+                <div class="recommendation-box">
+                    <div class="flex items-center mb-2">
+                        <div class="icon-circle">
+                            <i class="fas fa-code-branch text-purple-700 text-lg"></i>
+                        </div>
+                        <h2 class="font-bold">オープンソースプロジェクト</h2>
+                    </div>
+                    <div class="ml-10">
+                        <div class="mb-1">
+                            <span class="font-bold text-purple-800 text-sm">推奨: </span>
+                            <span class="highlight-text text-sm">Gemini CLI</span>
+                        </div>
+                        <h4 class="font-semibold mb-1 text-sm">理由:</h4>
+                        <ul class="list-disc ml-5 text-gray-700">
+                            <li>オープンソースの理念に合致</li>
+                            <li>コミュニティ貢献の機会</li>
+                            <li>透明性の高い開発</li>
+                            <li>無料での継続的利用</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 意思決定フローチャート -->
+            <div class="mt-4 p-4 bg-purple-50 rounded-lg" style="margin-top: 20px;">
+                <h3 class="font-bold text-purple-800 mb-4" style="font-size: 1.1rem;">
+                    <i class="fas fa-route text-purple-700 mr-2"></i>
+                    意思決定フローチャート
+                </h3>
+                <div style="background-color: white; padding: 20px; border-radius: 8px; border: 2px solid #8a2be2;">
+                    <!-- フローチャート -->
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <!-- 質問1 -->
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="background-color: #8a2be2; color: white; padding: 10px 15px; border-radius: 25px; font-weight: bold; font-size: 0.9rem; min-width: 200px; text-align: center;">
+                                1. 予算はあるか？
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span style="font-size: 0.85rem;">No →</span>
+                                <span style="background-color: #22c55e; color: white; padding: 5px 15px; border-radius: 15px; font-weight: bold; font-size: 0.9rem;">Gemini CLI</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 矢印 -->
+                        <div style="margin-left: 100px; font-size: 1.2rem; color: #8a2be2;">↓ Yes</div>
+                        
+                        <!-- 質問2 -->
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="background-color: #8a2be2; color: white; padding: 10px 15px; border-radius: 25px; font-weight: bold; font-size: 0.9rem; min-width: 200px; text-align: center;">
+                                2. エンタープライズ機能は必要か？
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span style="font-size: 0.85rem;">No →</span>
+                                <span style="background-color: #22c55e; color: white; padding: 5px 15px; border-radius: 15px; font-weight: bold; font-size: 0.9rem;">Gemini CLI</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 矢印 -->
+                        <div style="margin-left: 100px; font-size: 1.2rem; color: #8a2be2;">↓ Yes</div>
+                        
+                        <!-- 質問3 -->
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="background-color: #8a2be2; color: white; padding: 10px 15px; border-radius: 25px; font-weight: bold; font-size: 0.9rem; min-width: 200px; text-align: center;">
+                                3. GitHub/GitLab統合は必須か？
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span style="font-size: 0.85rem;">Yes →</span>
+                                <span style="background-color: #3b82f6; color: white; padding: 5px 15px; border-radius: 15px; font-weight: bold; font-size: 0.9rem;">Claude Code</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド7: 市場への影響 -->
+    <div class="slide-container" id="slide-7">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="slide-content" style="padding: 30px;">
+            <!-- ヘッダー -->
+            <div class="title-box" style="margin-bottom: 20px;">
+                <h1 class="text-3xl font-bold">市場への影響と将来展望</h1>
+            </div>
+            
+            <!-- メインコンテンツ -->
+            <div>
+                <!-- 市場変革セクション -->
+                <div style="margin-bottom: 25px;">
+                    <h2 style="font-size: 1.25rem; font-weight: bold; color: #8a2be2; margin-bottom: 15px;">
+                        <i class="fas fa-globe mr-2"></i>Gemini CLI参入による市場変革
+                    </h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <!-- 価格破壊 -->
+                        <div style="background-color: #f9fafb; padding: 12px; border-radius: 8px;">
+                            <h3 style="font-weight: bold; color: #8a2be2; font-size: 0.9rem; margin-bottom: 8px;">
+                                <i class="fas fa-dollar-sign mr-1"></i>価格破壊
+                            </h3>
+                            <p style="font-size: 0.75rem; color: #4b5563;">
+                                無料で高品質なツールが市場標準を変え、有料ツールは付加価値の再定義が必要に
+                            </p>
+                        </div>
+                        
+                        <!-- 競争激化 -->
+                        <div style="background-color: #f9fafb; padding: 12px; border-radius: 8px;">
+                            <h3 style="font-weight: bold; color: #8a2be2; font-size: 0.9rem; margin-bottom: 8px;">
+                                <i class="fas fa-fire mr-1"></i>競争激化
+                            </h3>
+                            <p style="font-size: 0.75rem; color: #4b5563;">
+                                機能面での差別化が必須となり、イノベーションが加速
+                            </p>
+                        </div>
+                        
+                        <!-- 市場の民主化 -->
+                        <div style="background-color: #f9fafb; padding: 12px; border-radius: 8px;">
+                            <h3 style="font-weight: bold; color: #8a2be2; font-size: 0.9rem; margin-bottom: 8px;">
+                                <i class="fas fa-users mr-1"></i>市場の民主化
+                            </h3>
+                            <p style="font-size: 0.75rem; color: #4b5563;">
+                                個人開発者・教育機関・発展途上国でのAI活用が拡大
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 将来展望セクション -->
+                <div style="margin-bottom: 25px;">
+                    <h2 style="font-size: 1.25rem; font-weight: bold; color: #8a2be2; margin-bottom: 15px;">
+                        <i class="fas fa-chart-line mr-2"></i>技術トレンド予測
+                    </h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                        <!-- 短期展望 -->
+                        <div style="border: 1px solid #e5e7eb; padding: 12px; border-radius: 8px;">
+                            <h3 style="font-weight: bold; color: #1f2937; font-size: 0.9rem; margin-bottom: 8px;">
+                                短期展望（1-2年）
+                            </h3>
+                            <ul style="font-size: 0.75rem; color: #4b5563; list-style: none; padding: 0;">
+                                <li style="margin-bottom: 4px;">• コンテキスト: 100万→1000万トークン</li>
+                                <li style="margin-bottom: 4px;">• マルチモーダル対応（コード+画像+音声）</li>
+                                <li>• リアルタイム協調作業の実現</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- 中期展望 -->
+                        <div style="border: 1px solid #e5e7eb; padding: 12px; border-radius: 8px;">
+                            <h3 style="font-weight: bold; color: #1f2937; font-size: 0.9rem; margin-bottom: 8px;">
+                                中期展望（3-5年）
+                            </h3>
+                            <ul style="font-size: 0.75rem; color: #4b5563; list-style: none; padding: 0;">
+                                <li style="margin-bottom: 4px;">• AIエージェントによる自律的開発</li>
+                                <li style="margin-bottom: 4px;">• 自然言語プログラミングの主流化</li>
+                                <li>• 予測的バグ修正とコード最適化</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 市場規模と影響 -->
+                <div style="background-color: #f3e8ff; padding: 15px; border-radius: 8px;">
+                    <h3 style="font-weight: bold; color: #8a2be2; font-size: 1rem; margin-bottom: 10px;">
+                        <i class="fas fa-chart-area mr-2"></i>市場規模と開発者への影響
+                    </h3>
+                    
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                        <div>
+                            <p style="font-size: 0.8rem; color: #1f2937; margin-bottom: 8px;">
+                                <strong>市場成長:</strong> 2025年 $2.5B → 2030年 $15B+（年間成長率 40-50%）
+                            </p>
+                            <p style="font-size: 0.8rem; color: #1f2937;">
+                                <strong>開発者の変化:</strong> 生産性30-50%向上、役割は実装から設計・問題解決へシフト。
+                                AIファーストの開発手法が標準となり、プロンプトエンジニアリングが必須スキルに。
+                            </p>
+                        </div>
+                        <div style="text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #8a2be2;">6X</div>
+                            <div style="font-size: 0.75rem; color: #6b7280;">5年で市場規模6倍</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド8: まとめと推奨事項 -->
+    <div class="slide-container" id="slide-8">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="slide-content">
+            <!-- ヘッダー -->
+            <div class="title-box">
+                <h1 class="text-3xl font-bold">まとめと推奨事項</h1>
+            </div>
+            
+            <!-- メインコンテンツ -->
+            <div>
+                <!-- 主要な結論 -->
+                <div class="bg-purple-50 p-6 rounded-lg mb-6">
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-lightbulb text-purple-700 mr-3"></i>
+                        主要な結論
+                    </h2>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-bold text-purple-800 mb-2">コスト効率</h3>
+                            <p class="text-gray-700">Gemini CLIの無料提供は、多くの開発者にとって
+                            十分な機能を提供し、年間数百〜数千ドルの節約を実現します。</p>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-purple-800 mb-2">機能性</h3>
+                            <p class="text-gray-700">Claude Codeはエンタープライズ向け機能で優位ですが、
+                            Gemini CLIの100万トークンコンテキストは技術的に圧倒的です。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 最終推奨事項 -->
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div class="recommendation-box text-center">
+                        <i class="fas fa-user text-purple-700 text-3xl mb-2"></i>
+                        <h3 class="font-bold mb-2">個人開発者</h3>
+                        <div class="highlight-text text-xl">Gemini CLI</div>
+                        <p class="text-sm text-gray-600 mt-1">無料で全機能利用可能</p>
+                    </div>
+                    <div class="recommendation-box text-center">
+                        <i class="fas fa-rocket text-purple-700 text-3xl mb-2"></i>
+                        <h3 class="font-bold mb-2">スタートアップ</h3>
+                        <div class="highlight-text text-xl">Gemini CLI</div>
+                        <p class="text-sm text-gray-600 mt-1">コスト効率を重視</p>
+                    </div>
+                    <div class="recommendation-box text-center">
+                        <i class="fas fa-building text-purple-700 text-3xl mb-2"></i>
+                        <h3 class="font-bold mb-2">エンタープライズ</h3>
+                        <div class="highlight-text text-xl">要件次第</div>
+                        <p class="text-sm text-gray-600 mt-1">セキュリティ重視ならClaude Code</p>
+                    </div>
+                </div>
+                
+                <!-- 行動指針 -->
+                <div class="segment-box mb-6">
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-tasks text-purple-700 mr-3"></i>
+                        推奨される行動指針
+                    </h2>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold text-purple-800 mb-2">すぐに始める</h3>
+                            <ol class="list-decimal ml-6 text-gray-700 text-sm">
+                                <li>Gemini CLIで無料で開始</li>
+                                <li>プロジェクトで実際に活用</li>
+                                <li>生産性向上を測定</li>
+                                <li>必要に応じてツールを再評価</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-purple-800 mb-2">将来に備える</h3>
+                            <ul class="list-disc ml-6 text-gray-700 text-sm">
+                                <li>AIツール活用スキルの習得</li>
+                                <li>プロンプトエンジニアリングの学習</li>
+                                <li>チーム内での知見共有</li>
+                                <li>最新動向の継続的キャッチアップ</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 最後のメッセージ -->
+                <div class="text-center p-4 border-t-4 border-purple-700">
+                    <p class="text-lg text-gray-700">
+                        <i class="fas fa-quote-left text-purple-700 mr-2"></i>
+                        AIコーディングアシスタントは開発者の<span class="highlight-text">パートナー</span>です。
+                        適切なツールを選択し、創造性を解放して、より高次の問題解決に注力しましょう。
+                        <i class="fas fa-quote-right text-purple-700 ml-2"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    </div> <!-- content-wrapper終了 -->
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 8</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+
+        // インジケーターの初期化
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        // スライド表示更新
+        function updateSlideDisplay() {
+            // すべてのスライドを非表示
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // 現在のスライドを表示
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            
+            // スライド番号更新
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            // ボタンの有効/無効
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            // インジケーター更新
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+            
+            // 目次の更新
+            document.querySelectorAll('.toc-item').forEach((item, index) => {
+                item.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        // 次のスライド
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        // 前のスライド
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        // 特定のスライドへ移動
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        // キーボードナビゲーション
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+            if (e.key === 'Escape' && document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        });
+
+        // 全画面表示切り替え
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.querySelector('.fullscreen-btn').innerHTML = '<i class="fas fa-compress"></i> 通常表示';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    document.querySelector('.fullscreen-btn').innerHTML = '<i class="fas fa-expand"></i> 全画面表示';
+                }
+            }
+        }
+
+        // サイドバー表示切り替え
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const contentWrapper = document.querySelector('.content-wrapper');
+            const toggleBtn = document.querySelector('.sidebar-toggle');
+            
+            sidebar.classList.toggle('hidden');
+            contentWrapper.classList.toggle('full-width');
+            
+            if (sidebar.classList.contains('hidden')) {
+                toggleBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            } else {
+                toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+
+        // スワイプ対応（タッチデバイス）
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) previousSlide();
+        }
+
+        // 初期化
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

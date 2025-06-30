@@ -1,0 +1,433 @@
+{
+  "slides": [
+    {
+      "slide": 1,
+      "title": "Gemini CLI vs Claude Code",
+      "subtitle": "AIコーディングアシスタント徹底比較",
+      "description": "開発者の生産性を革新する最新AIツールの比較分析",
+      "date": "作成日: 2025年6月26日",
+      "layout": {
+        "width": 1280,
+        "height": 720,
+        "backgroundColor": "#FFFFFF",
+        "accentColor": "#8A2BE2",
+        "padding": {
+          "top": 80,
+          "right": 80,
+          "bottom": 64,
+          "left": 80
+        }
+      },
+      "elements": [
+        {
+          "type": "rectangle",
+          "name": "Purple Accent Bar",
+          "x": 0,
+          "y": 200,
+          "width": 1280,
+          "height": 4,
+          "fill": "#8A2BE2"
+        },
+        {
+          "type": "text",
+          "name": "Main Title",
+          "x": 80,
+          "y": 280,
+          "fontSize": 60,
+          "fontWeight": "bold",
+          "color": "#1A1A1A",
+          "text": "Gemini CLI vs Claude Code"
+        },
+        {
+          "type": "text",
+          "name": "Subtitle",
+          "x": 80,
+          "y": 360,
+          "fontSize": 48,
+          "fontWeight": "bold",
+          "color": "#8A2BE2",
+          "text": "AIコーディングアシスタント徹底比較"
+        }
+      ]
+    },
+    {
+      "slide": 2,
+      "title": "エグゼクティブサマリー",
+      "layout": {
+        "width": 1280,
+        "height": 720,
+        "backgroundColor": "#FFFFFF"
+      },
+      "sections": [
+        {
+          "title": "価格競争力",
+          "icon": "chart-line",
+          "content": [
+            "Gemini CLI: 完全無料 1日1,000リクエスト",
+            "Claude Code: 有料のみ 最低$20/月〜"
+          ]
+        },
+        {
+          "title": "技術的優位性",
+          "icon": "microchip",
+          "content": [
+            "コンテキストウィンドウ: Gemini CLI 100万トークン vs Claude Code 20万トークン",
+            "オープンソース: Gemini CLI Apache 2.0ライセンス"
+          ]
+        },
+        {
+          "title": "エンタープライズ機能",
+          "icon": "building",
+          "content": [
+            "Claude Code: 高度なセキュリティ、チーム管理、GitHub/GitLab統合",
+            "Gemini CLI: オープンソースの柔軟性とカスタマイズ性"
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 3,
+      "title": "基本仕様比較",
+      "layout": {
+        "width": 1280,
+        "height": 720,
+        "backgroundColor": "#FFFFFF"
+      },
+      "table": {
+        "headers": ["機能", "Gemini CLI", "Claude Code"],
+        "rows": [
+          ["提供元", "Google", "Anthropic"],
+          ["リリース形態", "オープンソース（Apache 2.0）", "プロプライエタリ"],
+          ["使用モデル", "Gemini 2.5 Pro", "Claude Opus 4, Sonnet 4, Haiku 3.5"],
+          ["コンテキストウィンドウ", "100万トークン", "20万トークン"],
+          ["プラットフォーム", "Mac, Linux, Windows（ネイティブ）", "Mac, Linux, Windows（WSL）"],
+          ["価格", "無料 60 RPM, 1000/日", "有料 Pro: $20/月, Max: $200/月"],
+          ["主な統合", "Google検索、MCP、Deep Research", "GitHub、GitLab、VS Code"],
+          ["セキュリティ", "サンドボックス（Seatbelt/Docker）", "エンタープライズグレード"]
+        ]
+      }
+    },
+    {
+      "slide": 4,
+      "title": "価格分析",
+      "sections": [
+        {
+          "title": "価格モデル比較",
+          "geminiCLI": {
+            "badge": "完全無料",
+            "features": [
+              "1日あたり1,000リクエスト",
+              "分間60リクエスト（RPM）",
+              "追加費用なし",
+              "機能制限なし"
+            ]
+          },
+          "claudeCode": {
+            "badge": "有料のみ",
+            "plans": [
+              {
+                "name": "Pro プラン",
+                "price": "$20/月",
+                "features": ["5倍のメッセージ量", "Claude Opus 4へのアクセス"]
+              },
+              {
+                "name": "Max プラン",
+                "price": "$200/月",
+                "features": ["10倍のメッセージ量", "全モデルへの完全アクセス"]
+              }
+            ]
+          }
+        },
+        {
+          "title": "年間コスト比較",
+          "comparisons": [
+            {
+              "userType": "個人開発者（1人）",
+              "geminiCost": "$0",
+              "claudeCost": "$240"
+            },
+            {
+              "userType": "スタートアップ（5人）",
+              "geminiCost": "$0",
+              "claudeCost": "$1,200"
+            },
+            {
+              "userType": "エンタープライズ（50人）",
+              "geminiCost": "$0",
+              "claudeCost": "$120,000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 5,
+      "title": "機能比較",
+      "categories": [
+        {
+          "title": "コード理解と編集",
+          "icon": "code",
+          "geminiFeatures": [
+            "自然言語によるコード理解",
+            "Google検索統合でリアルタイム情報",
+            "MCPによる拡張機能"
+          ],
+          "claudeFeatures": [
+            "エージェント型プロジェクト分析",
+            "Git履歴の検索とマージ解決",
+            "自動テスト実行と修正"
+          ]
+        },
+        {
+          "title": "開発ワークフロー統合",
+          "icon": "cogs",
+          "geminiFeatures": [
+            "ターミナルベースの操作",
+            "Deep Researchによる調査機能",
+            "カスタムプロンプト設定"
+          ],
+          "claudeFeatures": [
+            "GitHub/GitLab深い統合",
+            "自動PR作成とレビュー",
+            "VS Code統合"
+          ]
+        },
+        {
+          "title": "セキュリティ",
+          "icon": "shield-alt",
+          "geminiFeatures": [
+            "アクション承認プロンプト",
+            "サンドボックス実行環境",
+            "オープンソースで監査可能"
+          ],
+          "claudeFeatures": [
+            "エンタープライズグレード",
+            "プロンプトインジェクション防止",
+            "組織向けユーザー管理"
+          ]
+        },
+        {
+          "title": "エンタープライズ機能",
+          "icon": "building",
+          "geminiFeatures": [
+            "完全なカスタマイズ性",
+            "Vertex AI経由の利用可能",
+            "チーム管理機能なし"
+          ],
+          "claudeFeatures": [
+            "組織向けロール管理",
+            "Amazon Bedrock/Vertex AI統合",
+            "コンプライアンス対応"
+          ]
+        }
+      ]
+    },
+    {
+      "slide": 6,
+      "title": "ユースケース別推奨",
+      "recommendations": [
+        {
+          "userType": "個人開発者・学習者",
+          "icon": "user",
+          "recommended": "Gemini CLI",
+          "reasons": [
+            "完全無料で利用開始可能",
+            "1日1,000リクエストの十分な無料枠",
+            "オープンソースによる学習機会",
+            "カスタマイズ・拡張の自由度"
+          ],
+          "savings": "年間節約額: $240〜$2,400"
+        },
+        {
+          "userType": "スタートアップ",
+          "icon": "rocket",
+          "recommended": "Gemini CLI（初期）",
+          "reasons": [
+            "キャッシュフロー改善",
+            "必要に応じて従量課金へ移行可能",
+            "MCPによる拡張性",
+            "Google検索統合でリアルタイム情報"
+          ],
+          "note": "成長に応じてClaude Codeへの移行も検討"
+        },
+        {
+          "userType": "エンタープライズ",
+          "icon": "building",
+          "recommended": "要件に応じて選択",
+          "claudeCodeReasons": [
+            "セキュリティ要件が高い",
+            "チーム管理機能が必要",
+            "GitHub/GitLab統合必須"
+          ],
+          "geminiReasons": [
+            "大幅なコスト削減",
+            "カスタマイズ性重視",
+            "ベンダーロックイン回避"
+          ]
+        },
+        {
+          "userType": "オープンソースプロジェクト",
+          "icon": "code-branch",
+          "recommended": "Gemini CLI",
+          "reasons": [
+            "オープンソースの理念に合致",
+            "コミュニティ貢献の機会",
+            "透明性の高い開発",
+            "無料での継続的利用"
+          ]
+        }
+      ],
+      "decisionFlow": {
+        "title": "意思決定フローチャート",
+        "steps": [
+          {
+            "question": "予算はあるか？",
+            "no": "Gemini CLI",
+            "yes": "次へ"
+          },
+          {
+            "question": "エンタープライズ機能は必要か？",
+            "no": "Gemini CLI",
+            "yes": "次へ"
+          },
+          {
+            "question": "GitHub/GitLab統合は必須か？",
+            "yes": "Claude Code",
+            "no": "Gemini CLI"
+          }
+        ]
+      }
+    },
+    {
+      "slide": 7,
+      "title": "市場への影響と将来展望",
+      "sections": [
+        {
+          "title": "Gemini CLI参入による市場変革",
+          "impacts": [
+            {
+              "title": "価格破壊",
+              "description": "無料で高品質なツールが市場標準を変え、有料ツールは付加価値の再定義が必要に"
+            },
+            {
+              "title": "競争激化",
+              "description": "機能面での差別化が必須となり、イノベーションが加速"
+            },
+            {
+              "title": "市場の民主化",
+              "description": "個人開発者・教育機関・発展途上国でのAI活用が拡大"
+            }
+          ]
+        },
+        {
+          "title": "技術トレンド予測",
+          "shortTerm": {
+            "period": "1-2年",
+            "predictions": [
+              "コンテキスト: 100万→1000万トークン",
+              "マルチモーダル対応（コード+画像+音声）",
+              "リアルタイム協調作業の実現"
+            ]
+          },
+          "midTerm": {
+            "period": "3-5年",
+            "predictions": [
+              "AIエージェントによる自律的開発",
+              "自然言語プログラミングの主流化",
+              "予測的バグ修正とコード最適化"
+            ]
+          }
+        },
+        {
+          "title": "市場規模と開発者への影響",
+          "marketGrowth": "2025年 $2.5B → 2030年 $15B+（年間成長率 40-50%）",
+          "developerImpact": "生産性30-50%向上、役割は実装から設計・問題解決へシフト",
+          "growthMultiplier": "6X"
+        }
+      ]
+    },
+    {
+      "slide": 8,
+      "title": "まとめと推奨事項",
+      "conclusions": {
+        "costEfficiency": "Gemini CLIの無料提供は、多くの開発者にとって十分な機能を提供し、年間数百〜数千ドルの節約を実現します。",
+        "functionality": "Claude Codeはエンタープライズ向け機能で優位ですが、Gemini CLIの100万トークンコンテキストは技術的に圧倒的です。"
+      },
+      "finalRecommendations": [
+        {
+          "userType": "個人開発者",
+          "tool": "Gemini CLI",
+          "reason": "無料で全機能利用可能"
+        },
+        {
+          "userType": "スタートアップ",
+          "tool": "Gemini CLI",
+          "reason": "コスト効率を重視"
+        },
+        {
+          "userType": "エンタープライズ",
+          "tool": "要件次第",
+          "reason": "セキュリティ重視ならClaude Code"
+        }
+      ],
+      "actionItems": {
+        "immediate": [
+          "Gemini CLIで無料で開始",
+          "プロジェクトで実際に活用",
+          "生産性向上を測定",
+          "必要に応じてツールを再評価"
+        ],
+        "future": [
+          "AIツール活用スキルの習得",
+          "プロンプトエンジニアリングの学習",
+          "チーム内での知見共有",
+          "最新動向の継続的キャッチアップ"
+        ]
+      },
+      "closingMessage": "AIコーディングアシスタントは開発者のパートナーです。適切なツールを選択し、創造性を解放して、より高次の問題解決に注力しましょう。"
+    }
+  ],
+  "designSystem": {
+    "colors": {
+      "primary": "#8A2BE2",
+      "secondary": "#D8BFD8",
+      "background": "#FFFFFF",
+      "text": {
+        "primary": "#1A1A1A",
+        "secondary": "#666666",
+        "accent": "#8A2BE2"
+      },
+      "status": {
+        "success": "#22C55E",
+        "error": "#E53E3E",
+        "info": "#3B82F6"
+      }
+    },
+    "typography": {
+      "fonts": {
+        "primary": "Hiragino Sans, Meiryo, sans-serif"
+      },
+      "sizes": {
+        "h1": 48,
+        "h2": 36,
+        "h3": 24,
+        "body": 16,
+        "small": 14
+      }
+    },
+    "spacing": {
+      "xs": 4,
+      "sm": 8,
+      "md": 16,
+      "lg": 24,
+      "xl": 32,
+      "xxl": 48
+    },
+    "borderRadius": 8,
+    "shadows": {
+      "small": "0 2px 4px rgba(0,0,0,0.1)",
+      "medium": "0 4px 6px rgba(0,0,0,0.1)",
+      "large": "0 10px 15px rgba(0,0,0,0.1)"
+    }
+  }
+}
