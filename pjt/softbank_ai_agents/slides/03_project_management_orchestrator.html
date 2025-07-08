@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全自動プロジェクト管理オーケストレーター</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .data-item {
+            margin-bottom: 25px;
+            padding-left: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">全自動プロジェクト管理</h1>
+                <h2 class="text-4xl font-bold text-green-800">オーケストレーター</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-tasks mr-3 text-green-700"></i>
+                F1のピットクルーのように連携するAIチーム
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと概要 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 完全自動化されたプロジェクト運営</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-8" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <div class="data-item flex items-start">
+                    <div class="icon-circle">
+                        <i class="fas fa-magic text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold mb-2">シンプルな開始方法</div>
+                        <div class="feature-box">
+                            <p class="text-sm mb-2"><i class="fas fa-quote-left text-green-700 mr-2"></i>
+                            「3ヶ月で新型スマートウォッチを開発したい」</p>
+                            <p class="text-sm">と入力するだけで、AIが過去1万件のプロジェクトを分析し、最適な計画を自動生成</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-item flex items-start mt-6">
+                    <div class="icon-circle">
+                        <i class="fas fa-robot text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold mb-2">専門AIチームの役割分担</div>
+                        <ul class="list-disc ml-5 text-gray-700 text-sm">
+                            <li><span class="font-semibold">プロジェクト設計AI</span>: WBS自動生成、工程最適化</li>
+                            <li><span class="font-semibold">リソース配分AI</span>: スキルマッチング、負荷平準化</li>
+                            <li><span class="font-semibold">リスク予測AI</span>: 500項目チェック、対策自動実装</li>
+                            <li><span class="font-semibold">進捗モニタリングAI</span>: リアルタイム追跡、異常検知</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-sitemap text-green-700 mr-3"></i>
+                    マルチエージェントアーキテクチャ
+                </h2>
+                
+                <div class="segment-box mb-3">
+                    <div class="flex items-start">
+                        <div class="icon-circle flex-shrink-0">
+                            <i class="fas fa-crown text-green-700"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="font-bold">オーケストレーターAI</h3>
+                            <p class="text-sm text-gray-600">全体統括・各専門AIへの指示</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div class="segment-box bg-white">
+                        <h4 class="font-semibold text-green-700 text-sm mb-1">計画AI</h4>
+                        <p class="text-xs text-gray-600">要件分析・スケジューリング</p>
+                    </div>
+                    <div class="segment-box bg-white">
+                        <h4 class="font-semibold text-green-700 text-sm mb-1">リソースAI</h4>
+                        <p class="text-xs text-gray-600">人員配置・スキル最適化</p>
+                    </div>
+                    <div class="segment-box bg-white">
+                        <h4 class="font-semibold text-green-700 text-sm mb-1">品質AI</h4>
+                        <p class="text-xs text-gray-600">品質基準・レビュー管理</p>
+                    </div>
+                    <div class="segment-box bg-white">
+                        <h4 class="font-semibold text-green-700 text-sm mb-1">リスクAI</h4>
+                        <p class="text-xs text-gray-600">リスク分析・対策立案</p>
+                    </div>
+                </div>
+
+                <div class="segment-box bg-green-50">
+                    <h3 class="font-bold text-green-700 mb-2">データ基盤</h3>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-600">過去プロジェクト数</p>
+                            <p class="font-bold">10万件</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">KPI監視数</p>
+                            <p class="font-bold">50個</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 主要機能と処理能力 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">主要機能と処理能力</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-4 gap-3 mb-6">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-bullseye text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">スキルマッチング</h3>
+                    <div class="highlight-number-medium">99%</div>
+                    <p class="text-xs text-gray-600">精度</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-exclamation-triangle text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">リスク早期発見</h3>
+                    <div class="highlight-number-medium">2週間前</div>
+                    <p class="text-xs text-gray-600">検知</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-calendar-check text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">完了日予測</h3>
+                    <div class="highlight-number-medium">95%</div>
+                    <p class="text-xs text-gray-600">精度</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-tachometer-alt text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">意思決定速度</h3>
+                    <div class="highlight-number-medium">5倍</div>
+                    <p class="text-xs text-gray-600">向上</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-cogs text-green-700 mr-3"></i>
+                        自動化機能の詳細
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">プロジェクト設計AI</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>自然言語要望を<span class="highlight-text">SMART目標</span>に変換</li>
+                            <li>過去データから最適な<span class="highlight-text">WBS自動生成</span></li>
+                            <li>PERT/CPM分析で<span class="highlight-text">クリティカルパス</span>特定</li>
+                            <li>不確実性考慮の<span class="highlight-text">バッファ自動配置</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">リスク予測・対策AI</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li><span class="highlight-text">500項目</span>のリスクを0.1秒で確認</li>
+                            <li>モンテカルロ法で<span class="highlight-text">10万シナリオ</span>分析</li>
+                            <li>予防策を自動で計画に組み込み</li>
+                            <li>リスク顕在化を<span class="highlight-text">2週間前</span>に警告</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-link text-green-700 mr-3"></i>
+                        エコシステム連携
+                    </h2>
+                    
+                    <div class="segment-box bg-gray-50 mb-4">
+                        <h3 class="font-bold text-green-700 mb-2">プロジェクト管理ツール</h3>
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                            <div class="performance-item">
+                                <i class="fas fa-check text-green-700 mr-1"></i>
+                                <span>Jira</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-check text-green-700 mr-1"></i>
+                                <span>Asana</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-check text-green-700 mr-1"></i>
+                                <span>Monday.com</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-check text-green-700 mr-1"></i>
+                                <span>MS Project</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="segment-box bg-gray-50">
+                        <h3 class="font-bold text-green-700 mb-2">開発・コミュニケーション</h3>
+                        <div class="text-sm">
+                            <div class="performance-item">
+                                <i class="fas fa-code-branch text-green-700 mr-2"></i>
+                                <span>GitHub/GitLab連携で開発進捗を自動取得</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-comments text-green-700 mr-2"></i>
+                                <span>Slack/Teams連携で会議設定・議事録作成</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-chart-bar text-green-700 mr-2"></i>
+                                <span>BI連携で経営ダッシュボードに反映</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 成功指標とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">成功指標と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-10 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-trophy text-green-700 mr-3"></i>
+                    プロジェクト成功率の飛躍的向上
+                </h2>
+
+                <div class="segment-box mb-4">
+                    <h3 class="font-bold text-green-700 mb-2">成功指標の改善</h3>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-calendar-check text-green-700 mr-2"></i>
+                            <span>納期遵守率: <span class="negative">65%</span>→<span class="positive">99%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-yen-sign text-green-700 mr-2"></i>
+                            <span>予算遵守率: <span class="negative">70%</span>→<span class="positive">95%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-medal text-green-700 mr-2"></i>
+                            <span>品質目標達成: <span class="negative">75%</span>→<span class="positive">98%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-smile text-green-700 mr-2"></i>
+                            <span>顧客満足度: <span class="negative">80%</span>→<span class="positive">95%</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-4">
+                    <h3 class="font-bold text-green-700 mb-2">効率性の改善</h3>
+                    <div class="text-sm">
+                        <div class="performance-item mb-2">
+                            <i class="fas fa-user-tie text-green-700 mr-2"></i>
+                            <span>PM工数: <span class="highlight-text">90%削減</span>（戦略的判断に集中）</span>
+                        </div>
+                        <div class="performance-item mb-2">
+                            <i class="fas fa-clock text-green-700 mr-2"></i>
+                            <span>会議時間: <span class="highlight-text">75%削減</span></span>
+                        </div>
+                        <div class="performance-item mb-2">
+                            <i class="fas fa-file-alt text-green-700 mr-2"></i>
+                            <span>報告書作成: <span class="highlight-text">95%削減</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">リスク管理の強化</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-search text-green-700 mr-2"></i>
+                            <span>早期発見率: <span class="highlight-text">95%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-shield-alt text-green-700 mr-2"></i>
+                            <span>リスク顕在化: <span class="negative">50%</span>→<span class="positive">5%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-compress-alt text-green-700 mr-2"></i>
+                            <span>被害額: <span class="highlight-text">80%削減</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-6 rounded-lg">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-yen-sign text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>システム開発</span>
+                            <span>60億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>既存システム統合</span>
+                            <span>25億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>導入・教育</span>
+                            <span>15億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">100億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>プロジェクト失敗損失回避</span>
+                            <span>300億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>PM人件費の価値創造シフト</span>
+                            <span>150億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>納期短縮による機会利益</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>品質向上による手戻り削減</span>
+                            <span>100億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">750億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-4 rounded-lg text-center">
+                    <p class="text-2xl font-bold text-green-800">ROI: 35倍</p>
+                    <p class="text-sm text-gray-700">5年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-2">投資回収期間：5ヶ月</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※AIは支援ツールであり、最終責任は人間のPMが持つ。心理的安全性を確保し、支援として機能</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

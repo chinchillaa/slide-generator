@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI予測型オーバーツーリズム解消システム</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .data-item {
+            margin-bottom: 25px;
+            padding-left: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .example-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .price-tag {
+            display: inline-block;
+            background-color: #fef3c7;
+            color: #92400e;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+        .price-tag.high {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .price-tag.low {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">AI予測型</h1>
+                <h2 class="text-4xl font-bold text-green-800">オーバーツーリズム解消システム</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-chart-area mr-3 text-green-700"></i>
+                1万体のAIが観光客の動きを予測し、持続可能な観光を実現
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと具体例 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 観光と日常生活の調和を実現</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="example-box">
+                <h3 class="font-bold text-green-700 mb-3 flex items-center">
+                    <i class="fas fa-torii-gate mr-2"></i>
+                    ゴールデンウィークの鎌倉での実現例
+                </h3>
+                <div class="text-sm space-y-2">
+                    <p><i class="fas fa-chart-line text-green-600 mr-2"></i>
+                    1週間前から<span class="highlight-text">予約・交通・SNSデータ</span>を分析して混雑を95%精度で予測</p>
+                    <p><i class="fas fa-yen-sign text-green-600 mr-2"></i>
+                    動的価格調整：通常<span class="price-tag">500円</span> → ピーク時<span class="price-tag high">2000円</span>、早朝<span class="price-tag low">300円</span></p>
+                    <p><i class="fas fa-map-marked-alt text-green-600 mr-2"></i>
+                    混雑時は<span class="highlight-text">北鎌倉・長谷の魅力的な代替スポット</span>をプッシュ通知</p>
+                    <p><i class="fas fa-users text-green-600 mr-2"></i>
+                    結果：ピーク時の人出を<span class="highlight-text">50%削減</span>しつつ満足度は維持</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-robot text-green-700 mr-3"></i>
+                        1万体のAI群の役割分担
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">観光客流動予測AI</span>
+                                <span class="highlight-text">3000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">交通・宿泊・検索データから15分単位で人流予測</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">動的価格調整AI</span>
+                                <span class="highlight-text">2000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">需要に応じて10分ごとに最適価格を自動計算</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">代替ルート提案AI</span>
+                                <span class="highlight-text">2500体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">個人の興味に合わせた満足度90%以上の代替地提案</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">地元調整AI</span>
+                                <span class="highlight-text">1500体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">住民生活への影響を最小化する動的制御</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">環境モニタリングAI</span>
+                                <span class="highlight-text">1000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">CO2・騒音・ゴミを1000箇所でリアルタイム監視</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-balance-scale text-green-700 mr-3"></i>
+                        実現する価値
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg" style="display: flex; flex-direction: column;">
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">観光客への価値</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-clock text-green-600 mr-1"></i>待ち時間：<span class="negative">60分</span>→<span class="positive">12分</span>（80%短縮）</li>
+                                <li><i class="fas fa-star text-green-600 mr-1"></i>満足度：3.5→<span class="highlight-text">4.5</span>（5段階評価）</li>
+                                <li><i class="fas fa-map text-green-600 mr-1"></i>新たな発見：隠れた名所との出会い</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">地元住民への価値</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-home text-green-600 mr-1"></i>生活道路の観光客制限で快適な日常</li>
+                                <li><i class="fas fa-thumbs-up text-green-600 mr-1"></i>観光への好感度：<span class="negative">40%</span>→<span class="positive">75%</span></li>
+                                <li><i class="fas fa-shield-alt text-green-600 mr-1"></i>騒音・ゴミ問題の大幅改善</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-100 p-2 rounded text-center" style="flex: 0 0 auto; margin: 0;">
+                            <p class="text-base font-bold text-green-800">混雑度削減</p>
+                            <p class="text-2xl font-bold text-green-700">50%減</p>
+                            <p class="text-xs text-gray-600">ピーク時の人流密度</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 技術アーキテクチャと機能 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">予測システムと制御メカニズム</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-bullseye text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">予測精度</h3>
+                    <div class="highlight-number-medium">95%</div>
+                    <p class="text-xs text-gray-600">1週間前予測</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-server text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">処理能力</h3>
+                    <div class="highlight-number-medium">100万</div>
+                    <p class="text-xs text-gray-600">イベント/秒</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-sensor text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">センサー数</h3>
+                    <div class="highlight-number-medium">1000箇所</div>
+                    <p class="text-xs text-gray-600">リアルタイム監視</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-brain text-green-700 mr-3"></i>
+                        予測データソースと分析
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">リアルタイム収集データ</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li><span class="highlight-text">航空・新幹線・高速道路</span>の予約データ</li>
+                            <li><span class="highlight-text">Google検索トレンド</span>と<span class="highlight-text">SNS投稿数</span></li>
+                            <li><span class="highlight-text">気象予報</span>と過去10年の相関データ</li>
+                            <li>大規模イベント（祭り・コンサート）情報</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">動的価格メカニズム</h3>
+                        <div class="text-sm space-y-2">
+                            <p><i class="fas fa-clock text-green-600 mr-2"></i>
+                            <span class="highlight-text">10分ごと</span>に需要予測から最適価格を計算</p>
+                            <p><i class="fas fa-tags text-green-600 mr-2"></i>
+                            早期予約・時間帯・グループ・地元割引を組合せ</p>
+                            <p><i class="fas fa-chart-line text-green-600 mr-2"></i>
+                            収益最大化と混雑緩和のバランスをAI最適化</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-network-wired text-green-700 mr-3"></i>
+                        センサーネットワークと制御
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="segment-box bg-white mb-3">
+                            <h3 class="font-bold text-green-700 mb-2 text-sm">人流センサー</h3>
+                            <div class="text-xs space-y-1">
+                                <p><i class="fas fa-camera text-green-600 mr-1"></i>赤外線・画像認識で混雑度を測定</p>
+                                <p><i class="fas fa-wifi text-green-600 mr-1"></i>Wi-Fi/Bluetoothビーコンで動線追跡</p>
+                                <p><i class="fas fa-mobile-alt text-green-600 mr-1"></i>スマホアプリと連携した位置情報</p>
+                            </div>
+                        </div>
+
+                        <div class="segment-box bg-white mb-3">
+                            <h3 class="font-bold text-green-700 mb-2 text-sm">環境センサー</h3>
+                            <div class="text-xs space-y-1">
+                                <p><i class="fas fa-smog text-green-600 mr-1"></i>CO2濃度・大気質をリアルタイム測定</p>
+                                <p><i class="fas fa-volume-up text-green-600 mr-1"></i>騒音レベルを24時間監視</p>
+                                <p><i class="fas fa-trash text-green-600 mr-1"></i>ゴミ箱満杯度をIoTで把握</p>
+                            </div>
+                        </div>
+
+                        <div class="segment-box bg-white">
+                            <h3 class="font-bold text-green-700 mb-2 text-sm">代替ルート提案システム</h3>
+                            <div class="text-xs">
+                                <p><i class="fas fa-user text-green-600 mr-1"></i>個人の興味をプロファイリング</p>
+                                <p><i class="fas fa-route text-green-600 mr-1"></i>混雑度80%超で<span class="highlight-text">3つの代替地</span>を提案</p>
+                                <p><i class="fas fa-gift text-green-600 mr-1"></i>提案受入でポイント付与</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-seedling text-green-700 mr-3"></i>
+                    持続可能な観光の実現
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（6ヶ月）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-users text-green-700 mr-2"></i>
+                            <span>ピーク時混雑度: <span class="highlight-text">50%削減</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-clock text-green-700 mr-2"></i>
+                            <span>平均待ち時間: <span class="highlight-text">80%短縮</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-car text-green-700 mr-2"></i>
+                            <span>交通渋滞: <span class="highlight-text">30%減少</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（2年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-heart text-green-700 mr-2"></i>
+                            <span>住民好感度: <span class="negative">40%</span>→<span class="positive">75%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-leaf text-green-700 mr-2"></i>
+                            <span>CO2排出: <span class="highlight-text">25%減</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-chart-line text-green-700 mr-2"></i>
+                            <span>事業者収益: <span class="highlight-text">20%向上</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（5年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-award text-green-700 mr-2"></i>
+                            <span>UNESCO持続可能観光地認証取得</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-map-marked text-green-700 mr-2"></i>
+                            <span>地方観光地: <span class="highlight-text">30%増加</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-globe text-green-700 mr-2"></i>
+                            <span>世界の持続可能観光地<span class="highlight-text">TOP10入り</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg" style="display: flex; flex-direction: column;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-yen-sign text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>システム開発</span>
+                            <span>80億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>センサー設置（1000箇所）</span>
+                            <span>50億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>データ基盤構築</span>
+                            <span>30億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>自治体連携・調整</span>
+                            <span>20億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">180億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>システム利用料（事業者）</span>
+                            <span>120億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>データ分析サービス</span>
+                            <span>60億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>動的価格調整による増収</span>
+                            <span>80億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>環境価値クレジット</span>
+                            <span>20億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">280億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="flex: 0 0 auto; margin: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 4.7倍</p>
+                    <p class="text-sm text-gray-700">3年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">初年度で黒字化達成</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※プライバシー保護：個人を特定できない形でのデータ収集、オプトアウト権利を保証</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>組織知識グラフAIによる暗黙知の完全可視化システム</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .graph-node {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.2);
+            border: 2px solid #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .data-item {
+            margin-bottom: 25px;
+            padding-left: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">組織知識グラフAIによる</h1>
+                <h2 class="text-4xl font-bold text-green-800">暗黙知の完全可視化システム</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-network-wired mr-3 text-green-700"></i>
+                「知っていれば防げたはずの失敗」をゼロに
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトとシステム概要 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 組織の集合知を完全活用</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-8" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <div class="data-item flex items-start">
+                    <div class="icon-circle">
+                        <i class="fas fa-brain text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold mb-2">暗黙知の抽出と可視化</div>
+                        <p class="text-gray-700 mb-2">全メール、チャット、会議録音、ドキュメントから組織の知識を自動抽出</p>
+                        <div class="feature-box">
+                            <p class="text-sm"><i class="fas fa-lightbulb text-green-700 mr-2"></i>
+                            例：3年前に別部門が解決済みの技術課題を瞬時に発見し、現状に合わせた改良案まで提案</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-item flex items-start mt-6">
+                    <div class="icon-circle">
+                        <i class="fas fa-users text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold mb-2">知識抽出AI群（1万体）</div>
+                        <ul class="list-disc ml-5 text-gray-700 text-sm">
+                            <li>言語処理AI（5000体）：20言語対応</li>
+                            <li>音声解析AI（2000体）：会議録音を自動要約</li>
+                            <li>画像認識AI（2000体）：図面・グラフから情報抽出</li>
+                            <li>関係推論AI（1000体）：隠れた関係性を推測</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg" style="max-width: 100%;">
+                <h2 class="text-lg font-bold mb-3 flex items-center">
+                    <i class="fas fa-project-diagram text-green-700 mr-2"></i>
+                    <span>知識グラフの構成要素</span>
+                </h2>
+                
+                <div class="mb-3">
+                    <h3 class="font-bold text-green-700 mb-2 text-sm">ノード種別</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="text-center">
+                            <div class="graph-node mx-auto mb-1" style="width: 40px; height: 40px;">
+                                <i class="fas fa-user text-xs"></i>
+                            </div>
+                            <p class="text-xs">人物</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="graph-node mx-auto mb-1" style="width: 40px; height: 40px;">
+                                <i class="fas fa-folder text-xs"></i>
+                            </div>
+                            <p class="text-xs">プロジェクト</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="graph-node mx-auto mb-1" style="width: 40px; height: 40px;">
+                                <i class="fas fa-cog text-xs"></i>
+                            </div>
+                            <p class="text-xs">技術</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box p-3">
+                    <h3 class="font-bold text-green-700 mb-2 text-sm">グラフ規模</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <p class="text-xs text-gray-600">ノード数</p>
+                            <p class="text-xl font-bold text-green-700">100億</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-600">エッジ数</p>
+                            <p class="text-xl font-bold text-green-700">1兆</p>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <p class="text-xs text-gray-600">日次更新量</p>
+                        <p class="text-sm font-bold text-green-700">1億件/日</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 主要機能と技術仕様 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">主要機能と技術仕様</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="segment-box">
+                    <div class="icon-circle mb-3">
+                        <i class="fas fa-search text-green-700 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 mb-2">専門家推薦</h3>
+                    <p class="text-sm text-gray-600 mb-2">「この技術に詳しい人」を関連度スコア付きで即座に表示</p>
+                    <div class="text-center">
+                        <p class="highlight-number-medium">95%</p>
+                        <p class="text-xs text-gray-600">推薦精度</p>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <div class="icon-circle mb-3">
+                        <i class="fas fa-history text-green-700 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 mb-2">類似事例検索</h3>
+                    <p class="text-sm text-gray-600 mb-2">過去の類似プロジェクトや課題を高精度で発見</p>
+                    <div class="text-center">
+                        <p class="highlight-number-medium">0.5秒</p>
+                        <p class="text-xs text-gray-600">検索速度</p>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <div class="icon-circle mb-3">
+                        <i class="fas fa-chart-line text-green-700 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 mb-2">知識予測</h3>
+                    <p class="text-sm text-gray-600 mb-2">3ヶ月後に必要になる知識を事前に提示</p>
+                    <div class="text-center">
+                        <p class="highlight-number-medium">85%</p>
+                        <p class="text-xs text-gray-600">予測精度</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-database text-green-700 mr-3"></i>
+                        データ処理能力
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <div class="performance-item">
+                            <i class="fas fa-microchip text-green-700 mr-2"></i>
+                            <span>並列処理：<span class="highlight-text">1万体のAI</span>が同時稼働</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-stream text-green-700 mr-2"></i>
+                            <span>ストリーム処理：リアルタイムデータ反映</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-graduation-cap text-green-700 mr-2"></i>
+                            <span>増分学習：新パターンを継続学習</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-language text-green-700 mr-2"></i>
+                            <span>多言語対応：<span class="highlight-text">20言語</span>をネイティブ処理</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">ストレージ仕様</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>分散型グラフDB：<span class="highlight-text">500TB</span></li>
+                            <li>クエリ性能：複雑な探索も<span class="highlight-text">0.5秒以内</span></li>
+                            <li>専門用語辞書：<span class="highlight-text">100万語</span>搭載</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-shield-alt text-green-700 mr-3"></i>
+                        セキュリティとプライバシー
+                    </h2>
+                    
+                    <div class="segment-box bg-gray-50">
+                        <h3 class="font-bold text-green-700 mb-2">アクセス制御</h3>
+                        <div class="performance-item">
+                            <i class="fas fa-key text-green-700 mr-2"></i>
+                            <span>ゼロトラスト認証</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-layer-group text-green-700 mr-2"></i>
+                            <span>5段階の機密度レベル</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-file-contract text-green-700 mr-2"></i>
+                            <span>完全な監査ログ</span>
+                        </div>
+                    </div>
+
+                    <div class="segment-box bg-gray-50 mt-4">
+                        <h3 class="font-bold text-green-700 mb-2">プライバシー保護</h3>
+                        <div class="performance-item">
+                            <i class="fas fa-user-shield text-green-700 mr-2"></i>
+                            <span>個人情報自動マスキング</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-ban text-green-700 mr-2"></i>
+                            <span>オプトアウト権利保証</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-eraser text-green-700 mr-2"></i>
+                            <span>忘れられる権利対応</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 期待効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-10 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-rocket text-green-700 mr-3"></i>
+                    業務効率化効果
+                </h2>
+
+                <div class="segment-box mb-4">
+                    <h3 class="font-bold text-green-700 mb-2">情報探索の効率化</h3>
+                    <div class="performance-item">
+                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                        <span>必要情報の発見時間: <span class="highlight-text">2時間→5分</span>（96%短縮）</span>
+                    </div>
+                    <div class="performance-item">
+                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                        <span>情報の網羅性: <span class="highlight-text">60%→99%</span></span>
+                    </div>
+                    <div class="performance-item">
+                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                        <span>専門家特定精度: <span class="highlight-text">95%以上</span></span>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-4">
+                    <h3 class="font-bold text-green-700 mb-2">ビジネスインパクト</h3>
+                    <div class="performance-item">
+                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                        <span>プロジェクト調査期間: <span class="highlight-text">2週間→2日</span></span>
+                    </div>
+                    <div class="performance-item">
+                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                        <span>重複開発削減: <span class="highlight-text">年間100件</span></span>
+                    </div>
+                    <div class="performance-item">
+                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                        <span>問題解決速度: <span class="highlight-text">80%短縮</span></span>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">イノベーション促進</h3>
+                    <div class="performance-item">
+                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                        <span>異分野知識融合: <span class="highlight-text">年間500件</span></span>
+                    </div>
+                    <div class="performance-item">
+                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                        <span>特許出願数: <span class="highlight-text">30%増加</span></span>
+                    </div>
+                    <div class="performance-item">
+                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                        <span>改善提案数: <span class="highlight-text">10倍増加</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-6 rounded-lg">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-yen-sign text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>AI開発・学習</span>
+                            <span>40億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>グラフDB構築</span>
+                            <span>25億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>データ統合</span>
+                            <span>20億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>セキュリティ対策</span>
+                            <span>15億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">100億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>重複作業削減</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>問題解決迅速化</span>
+                            <span>150億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>イノベーション創出</span>
+                            <span>100億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>知識継承効率化</span>
+                            <span>50億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">500億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-4 rounded-lg text-center">
+                    <p class="text-2xl font-bold text-green-800">ROI: 23倍</p>
+                    <p class="text-sm text-gray-700">5年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-2">投資回収期間：6ヶ月</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※知識の出所と推論過程を常に明示し、人間中心の意思決定を支援</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

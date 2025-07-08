@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI駆動型イノベーション創出プラットフォーム</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .data-item {
+            margin-bottom: 25px;
+            padding-left: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">AI駆動型イノベーション</h1>
+                <h2 class="text-4xl font-bold text-green-800">創出プラットフォーム</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-lightbulb mr-3 text-green-700"></i>
+                24時間365日、革新的ビジネスモデルを自動生成
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと概要 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 無限の創造性を解放</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-8" style="margin-left: 40px; margin-right: 40px; margin-top: 20px;">
+            <div>
+                <div class="data-item flex items-start">
+                    <div class="icon-circle">
+                        <i class="fas fa-rocket text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-lg font-bold mb-2">異分野融合による革新</div>
+                        <div class="feature-box">
+                            <p class="text-sm mb-2"><i class="fas fa-quote-left text-green-700 mr-2"></i>
+                            「高齢化社会」×「量子コンピューティング」×「フードテック」</p>
+                            <p class="text-xs">→ 量子最適化された個別化栄養管理で健康寿命を10年延ばすサービス</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-item flex items-start mt-4">
+                    <div class="icon-circle">
+                        <i class="fas fa-users text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-lg font-bold mb-2">AI群の役割分担</div>
+                        <ul class="list-disc ml-5 text-gray-700 text-sm">
+                            <li><span class="font-semibold">トレンド分析AI（5000体）</span>: 200ヶ国のデータを毎秒10万件処理</li>
+                            <li><span class="font-semibold">アイデア生成AI（1000体）</span>: 100万通りの組み合わせ探索</li>
+                            <li><span class="font-semibold">事業性評価AI（500体）</span>: 市場規模を誤差10%以内で算出</li>
+                            <li><span class="font-semibold">プロトタイプAI（100体）</span>: MVPを自動生成</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-brain text-green-700 mr-3"></i>
+                    創造性エンジン
+                </h2>
+                
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">深層学習モデル</h3>
+                    <div class="performance-item">
+                        <i class="fas fa-microchip text-green-700 mr-2"></i>
+                        <span class="text-sm">GPT-4規模×<span class="highlight-text">100個</span>並列稼働</span>
+                    </div>
+                    <div class="performance-item">
+                        <i class="fas fa-network-wired text-green-700 mr-2"></i>
+                        <span class="text-sm"><span class="highlight-text">1兆ノード</span>の知識グラフ</span>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">処理能力</h3>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                            <p class="text-gray-600">データ収集</p>
+                            <p class="font-bold">1TB/秒</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">アイデア生成</p>
+                            <p class="font-bold">0.1秒/個</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box bg-green-50">
+                    <h3 class="font-bold text-green-700 mb-2">成果指標</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-lightbulb text-green-700 mr-2"></i>
+                            <span>年間<span class="highlight-text">10万個</span>のアイデア生成</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-check-circle text-green-700 mr-2"></i>
+                            <span>事業化可能レベル<span class="highlight-text">30%</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: AI群の詳細機能 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">AI群の詳細機能</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-2 gap-4 mb-5">
+                <div class="segment-box">
+                    <div class="flex items-center mb-3">
+                        <div class="icon-circle">
+                            <i class="fas fa-chart-line text-green-700"></i>
+                        </div>
+                        <h3 class="font-bold text-green-700">トレンド分析AI群（5000体）</h3>
+                    </div>
+                    <ul class="list-disc ml-5 text-sm">
+                        <li>200ヶ国、50言語のニュース・SNS・論文を処理</li>
+                        <li>年間<span class="highlight-text">500万件</span>の新規特許を解析</li>
+                        <li>株価・商品価格から未来需要を推定</li>
+                        <li>各国の法規制変更を監視</li>
+                    </ul>
+                </div>
+
+                <div class="segment-box">
+                    <div class="flex items-center mb-3">
+                        <div class="icon-circle">
+                            <i class="fas fa-lightbulb text-green-700"></i>
+                        </div>
+                        <h3 class="font-bold text-green-700">アイデア生成AI群（1000体）</h3>
+                    </div>
+                    <ul class="list-disc ml-5 text-sm">
+                        <li><span class="highlight-text">100万通り</span>の業界×技術組み合わせ</li>
+                        <li>生物の仕組みからアナロジー思考</li>
+                        <li>既存常識を180度転換する逆転発想</li>
+                        <li>10年後の社会課題を先読み</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="segment-box">
+                    <div class="flex items-center mb-3">
+                        <div class="icon-circle">
+                            <i class="fas fa-calculator text-green-700"></i>
+                        </div>
+                        <h3 class="font-bold text-green-700">事業性評価AI（500体）</h3>
+                    </div>
+                    <div class="text-sm">
+                        <div class="performance-item mb-2">
+                            <i class="fas fa-chart-pie text-green-700 mr-2"></i>
+                            <span>TAM/SAM/SOM算出精度：<span class="highlight-text">誤差10%以内</span></span>
+                        </div>
+                        <div class="performance-item mb-2">
+                            <i class="fas fa-users text-green-700 mr-2"></i>
+                            <span>競合分析：既存・潜在を網羅</span>
+                        </div>
+                        <div class="performance-item mb-2">
+                            <i class="fas fa-cogs text-green-700 mr-2"></i>
+                            <span>技術実現性：成熟度・リスク評価</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-yen-sign text-green-700 mr-2"></i>
+                            <span>財務予測：5年間のP/L・CF算出</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <div class="flex items-center mb-3">
+                        <div class="icon-circle">
+                            <i class="fas fa-laptop-code text-green-700"></i>
+                        </div>
+                        <h3 class="font-bold text-green-700">プロトタイプ生成AI（100体）</h3>
+                    </div>
+                    <div class="text-sm">
+                        <div class="performance-item mb-2">
+                            <i class="fas fa-paint-brush text-green-700 mr-2"></i>
+                            <span>UI/UXデザイン自動生成</span>
+                        </div>
+                        <div class="performance-item mb-2">
+                            <i class="fas fa-sitemap text-green-700 mr-2"></i>
+                            <span>システム設計：DB・API設計</span>
+                        </div>
+                        <div class="performance-item mb-2">
+                            <i class="fas fa-code text-green-700 mr-2"></i>
+                            <span>MVP自動プログラミング</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-vial text-green-700 mr-2"></i>
+                            <span>品質自動検証・テスト</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-green-50 p-3 rounded-lg mt-4">
+                <p class="text-sm"><i class="fas fa-info-circle text-green-700 mr-2"></i>
+                全てのAIが連携し、アイデアの生成から事業計画書作成、プロトタイプ開発まで<span class="font-semibold">完全自動化</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: ビジネスインパクト -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">ビジネスインパクトとROI</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-8 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-chart-bar text-green-700 mr-3"></i>
+                    創出力とビジネス成果
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">アイデア創出力</h3>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                            <p class="text-gray-600">年間生成数</p>
+                            <p class="highlight-number-medium">10万個</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">事業化可能</p>
+                            <p class="highlight-number-medium">3万個</p>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <div class="performance-item">
+                            <i class="fas fa-star text-green-700 mr-2"></i>
+                            <span class="text-sm">新規性80%以上、実現可能性50%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">ビジネスインパクト</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-briefcase text-green-700 mr-2"></i>
+                            <span>新規事業化数：<span class="highlight-text">年間100件</span>（現在の10倍）</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-trophy text-green-700 mr-2"></i>
+                            <span>事業化成功率：<span class="highlight-text">30%</span>（現在の3倍）</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-yen-sign text-green-700 mr-2"></i>
+                            <span>新規事業売上：<span class="highlight-text">5年で1兆円</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">イノベーション指標</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-file-alt text-green-700 mr-2"></i>
+                            <span>特許出願：<span class="highlight-text">年間1000件</span>（5倍）</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-award text-green-700 mr-2"></i>
+                            <span>業界初：<span class="highlight-text">年間50件</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-globe text-green-700 mr-2"></i>
+                            <span>SDGs貢献度：<span class="highlight-text">90点以上</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-yen-sign text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-5">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>AI開発・学習</span>
+                            <span>80億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>データ収集基盤</span>
+                            <span>40億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>計算インフラ</span>
+                            <span>50億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>特許・法務体制</span>
+                            <span>30億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">200億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益（5年目）</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>新規事業売上</span>
+                            <span>2000億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>既存事業革新</span>
+                            <span>500億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>ライセンス収入</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>M&A・EXIT益</span>
+                            <span>300億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">3000億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center">
+                    <p class="text-2xl font-bold text-green-800">ROI: 100倍</p>
+                    <p class="text-sm text-gray-700">10年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">3年で投資回収</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※社会的影響評価と倫理審査を経て、持続可能なイノベーションのみを実現</p>
+        </div>
+    </div>
+
+    <!-- スライド5: エコシステム連携 -->
+    <div class="slide-container" id="slide-5">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">エコシステム連携と倫理的配慮</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-8 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-link text-green-700 mr-3"></i>
+                    エコシステム連携
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">研究機関連携</h3>
+                    <div class="performance-item">
+                        <i class="fas fa-university text-green-700 mr-2"></i>
+                        <span class="text-sm">MIT、Stanford、東大等の最新研究へリアルタイムアクセス</span>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">データベース連携</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-rocket text-green-700 mr-2"></i>
+                            <span>Crunchbase：世界中のスタートアップ動向</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-file-contract text-green-700 mr-2"></i>
+                            <span>Google Patents：技術動向の完全把握</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">投資・政府連携</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-hand-holding-usd text-green-700 mr-2"></i>
+                            <span>VC/CVCネットワーク：即座の投資アレンジ</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-landmark text-green-700 mr-2"></i>
+                            <span>規制サンドボックス：革新的実証の加速</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-shield-alt text-green-700 mr-3"></i>
+                    リスク管理と倫理的配慮
+                </h2>
+
+                <div class="segment-box bg-gray-50 mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">知的財産管理</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-search text-green-700 mr-2"></i>
+                            <span>既存特許の侵害チェック</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-lock text-green-700 mr-2"></i>
+                            <span>アイデアの厳格な秘密保持</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-file-signature text-green-700 mr-2"></i>
+                            <span>特許明細書の自動作成</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box bg-gray-50 mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">倫理的配慮</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-balance-scale text-green-700 mr-2"></i>
+                            <span>社会的影響の多角的評価</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-heart text-green-700 mr-2"></i>
+                            <span>生命倫理・AI倫理の確認</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-globe-americas text-green-700 mr-2"></i>
+                            <span>SDGs貢献度を必須評価</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-users text-green-700 mr-2"></i>
+                            <span>社会的包摂性の確保</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 p-3 rounded-lg">
+                    <p class="text-sm font-semibold text-green-800">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        段階的検証プロセス
+                    </p>
+                    <p class="text-xs mt-1">アイデア→PoC→パイロット→本格展開</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 5</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 5;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

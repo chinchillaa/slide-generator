@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ソフトバンクグループ 10億AIエージェント活用構想 - 全スライド</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .purple-accent {
+            background-color: #8a2be2;
+        }
+        .title-box {
+            border-left: 8px solid #8a2be2;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #8a2be2, #d8bfd8);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #8a2be2;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #8a2be2;
+        }
+        .highlight-number-small {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #8a2be2;
+        }
+        .improvement {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .data-item {
+            margin-bottom: 25px;
+            padding-left: 15px;
+        }
+        .data-subitem {
+            padding-left: 40px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(138, 43, 226, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            height: 100%;
+            position: relative;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(138, 43, 226, 0.1);
+        }
+        .segment-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(138, 43, 226, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-title {
+            color: #8a2be2;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .service-item {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: start;
+        }
+        .highlight-text {
+            color: #8a2be2;
+            font-weight: bold;
+        }
+        
+        /* ナビゲーション */
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.1);
+        }
+        .nav-button {
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #7a1fd2;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #8a2be2;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        /* サイドバー目次 */
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 60vh;
+            overflow-y: auto;
+            z-index: 10;
+            width: 200px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        
+        /* コンテンツラッパー */
+        .content-wrapper {
+            min-height: calc(100vh - 100px);
+            padding-left: 240px;
+            padding-top: 40px;
+            padding-bottom: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* サイドバー非表示時 */
+        .content-wrapper.full-width {
+            padding-left: 0;
+        }
+        
+        /* サイドバートグルボタン */
+        .sidebar-toggle {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 15;
+            transition: all 0.3s ease;
+        }
+        .sidebar-toggle:hover {
+            background-color: #7a1fd2;
+        }
+        .sidebar.hidden {
+            transform: translateX(-100%) translateY(-50%);
+            opacity: 0;
+        }
+        .sidebar-title {
+            font-weight: bold;
+            color: #8a2be2;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .toc-item {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .toc-item:hover {
+            background-color: #f3f4f6;
+            padding-left: 16px;
+        }
+        .toc-item.active {
+            background-color: #8a2be2;
+            color: white;
+        }
+        
+        /* 全画面表示ボタン */
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+        .fullscreen-btn:hover {
+            background-color: #7a1fd2;
+        }
+        
+        /* カテゴリー別カラー */
+        .category-cx {
+            background-color: rgba(255, 107, 107, 0.1);
+            border-left-color: #ff6b6b;
+        }
+        .category-ops {
+            background-color: rgba(78, 205, 196, 0.1);
+            border-left-color: #4ecdc4;
+        }
+        .category-service {
+            background-color: rgba(102, 126, 234, 0.1);
+            border-left-color: #667eea;
+        }
+        .category-data {
+            background-color: rgba(240, 147, 251, 0.1);
+            border-left-color: #f093fb;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .service-card {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .service-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-color: #8a2be2;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .service-detail {
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .impact-box {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .impact-box:hover {
+            transform: scale(1.05);
+        }
+        
+        .impact-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #8a2be2;
+            margin-bottom: 10px;
+        }
+        
+        .impact-label {
+            font-size: 1.1rem;
+            color: #333;
+        }
+        
+        /* 吹き出しスタイル */
+        .dialogue-box {
+            background-color: #f0f4f8;
+            border-left: 4px solid #8a2be2;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .dialogue-box::before {
+            content: '"';
+            font-size: 2rem;
+            color: #8a2be2;
+            position: absolute;
+            top: -10px;
+            left: 10px;
+        }
+        
+        /* ストーリーボックス */
+        .story-box {
+            background: linear-gradient(to right, #f9fafb, #f3f4f6);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .story-title {
+            font-weight: bold;
+            color: #8a2be2;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        /* タイムライン */
+        .timeline-item {
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background-color: #8a2be2;
+            border-radius: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 15px;
+            width: 2px;
+            height: calc(100% + 10px);
+            background-color: #ddd;
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        .time-marker {
+            color: #8a2be2;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        /* Before/After比較 */
+        .compare-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .compare-box {
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .before-box {
+            background-color: #fee;
+            border: 2px solid #fcc;
+        }
+        
+        .after-box {
+            background-color: #efe;
+            border: 2px solid #cfc;
+        }
+        
+        .compare-label {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background-color: white;
+            padding: 0 10px;
+            font-weight: bold;
+        }
+        
+        .before-box .compare-label {
+            color: #e53e3e;
+        }
+        
+        .after-box .compare-label {
+            color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <!-- サイドバートグルボタン -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- 全画面表示ボタン -->
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">
+        <i class="fas fa-expand"></i> 全画面表示
+    </button>
+
+    <!-- サイドバー目次 -->
+    <div class="sidebar">
+        <div class="sidebar-title">目次</div>
+        <div class="toc-item active" onclick="goToSlide(1)">1. タイトル</div>
+        <div class="toc-item" onclick="goToSlide(2)">2. 2030年のビジョン</div>
+        <div class="toc-item" onclick="goToSlide(3)">3. 顧客体験革新</div>
+        <div class="toc-item" onclick="goToSlide(4)">4. 山田さんの1日</div>
+        <div class="toc-item" onclick="goToSlide(5)">5. 業務自動化革命</div>
+        <div class="toc-item" onclick="goToSlide(6)">6. 田中さんの変化</div>
+        <div class="toc-item" onclick="goToSlide(7)">7. 新サービス創出</div>
+        <div class="toc-item" onclick="goToSlide(8)">8. 健康革命の実例</div>
+        <div class="toc-item" onclick="goToSlide(9)">9. データ駆動型経営</div>
+        <div class="toc-item" onclick="goToSlide(10)">10. 社長の朝の革命</div>
+        <div class="toc-item" onclick="goToSlide(11)">11. 総合インパクト</div>
+        <div class="toc-item" onclick="goToSlide(12)">12. 実現への道のり</div>
+    </div>
+
+    <!-- コンテンツラッパー -->
+    <div class="content-wrapper">
+    
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <!-- 紫のアクセントライン -->
+            <div class="purple-accent h-1 w-full mb-10"></div>
+            
+            <!-- タイトルエリア -->
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">ソフトバンクグループ</h1>
+                <h2 class="text-4xl font-bold text-purple-800">10億AIエージェント活用構想</h2>
+            </div>
+            
+            <!-- サブタイトル -->
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-brain mr-3 text-purple-700"></i>
+                2030年、人とAIが創る新しい世界
+            </div>
+            
+            <!-- インパクトメッセージ -->
+            <div class="mt-8 text-lg text-gray-700">
+                <p>これは、SFではない。</p>
+                <p>これは、5年後の現実。</p>
+                <p class="mt-4 font-bold text-purple-800">Welcome to the Future.</p>
+            </div>
+            
+            <!-- 下部のグラデーションライン -->
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: 2030年のビジョン -->
+    <div class="slide-container" id="slide-2">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">2030年、ソフトバンクグループの朝</h1>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <!-- CEOの朝 -->
+            <div class="story-box">
+                <div class="story-title">東京本社、午前7時</div>
+                <div class="dialogue-box">
+                    <strong>AI秘書：</strong>「おはようございます。<br>
+                    昨夜、世界中の10億のAIエージェントが協力して、<br>
+                    新しいビジネスチャンスを3つ発見しました。<br><br>
+                    1. インドで急増する電動バイク需要<br>
+                    2. アフリカでの金融包摂の機会<br>
+                    3. 日本の過疎地での医療問題<br><br>
+                    どれも、今なら先行者利益を獲得できます。」
+                </div>
+            </div>
+            
+            <!-- 現場の風景 -->
+            <div class="grid grid-cols-2 gap-6 mt-6">
+                <div class="story-box">
+                    <div class="story-title">福岡のPayPay加盟店</div>
+                    <p class="mb-2"><strong>店主：</strong>「今月も売上最高記録！」</p>
+                    <div class="dialogue-box">
+                        <strong>AIアドバイザー：</strong>「来週火曜日の14時に、新商品を店頭に出すと売上が更に23%伸びる可能性があります。」
+                    </div>
+                </div>
+                
+                <div class="story-box">
+                    <div class="story-title">ソフトバンクショップ</div>
+                    <p class="mb-2"><strong>来店客：</strong>「スマホの調子が...」</p>
+                    <div class="dialogue-box">
+                        <strong>AI店員：</strong>「原因を特定しました。<br>
+                        1. 今すぐ設定変更で解決（無料）<br>
+                        2. 部品交換で完全修復（30分）<br>
+                        3. 新機種への交換（特別割引）」
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ビジョンメッセージ -->
+            <div class="bg-purple-50 p-6 rounded-lg mt-6 text-center">
+                <p class="text-lg">
+                    <i class="fas fa-quote-left text-purple-700 mr-2"></i>
+                    10億のAIが、100億の人々の幸せを創る
+                    <i class="fas fa-quote-right text-purple-700 ml-2"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 顧客体験革新 -->
+    <div class="slide-container" id="slide-3">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8 category-cx" style="margin-left: 40px; border-left-width: 8px;">
+            <h1 class="text-3xl font-bold">顧客体験革新</h1>
+            <p class="text-lg text-gray-600 mt-2">一人ひとりに寄り添うAI</p>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <!-- 現在の課題 -->
+            <div class="segment-box mb-4 bg-red-50">
+                <h3 class="text-xl font-bold mb-3 text-red-800">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>現在の課題
+                </h3>
+                <ul class="list-disc ml-8 text-gray-700">
+                    <li>お客様センターに電話しても「ただいま大変混み合っております」で20分待ち</li>
+                    <li>過去に同じ説明を何度もしているのに、担当が変わるとまた最初から</li>
+                    <li>「私の状況」を理解してもらうまでに疲れ果てる</li>
+                </ul>
+            </div>
+            
+            <!-- AIが実現する世界 -->
+            <div class="segment-box bg-green-50">
+                <h3 class="text-xl font-bold mb-3 text-green-800">
+                    <i class="fas fa-magic mr-2"></i>AIエージェントが実現する世界
+                </h3>
+                
+                <div class="grid grid-cols-3 gap-4 mt-4">
+                    <div class="text-center">
+                        <div class="icon-circle mx-auto mb-2" style="width: 60px; height: 60px;">
+                            <i class="fas fa-clock text-purple-700 text-2xl"></i>
+                        </div>
+                        <div class="highlight-number-small">0秒</div>
+                        <p class="text-sm">待ち時間</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="icon-circle mx-auto mb-2" style="width: 60px; height: 60px;">
+                            <i class="fas fa-user-shield text-purple-700 text-2xl"></i>
+                        </div>
+                        <div class="highlight-number-small">24/365</div>
+                        <p class="text-sm">専属サポート</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="icon-circle mx-auto mb-2" style="width: 60px; height: 60px;">
+                            <i class="fas fa-heart text-purple-700 text-2xl"></i>
+                        </div>
+                        <div class="highlight-number-small">100%</div>
+                        <p class="text-sm">あなたを理解</p>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <p class="font-bold text-purple-800 mb-2">主な機能：</p>
+                    <ul class="list-disc ml-8 text-gray-700">
+                        <li><strong>ハイパーパーソナライゼーション：</strong>あなただけの秘書が24時間待機</li>
+                        <li><strong>感情理解：</strong>お客様の気持ちに寄り添う対応</li>
+                        <li><strong>予測サポート：</strong>困る前に解決策を提案</li>
+                        <li><strong>コミュニティ連携：</strong>同じ悩みを持つ人とつながる</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 山田さんの1日 -->
+    <div class="slide-container" id="slide-4">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8 category-cx" style="margin-left: 40px; border-left-width: 8px;">
+            <h1 class="text-3xl font-bold">山田太郎さん（45歳・会社員）の1日</h1>
+            <p class="text-lg text-gray-600 mt-2">「私だけの秘書」が変える日常</p>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <!-- タイムライン -->
+            <div class="timeline-item">
+                <span class="time-marker">朝7:00</span>
+                <div class="dialogue-box">
+                    「おはようございます、山田様。<br>
+                    今日の通勤ルートですが、東西線で人身事故が発生しています。<br>
+                    いつもより15分早く出て、都営新宿線経由をお勧めします。<br>
+                    月の交通費がまだ3,000円余裕があるので問題ありません。」
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <span class="time-marker">昼12:30</span>
+                <div class="dialogue-box">
+                    「山田様、来週の娘さんの誕生日プレゼントの件です。<br>
+                    3日前にネットで見ていたピンクのリュック、<br>
+                    近くのイオンに在庫があります。<br>
+                    PayPayで支払えば5%還元もつきますよ。」
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <span class="time-marker">夜19:00</span>
+                <div class="dialogue-box">
+                    「山田様、奥様から『牛乳を買ってきて』とLINEが届いています。<br>
+                    最寄りのセブンイレブンなら、いつも買う明治おいしい牛乳が<br>
+                    賞味期限5日のものがあります。」
+                </div>
+            </div>
+            
+            <!-- 効果まとめ -->
+            <div class="bg-purple-50 p-6 rounded-lg mt-6">
+                <h3 class="text-xl font-bold mb-3 text-purple-800">山田さんの生活はこう変わった</h3>
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <p class="font-bold">ストレス</p>
+                        <p class="text-2xl"><span class="negative">-70%</span></p>
+                    </div>
+                    <div>
+                        <p class="font-bold">自由時間</p>
+                        <p class="text-2xl"><span class="positive">+2時間/日</span></p>
+                    </div>
+                    <div>
+                        <p class="font-bold">家族との時間</p>
+                        <p class="text-2xl"><span class="positive">+50%</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド5: 業務自動化革命 -->
+    <div class="slide-container" id="slide-5">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8 category-ops" style="margin-left: 40px; border-left-width: 8px;">
+            <h1 class="text-3xl font-bold">業務自動化・効率化革命</h1>
+            <p class="text-lg text-gray-600 mt-2">人間の創造性を解放する</p>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <!-- 現在の課題 -->
+            <div class="segment-box mb-4 bg-red-50">
+                <h3 class="text-xl font-bold mb-3 text-red-800">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>現在の課題
+                </h3>
+                <ul class="list-disc ml-8 text-gray-700">
+                    <li>「この承認、なんで3人も必要なの？」でも誰も変えられない</li>
+                    <li>同じミスが違う部署で繰り返される</li>
+                    <li>「効率化」と言いながら、結局エクセルでの手作業</li>
+                    <li>できる人に仕事が集中してパンク</li>
+                </ul>
+            </div>
+            
+            <!-- AIが実現する世界 -->
+            <div class="segment-box bg-green-50">
+                <h3 class="text-xl font-bold mb-3 text-green-800">
+                    <i class="fas fa-magic mr-2"></i>AIエージェントが実現する世界
+                </h3>
+                
+                <div class="grid grid-cols-2 gap-6 mt-4">
+                    <div>
+                        <h4 class="font-bold text-purple-800 mb-2">
+                            <i class="fas fa-robot mr-2"></i>自律的業務最適化
+                        </h4>
+                        <ul class="list-disc ml-6 text-sm">
+                            <li>プロセスの無駄を自動発見・改善</li>
+                            <li>承認フローの動的最適化</li>
+                            <li>ミスの予防的検知と修正</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-purple-800 mb-2">
+                            <i class="fas fa-users-cog mr-2"></i>インテリジェント人材配置
+                        </h4>
+                        <ul class="list-disc ml-6 text-sm">
+                            <li>最適なチーム編成を自動提案</li>
+                            <li>業務負荷の自動バランシング</li>
+                            <li>スキルに応じた仕事の割り振り</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 効果 -->
+                <div class="bg-white p-4 rounded mt-4">
+                    <div class="grid grid-cols-4 gap-4 text-center">
+                        <div>
+                            <div class="highlight-number-small">80%</div>
+                            <p class="text-sm">定型業務削減</p>
+                        </div>
+                        <div>
+                            <div class="highlight-number-small">90%</div>
+                            <p class="text-sm">処理時間短縮</p>
+                        </div>
+                        <div>
+                            <div class="highlight-number-small">99%</div>
+                            <p class="text-sm">エラー削減</p>
+                        </div>
+                        <div>
+                            <div class="highlight-number-small">40%</div>
+                            <p class="text-sm">コスト削減</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド6: 田中さんの変化 -->
+    <div class="slide-container" id="slide-6">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8 category-ops" style="margin-left: 40px; border-left-width: 8px;">
+            <h1 class="text-3xl font-bold">営業事務・田中さんの1日の変化</h1>
+            <p class="text-lg text-gray-600 mt-2">12時間労働から8時間労働へ</p>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <!-- Before/After比較 -->
+            <div class="compare-container">
+                <!-- Before -->
+                <div class="compare-box before-box">
+                    <span class="compare-label">Before（現在）</span>
+                    <h3 class="text-lg font-bold mb-3">朝9時〜夜9時の12時間労働</h3>
+                    <div class="text-sm">
+                        <p><strong>9:00</strong> メールチェック（50通）</p>
+                        <p><strong>10:00</strong> 見積書作成（手入力でミス多発）</p>
+                        <p><strong>11:30</strong> 在庫確認（3システムにログイン）</p>
+                        <p><strong>14:00</strong> 発注処理（また最初から入力）</p>
+                        <p><strong>16:00</strong> 請求書作成（先月分がまだ...）</p>
+                        <p><strong>18:00</strong> 定時？まだ半分も終わってない</p>
+                        <p><strong>21:00</strong> やっと帰宅「明日も同じ作業か...」</p>
+                    </div>
+                </div>
+                
+                <!-- After -->
+                <div class="compare-box after-box">
+                    <span class="compare-label">After（AI導入後）</span>
+                    <h3 class="text-lg font-bold mb-3">朝9時〜夕方5時で完了</h3>
+                    <div class="text-sm">
+                        <p><strong>9:00</strong> 「重要な3件以外は全て処理済みです」</p>
+                        <p><strong>9:30</strong> 「見積もり作成済み。承認だけお願い」</p>
+                        <p><strong>10:00</strong> 「在庫不足予測。発注案を作成済み」</p>
+                        <p><strong>12:00</strong> 「午前の業務、全て完了」</p>
+                        <p><strong>14:00</strong> 「請求書は自動作成済み」</p>
+                        <p><strong>16:00</strong> 「創造的な仕事をしませんか？」</p>
+                        <p><strong>17:00</strong> 定時退社！</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 具体例：経費精算 -->
+            <div class="story-box mt-6">
+                <div class="story-title">経費精算の革命的変化</div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="font-bold text-red-600">現在：平均45分/件</p>
+                        <p class="text-sm">月末は経理が徹夜...</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-green-600">AI導入後：30秒/件</p>
+                        <p class="text-sm">写真を撮るだけで完了！</p>
+                    </div>
+                </div>
+                
+                <div class="dialogue-box mt-4">
+                    <strong>AI：</strong>「交通費2,450円、会議費3,200円で登録しますね。<br>
+                    このタクシー代、通常の3倍です。理由を教えてください。」<br>
+                    <strong>社員：</strong>「終電逃して緊急対応」<br>
+                    <strong>AI：</strong>「了解。過去の事例から承認可能と判断」
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド7: 新サービス創出 -->
+    <div class="slide-container" id="slide-7">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8 category-service" style="margin-left: 40px; border-left-width: 8px;">
+            <h1 class="text-3xl font-bold">新サービス創出</h1>
+            <p class="text-lg text-gray-600 mt-2">社会課題を解決する革新的サービス</p>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div class="service-grid" style="margin-left: 40px; margin-right: 40px;">
+            <!-- AIヘルスケア -->
+            <div class="service-card">
+                <h3 class="text-xl font-bold mb-3 flex items-center">
+                    <span class="service-number">1</span>
+                    AI駆動型パーソナルヘルスケア
+                </h3>
+                <div class="service-detail">
+                    <p class="mb-2"><strong>概要：</strong>病気になる前に防ぐ、究極の予防医療</p>
+                    <ul class="list-disc ml-5">
+                        <li>24時間健康モニタリング</li>
+                        <li>3ヶ月先の健康リスク予測</li>
+                        <li>個別最適化された健康プログラム</li>
+                        <li>緊急時の自動対応</li>
+                    </ul>
+                    <div class="bg-blue-50 p-3 mt-3 rounded">
+                        <p class="text-sm"><i class="fas fa-heartbeat mr-2"></i>健康寿命5年延伸、医療費30%削減</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI教育 -->
+            <div class="service-card">
+                <h3 class="text-xl font-bold mb-3 flex items-center">
+                    <span class="service-number">2</span>
+                    次世代教育プラットフォーム
+                </h3>
+                <div class="service-detail">
+                    <p class="mb-2"><strong>概要：</strong>子供の才能を見つけて伸ばすAI家庭教師</p>
+                    <ul class="list-disc ml-5">
+                        <li>学習特性の完全把握</li>
+                        <li>苦手を楽しいに変える工夫</li>
+                        <li>隠れた才能の発見</li>
+                        <li>不登校でも学べる環境</li>
+                    </ul>
+                    <div class="bg-blue-50 p-3 mt-3 rounded">
+                        <p class="text-sm"><i class="fas fa-graduation-cap mr-2"></i>学習効率3倍、教育格差80%解消</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- スマートシティ -->
+            <div class="service-card">
+                <h3 class="text-xl font-bold mb-3 flex items-center">
+                    <span class="service-number">3</span>
+                    スマートシティ統合プラットフォーム
+                </h3>
+                <div class="service-detail">
+                    <p class="mb-2"><strong>概要：</strong>街全体が人に優しくなる</p>
+                    <ul class="list-disc ml-5">
+                        <li>渋滞を5分で解消</li>
+                        <li>ゴミ問題の完全解決</li>
+                        <li>災害時の最適避難誘導</li>
+                        <li>エネルギーの無駄ゼロ</li>
+                    </ul>
+                    <div class="bg-blue-50 p-3 mt-3 rounded">
+                        <p class="text-sm"><i class="fas fa-city mr-2"></i>CO2削減50%、生活満足度90%</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 言語バリアフリー -->
+            <div class="service-card">
+                <h3 class="text-xl font-bold mb-3 flex items-center">
+                    <span class="service-number">4</span>
+                    グローバル言語バリアフリー
+                </h3>
+                <div class="service-detail">
+                    <p class="mb-2"><strong>概要：</strong>言葉の壁が消える世界</p>
+                    <ul class="list-disc ml-5">
+                        <li>リアルタイム完璧翻訳</li>
+                        <li>文化的ニュアンスも伝達</li>
+                        <li>国際結婚カップルの味方</li>
+                        <li>田舎の名店が世界デビュー</li>
+                    </ul>
+                    <div class="bg-blue-50 p-3 mt-3 rounded">
+                        <p class="text-sm"><i class="fas fa-globe mr-2"></i>言語障壁95%解消</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド8: 健康革命の実例 -->
+    <div class="slide-container" id="slide-8">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8 category-service" style="margin-left: 40px; border-left-width: 8px;">
+            <h1 class="text-3xl font-bold">鈴木さん（45歳）の健康革命</h1>
+            <p class="text-lg text-gray-600 mt-2">AIヘルスケアが救った命</p>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <!-- ストーリー展開 -->
+            <div class="timeline-item">
+                <span class="time-marker">ある朝6:30</span>
+                <div class="dialogue-box">
+                    <strong>AI健康秘書：</strong>「おはようございます、鈴木さん。<br>
+                    昨夜の睡眠の質が通常より23%低下していました。<br>
+                    心拍変動から、ストレスレベルが高い状態です。<br><br>
+                    今朝の提案：<br>
+                    - 朝食にバナナを追加（セロトニン生成を促進）<br>
+                    - 通勤は一駅歩く（軽い運動でストレス軽減）<br>
+                    - 午後3時にハーブティーブレイク」
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <span class="time-marker">2週間後</span>
+                <div class="dialogue-box">
+                    <strong>AI：</strong>「鈴木さん、最近の疲労パターンを分析しました。<br>
+                    血圧も少し上昇傾向です。<br>
+                    このままだと3ヶ月後に健康リスクが高まります。<br><br>
+                    提案：<br>
+                    1. 火曜の昼に15分の仮眠時間を確保<br>
+                    2. 塩分を1日1g減らす<br>
+                    3. 来週、オンライン医師相談を予約しますか？」
+                </div>
+            </div>
+            
+            <!-- 別の事例：糖尿病予防 -->
+            <div class="story-box mt-6">
+                <div class="story-title">田中さん（52歳）の糖尿病予防成功</div>
+                
+                <div class="timeline-item">
+                    <span class="time-marker">初日</span>
+                    <p><strong>AI：</strong>「このままでは1年以内に糖尿病発症確率75%」</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <span class="time-marker">毎日</span>
+                    <div class="dialogue-box">
+                        （レストランでメニュー撮影）<br>
+                        <strong>AI：</strong>「このパスタ、糖質が82gあります。<br>
+                        でも、最初にサラダを食べて、パスタは半分にすれば大丈夫。<br>
+                        飲み物は烏龍茶がおすすめ。血糖値上昇を15%抑えられます。」
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <span class="time-marker">3ヶ月後</span>
+                    <div class="bg-green-50 p-4 rounded">
+                        <p><strong>結果：</strong></p>
+                        <ul>
+                            <li>HbA1c: 6.8 → 5.9（正常値）</li>
+                            <li>体重: 5kg減少</li>
+                            <li>糖尿病リスク: 75% → 12%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド9: データ駆動型経営 -->
+    <div class="slide-container" id="slide-9">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8 category-data" style="margin-left: 40px; border-left-width: 8px;">
+            <h1 class="text-3xl font-bold">データ駆動型インサイト</h1>
+            <p class="text-lg text-gray-600 mt-2">経営と現場を変えるリアルタイム分析</p>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <!-- 現在の課題 -->
+            <div class="segment-box mb-4 bg-red-50">
+                <h3 class="text-xl font-bold mb-3 text-red-800">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>現在の課題
+                </h3>
+                <ul class="list-disc ml-8 text-gray-700">
+                    <li>月次報告書が出るのは翌月15日、もう手遅れ</li>
+                    <li>「勘と経験」の経営で市場変化に乗り遅れ</li>
+                    <li>データはあるのに、誰も見ない・使えない</li>
+                    <li>問題が起きてから対策会議</li>
+                </ul>
+            </div>
+            
+            <!-- AIが実現する世界 -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="segment-box bg-green-50">
+                    <h3 class="font-bold text-green-800 mb-2">
+                        <i class="fas fa-chart-line mr-2"></i>予測型経営
+                    </h3>
+                    <ul class="list-disc ml-6 text-sm">
+                        <li>3秒で意思決定</li>
+                        <li>競合の動きを即座に把握</li>
+                        <li>市場変化を先読み</li>
+                        <li>リスクを事前回避</li>
+                    </ul>
+                </div>
+                
+                <div class="segment-box bg-green-50">
+                    <h3 class="font-bold text-green-800 mb-2">
+                        <i class="fas fa-store mr-2"></i>現場の最適化
+                    </h3>
+                    <ul class="list-disc ml-6 text-sm">
+                        <li>天気予報で在庫調整</li>
+                        <li>来客予測で人員配置</li>
+                        <li>トレンドを即座にキャッチ</li>
+                        <li>個客への最適提案</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 効果 -->
+            <div class="bg-purple-50 p-6 rounded-lg mt-6">
+                <h3 class="text-xl font-bold mb-4 text-center text-purple-800">データ活用による革命的効果</h3>
+                <div class="grid grid-cols-4 gap-4 text-center">
+                    <div>
+                        <div class="highlight-number-medium">10倍</div>
+                        <p class="text-sm">意思決定速度</p>
+                    </div>
+                    <div>
+                        <div class="highlight-number-medium">95%</div>
+                        <p class="text-sm">予測的中率</p>
+                    </div>
+                    <div>
+                        <div class="highlight-number-medium">70%</div>
+                        <p class="text-sm">リスク回避率</p>
+                    </div>
+                    <div>
+                        <div class="highlight-number-medium">300%</div>
+                        <p class="text-sm">ROI向上</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド10: 社長の朝の革命 -->
+    <div class="slide-container" id="slide-10">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8 category-data" style="margin-left: 40px; border-left-width: 8px;">
+            <h1 class="text-3xl font-bold">社長・山田太郎の朝のルーティン革命</h1>
+            <p class="text-lg text-gray-600 mt-2">月1回の会議から、毎朝の戦略的意思決定へ</p>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <!-- Before/After -->
+            <div class="compare-container mb-6">
+                <div class="compare-box before-box">
+                    <span class="compare-label">Before</span>
+                    <p class="text-center font-bold">月1回の経営会議で初めて数字を知る</p>
+                </div>
+                <div class="compare-box after-box">
+                    <span class="compare-label">After</span>
+                    <p class="text-center font-bold">毎朝6:30、AIが経営状況を報告</p>
+                </div>
+            </div>
+            
+            <!-- 朝の報告 -->
+            <div class="story-box">
+                <div class="story-title">毎朝6:30のAI報告</div>
+                <div class="dialogue-box">
+                    <strong>AI経営アシスタント：</strong>「おはようございます、山田社長。<br>
+                    昨日の経営状況をお伝えします。<br><br>
+                    【売上速報】<br>
+                    昨日の売上：3.2億円（前年同日比+12%）<br>
+                    今月の着地予想：92億円（目標比+3%）<br><br>
+                    【重要アラート】<br>
+                    競合A社が昨夜、新サービスを発表しました。<br>
+                    当社顧客の15%が影響を受ける可能性があります。<br><br>
+                    対抗策を3つ準備しました：<br>
+                    1. 価格マッチング（利益率-2%、シェア維持）<br>
+                    2. 付加価値追加（開発済み機能の前倒しリリース）<br>
+                    3. 別セグメント強化（影響の少ない法人市場）」
+                </div>
+            </div>
+            
+            <!-- 即座の実行 -->
+            <div class="story-box mt-4">
+                <div class="story-title">社長の決断が3秒で現場に</div>
+                <div class="dialogue-box">
+                    <strong>山田社長：</strong>「2番で行こう。開発チームに連絡を」<br><br>
+                    <strong>AI：</strong>「承知しました。<br>
+                    開発部長への指示：完了<br>
+                    マーケティング部への告知準備：開始<br>
+                    営業部への説明資料：自動作成中<br><br>
+                    本日14時にリリース可能です。」
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド11: 総合インパクト -->
+    <div class="slide-container" id="slide-11">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">10億AIエージェントが創る未来</h1>
+            <p class="text-lg text-gray-600 mt-2">2030年、実現する社会インパクト</p>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <!-- ビジネスインパクト -->
+            <div class="mb-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-chart-bar text-purple-700 mr-3"></i>
+                    ビジネスインパクト
+                </h2>
+                <div class="grid grid-cols-4 gap-4">
+                    <div class="impact-box">
+                        <div class="impact-number text-purple-700">80%</div>
+                        <div class="impact-label">業務効率化</div>
+                    </div>
+                    <div class="impact-box">
+                        <div class="impact-number text-green-600">50%</div>
+                        <div class="impact-label">顧客満足度向上</div>
+                    </div>
+                    <div class="impact-box">
+                        <div class="impact-number text-blue-600">10兆円</div>
+                        <div class="impact-label">新規市場創出</div>
+                    </div>
+                    <div class="impact-box">
+                        <div class="impact-number text-orange-600">100万人</div>
+                        <div class="impact-label">新規雇用創出</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 社会インパクト -->
+            <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-heart text-purple-700 mr-3"></i>
+                    社会インパクト
+                </h2>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold text-purple-800 mb-2">日本の課題解決</h3>
+                        <ul class="list-disc ml-5 text-gray-700">
+                            <li>少子高齢化：介護AI で100万人を24時間見守り</li>
+                            <li>地方創生：隠れた観光資源を世界に発信</li>
+                            <li>医療格差：どこでも最高の医療アドバイス</li>
+                            <li>教育格差：全ての子供に個別最適化教育</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-purple-800 mb-2">世界への貢献</h3>
+                        <ul class="list-disc ml-5 text-gray-700">
+                            <li>インド：10億人にデジタル金融サービス</li>
+                            <li>アフリカ：2億人に金融包摂を実現</li>
+                            <li>東南アジア：教育格差をAI教師で解消</li>
+                            <li>全世界：言語の壁を完全に撤廃</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ビジョンメッセージ -->
+            <div class="bg-purple-100 p-6 rounded-lg text-center">
+                <p class="text-xl text-purple-800 font-bold mb-4">
+                    「10億のAIが、100億の人々の幸せを創る」
+                </p>
+                <p class="text-lg text-gray-700">
+                    情報革命で人々を幸せに。<br>
+                    誰も取り残さない、全員が主役の未来。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド12: 実現への道のり -->
+    <div class="slide-container" id="slide-12">
+        <!-- ロゴ -->
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <!-- ヘッダー -->
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">実現への道のり</h1>
+            <p class="text-lg text-gray-600 mt-2">今日から始まる革命</p>
+        </div>
+        
+        <!-- メインコンテンツ -->
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <!-- Phase 1 -->
+            <div class="segment-box mb-4">
+                <div class="flex items-start">
+                    <div class="segment-icon" style="background-color: rgba(255, 107, 107, 0.15);">
+                        <span class="font-bold text-xl" style="color: #ff6b6b;">1</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2">第1章：覚醒（2025年）</h3>
+                        <p class="text-purple-800 font-bold mb-2">「これは始まりに過ぎない...」</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <ul class="list-disc ml-5 text-sm">
+                                <li>最初の1万エージェント稼働</li>
+                                <li>社内業務の30%を自動化</li>
+                            </ul>
+                            <ul class="list-disc ml-5 text-sm">
+                                <li>顧客満足度20%向上</li>
+                                <li>新規事業アイデア100件/月</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Phase 2 -->
+            <div class="segment-box mb-4">
+                <div class="flex items-start">
+                    <div class="segment-icon" style="background-color: rgba(102, 126, 234, 0.15);">
+                        <span class="font-bold text-xl" style="color: #667eea;">2</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2">第2章：進化（2027年）</h3>
+                        <p class="text-purple-800 font-bold mb-2">「もう後戻りはできない」</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <ul class="list-disc ml-5 text-sm">
+                                <li>100万エージェントが協調</li>
+                                <li>創造的業務へのシフト</li>
+                            </ul>
+                            <ul class="list-disc ml-5 text-sm">
+                                <li>顧客一人ひとりに専属AI</li>
+                                <li>社会問題の解決に着手</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Phase 3 -->
+            <div class="segment-box mb-6">
+                <div class="flex items-start">
+                    <div class="segment-icon" style="background-color: rgba(34, 197, 94, 0.15);">
+                        <span class="font-bold text-xl" style="color: #22c55e;">3</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2">第3章：完成（2030年）</h3>
+                        <p class="text-purple-800 font-bold mb-2">「新しい世界の幕開け」</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <ul class="list-disc ml-5 text-sm">
+                                <li>10億エージェントの集合知</li>
+                                <li>人類の課題を次々解決</li>
+                            </ul>
+                            <ul class="list-disc ml-5 text-sm">
+                                <li>誰も予想しなかった未来</li>
+                                <li>人間とAIの真の共生</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Call to Action -->
+            <div class="bg-purple-50 p-6 rounded-lg text-center">
+                <h3 class="text-xl font-bold mb-4">
+                    <i class="fas fa-rocket text-purple-700 mr-2"></i>あなたも、この革命の一部
+                </h3>
+                <p class="text-lg mb-4">
+                    10億のAIと共に働く。<br>
+                    それは、10億倍の可能性を手にすること。
+                </p>
+                <p class="font-bold text-purple-800 text-xl">
+                    一緒に、誰も見たことのない明日を創ろう。
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    </div> <!-- content-wrapper終了 -->
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 12</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 12;
+
+        // インジケーターの初期化
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        // スライド表示更新
+        function updateSlideDisplay() {
+            // すべてのスライドを非表示
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // 現在のスライドを表示
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            
+            // スライド番号更新
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            // ボタンの有効/無効
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            // インジケーター更新
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+            
+            // 目次の更新
+            document.querySelectorAll('.toc-item').forEach((item, index) => {
+                item.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        // 次のスライド
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        // 前のスライド
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        // 特定のスライドへ移動
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        // キーボードナビゲーション
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+            if (e.key === 'Escape' && document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        });
+
+        // 全画面表示切り替え
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.querySelector('.fullscreen-btn').innerHTML = '<i class="fas fa-compress"></i> 通常表示';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    document.querySelector('.fullscreen-btn').innerHTML = '<i class="fas fa-expand"></i> 全画面表示';
+                }
+            }
+        }
+
+        // サイドバー表示切り替え
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const contentWrapper = document.querySelector('.content-wrapper');
+            const toggleBtn = document.querySelector('.sidebar-toggle');
+            
+            sidebar.classList.toggle('hidden');
+            contentWrapper.classList.toggle('full-width');
+            
+            if (sidebar.classList.contains('hidden')) {
+                toggleBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            } else {
+                toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+
+        // スワイプ対応（タッチデバイス）
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) previousSlide();
+        }
+
+        // 初期化
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

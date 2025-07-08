@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バーチャル＆リアル融合型タイムトラベル観光</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .data-item {
+            margin-bottom: 25px;
+            padding-left: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .example-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .timeline-box {
+            background-color: #f3f4f6;
+            border: 2px solid #22c55e;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            margin: 10px 0;
+        }
+        .timeline-marker {
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">バーチャル＆リアル融合型</h1>
+                <h2 class="text-4xl font-bold text-green-800">タイムトラベル観光</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-clock-rotate-left mr-3 text-green-700"></i>
+                ARグラスとAIで、過去の世界を完全再現する没入体験
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと具体例 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 歴史の中を歩く究極の体験</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="example-box">
+                <h3 class="font-bold text-green-700 mb-3 flex items-center">
+                    <i class="fas fa-torii-gate mr-2"></i>
+                    京都・金閣寺での体験例
+                </h3>
+                <div class="text-sm space-y-2">
+                    <p><i class="fas fa-glasses text-green-600 mr-2"></i>
+                    ARグラスを装着すると<span class="highlight-text">1950年放火前の黄金の姿</span>が目前に出現</p>
+                    <p><i class="fas fa-user-tie text-green-600 mr-2"></i>
+                    <span class="highlight-text">足利義満</span>本人が案内役として登場・当時の生活を解説</p>
+                    <p><i class="fas fa-volume-high text-green-600 mr-2"></i>
+                    鐘の音・読経・鳥の声など<span class="highlight-text">室町時代の音環境</span>を完全再現</p>
+                    <p><i class="fas fa-wind text-green-600 mr-2"></i>
+                    お香の香りまで再現する<span class="highlight-text">五感体験</span>で本物のタイムトラベル感覚</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-robot text-green-700 mr-3"></i>
+                        1万体のAI群が創る体験
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">歴史再現AI</span>
+                                <span class="highlight-text">3000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">100万点の史料から建築・風景を0.1mm精度で復元</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">時代考証AI</span>
+                                <span class="highlight-text">2000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">服装・言葉遣い・所作を時代別に完全再現</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">インタラクティブAI</span>
+                                <span class="highlight-text">3000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">歴史人物1000人と当時の言葉で対話可能</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">マルチ時代切替AI</span>
+                                <span class="highlight-text">1000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">同じ場所の100年前・500年前を瞬時切替</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">教育コンテンツAI</span>
+                                <span class="highlight-text">1000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">歴史ミステリーゲームや職業体験を提供</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-wand-magic-sparkles text-green-700 mr-3"></i>
+                        実現する価値
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg" style="display: flex; flex-direction: column;">
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">究極の没入感</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>8K・120fps・遅延5ms以下のリアルタイム描画</li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>五感（視覚・聴覚・嗅覚）への完全対応</li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>歴史人物との自然な会話体験</li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">教育効果の革新</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>学習定着率が教科書の<span class="highlight-text">5倍</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>歴史への興味関心度<span class="highlight-text">300%向上</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>体験型学習で深い理解を実現</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-100 p-2 rounded text-center" style="flex: 0 0 auto; margin: 0;">
+                            <p class="text-base font-bold text-green-800">体験満足度</p>
+                            <p class="text-2xl font-bold text-green-700">4.8/5.0</p>
+                            <p class="text-xs text-gray-600">SNSシェア率 85%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 技術アーキテクチャと体験機能 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">技術アーキテクチャと体験機能</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-database text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">史料データ</h3>
+                    <div class="highlight-number-medium">100万点</div>
+                    <p class="text-xs text-gray-600">学習済み</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-ruler text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">再現精度</h3>
+                    <div class="highlight-number-medium">0.1mm</div>
+                    <p class="text-xs text-gray-600">3Dスキャン</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-users text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">歴史人物</h3>
+                    <div class="highlight-number-medium">1000人</div>
+                    <p class="text-xs text-gray-600">対話可能</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-layer-group text-green-700 mr-3"></i>
+                        多層的な時代体験
+                    </h2>
+                    
+                    <div class="timeline-box">
+                        <div class="timeline-marker"></div>
+                        <h3 class="font-bold text-green-700 mb-2">現代（2024年）</h3>
+                        <p class="text-sm">現在の姿をベースに過去へ遡る</p>
+                    </div>
+
+                    <div class="timeline-box">
+                        <div class="timeline-marker"></div>
+                        <h3 class="font-bold text-green-700 mb-2">100年前（大正時代）</h3>
+                        <p class="text-sm">近代化の波と伝統の共存を体験</p>
+                    </div>
+
+                    <div class="timeline-box">
+                        <div class="timeline-marker"></div>
+                        <h3 class="font-bold text-green-700 mb-2">500年前（戦国時代）</h3>
+                        <p class="text-sm">武将たちの生活と戦いの現場へ</p>
+                    </div>
+
+                    <div class="timeline-box">
+                        <div class="timeline-marker"></div>
+                        <h3 class="font-bold text-green-700 mb-2">1000年前（平安時代）</h3>
+                        <p class="text-sm">王朝文化の華やかさを五感で体感</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-gamepad text-green-700 mr-3"></i>
+                        インタラクティブ体験モード
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">歴史ミステリー解決</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li><span class="highlight-text">本能寺の変</span>の真相を明智光秀本人から聞く</li>
+                            <li>消えた<span class="highlight-text">邪馬台国</span>の場所を探す冒険</li>
+                            <li><span class="highlight-text">聖徳太子</span>の実在性を検証する旅</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">職業体験クエスト</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>平安貴族の一日：<span class="highlight-text">歌会・蹴鞠・宮中行事</span></li>
+                            <li>戦国武将体験：<span class="highlight-text">合戦指揮・城下町経営</span></li>
+                            <li>江戸町人生活：<span class="highlight-text">商売・祭り・歌舞伎見物</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">歴史改変シミュレーション</h3>
+                        <div class="text-sm">
+                            <p><i class="fas fa-arrow-right text-green-600 mr-2"></i>
+                            もし<span class="highlight-text">関ヶ原で西軍が勝利</span>していたら？</p>
+                            <p><i class="fas fa-arrow-right text-green-600 mr-2"></i>
+                            <span class="highlight-text">黒船来航を阻止</span>できていたら？</p>
+                            <p class="text-xs text-gray-600 mt-2">※歴史のIFを楽しむエンタメモード</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（6ヶ月）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-users text-green-700 mr-2"></i>
+                            <span>来訪者数: <span class="highlight-text">200%増加</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-clock text-green-700 mr-2"></i>
+                            <span>平均滞在時間: <span class="negative">45分</span>→<span class="positive">150分</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-share text-green-700 mr-2"></i>
+                            <span>SNSシェア率: <span class="highlight-text">85%</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（2年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-school text-green-700 mr-2"></i>
+                            <span>教育旅行採用率: <span class="highlight-text">80%の学校</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-brain text-green-700 mr-2"></i>
+                            <span>学習定着率: <span class="highlight-text">従来の5倍</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-map-marked-alt text-green-700 mr-2"></i>
+                            <span>地方文化財来訪: <span class="highlight-text">500%増</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（5年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-yen-sign text-green-700 mr-2"></i>
+                            <span>観光産業規模: <span class="negative">1兆円</span>→<span class="positive">3兆円</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-globe text-green-700 mr-2"></i>
+                            <span>国際観光客: <span class="highlight-text">年間1億人突破</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-graduation-cap text-green-700 mr-2"></i>
+                            <span>歴史研究者数: <span class="highlight-text">2倍増加</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg" style="display: flex; flex-direction: column;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-yen-sign text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>コンテンツ開発（100施設）</span>
+                            <span>100億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>AI学習・モデル構築</span>
+                            <span>50億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>インフラ整備</span>
+                            <span>30億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>デバイス調達</span>
+                            <span>20億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">200億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>入場料（500円×2000万人）</span>
+                            <span>100億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>年間パス（1万円×100万人）</span>
+                            <span>100億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>教育機関ライセンス</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>海外展開・コンテンツ販売</span>
+                            <span>300億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>関連グッズ・サービス</span>
+                            <span>100億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">800億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="flex: 0 0 auto; margin: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 12倍</p>
+                    <p class="text-sm text-gray-700">3年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">初年度で黒字化達成</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※歴史的正確性は専門家による監修、文化的配慮を最優先に開発</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>
