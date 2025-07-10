@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI統合型スマート稲作エコシステム</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
+            box-sizing: border-box;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .example-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">AI統合型スマート稲作エコシステム</h1>
+                <h2 class="text-4xl font-bold text-green-800">日本の稲作を革新する1000万体のAI群</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-seedling mr-3 text-green-700"></i>
+                ドローン、センサー、農業ロボットを統合し、完全自動化された次世代稲作を実現
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと具体例 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 美しい水田を未来につなぐ</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="example-box">
+                <h3 class="font-bold text-green-700 mb-3 flex items-center">
+                    <i class="fas fa-user mr-2"></i>
+                    新潟県の佐藤農園での導入事例
+                </h3>
+                <div class="text-sm space-y-2">
+                    <p><i class="fas fa-sun text-green-600 mr-2"></i>
+                    春の朝5時、<span class="highlight-text">1000体のドローンが一斉に飛び立ち</span>、3000ヘクタールの水田を巡回</p>
+                    <p><i class="fas fa-robot text-green-600 mr-2"></i>
+                    AIが土壌分析：<span class="highlight-text">「区画A-15の窒素不足、B-7は水分過多」</span>を瞬時に診断</p>
+                    <p><i class="fas fa-tint text-green-600 mr-2"></i>
+                    自動給水システム：<span class="highlight-text">水田ごとに最適な水位を維持、節水率40%</span></p>
+                    <p><i class="fas fa-bug text-green-600 mr-2"></i>
+                    害虫対策：<span class="highlight-text">カメムシを画像認識、ピンポイント駆除で農薬95%削減</span></p>
+                    <p><i class="fas fa-chart-line text-green-600 mr-2"></i>
+                    結果：<span class="positive">収量30%増、品質特Aランク達成、利益率2.5倍</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-network-wired text-green-700 mr-3"></i>
+                        1000万体のAI群による統合管理
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">環境センシングAI</span>
+                                <span class="highlight-text">300万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">温湿度・土壌・日照を24時間監視</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">生育診断AI</span>
+                                <span class="highlight-text">250万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">葉色・分げつ・出穂を画像解析</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">ロボット制御AI</span>
+                                <span class="highlight-text">200万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">田植え・除草・収穫を完全自動化</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                        劇的な効果
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg" style="display: flex; flex-direction: column;">
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">短期効果（1年目）</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>労働時間：<span class="highlight-text">70%削減</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>農薬使用：<span class="highlight-text">95%削減</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>水使用量：<span class="highlight-text">40%削減</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">中期効果（3年）</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>収量：<span class="highlight-text">平均30%向上</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>品質：<span class="highlight-text">特Aランク率90%</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>収益：<span class="highlight-text">2.5倍増加</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-100 p-2 rounded text-center" style="flex: 0 0 auto; margin: 0;">
+                            <p class="text-base font-bold text-green-800">生産効率</p>
+                            <p class="text-2xl font-bold text-green-700">300%向上</p>
+                            <p class="text-xs text-gray-600">10年後の予測値</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 技術アーキテクチャとシステム連携 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">技術アーキテクチャとエコシステム</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-satellite text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">センサー密度</h3>
+                    <div class="highlight-number-medium">1個/10㎡</div>
+                    <p class="text-xs text-gray-600">IoTセンサー配置</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-robot text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">ロボット稼働</h3>
+                    <div class="highlight-number-medium">24時間</div>
+                    <p class="text-xs text-gray-600">完全自動運転</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-brain text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">AI精度</h3>
+                    <div class="highlight-number-medium">99.5%</div>
+                    <p class="text-xs text-gray-600">病害虫診断率</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-microchip text-green-700 mr-3"></i>
+                        統合技術基盤
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">センシング技術</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>衛星画像：<span class="highlight-text">10cm精度の日次解析</span></li>
+                            <li>ドローン：<span class="highlight-text">マルチスペクトル撮影</span></li>
+                            <li>水中センサー：<span class="highlight-text">根の健康状態監視</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">AI解析システム</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>深層学習：<span class="highlight-text">100万枚の稲画像学習</span></li>
+                            <li>予測モデル：<span class="highlight-text">収穫量±3%精度</span></li>
+                            <li>最適化：<span class="highlight-text">水・肥料を個別制御</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-handshake text-green-700 mr-3"></i>
+                        エコシステム連携
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">産業連携</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>JA：<span class="highlight-text">営農指導のデジタル化</span></li>
+                            <li>農機メーカー：<span class="highlight-text">ヤンマー、クボタ</span></li>
+                            <li>食品企業：<span class="highlight-text">品質保証・トレース</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">研究機関連携</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>農研機構：<span class="highlight-text">品種改良データ</span></li>
+                            <li>大学：<span class="highlight-text">東大、京大農学部</span></li>
+                            <li>気象庁：<span class="highlight-text">精密気象予測</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（1年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-clock text-green-700 mr-2"></i>
+                            <span>労働時間: <span class="highlight-text">70%削減</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-leaf text-green-700 mr-2"></i>
+                            <span>農薬使用: <span class="highlight-text">95%削減</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-dollar-sign text-green-700 mr-2"></i>
+                            <span>コスト: <span class="highlight-text">30%削減</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（3年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-chart-bar text-green-700 mr-2"></i>
+                            <span>収量: <span class="highlight-text">30%向上</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-award text-green-700 mr-2"></i>
+                            <span>品質: <span class="highlight-text">特A率90%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-users text-green-700 mr-2"></i>
+                            <span>後継者: <span class="highlight-text">参入3倍増</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（10年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-globe text-green-700 mr-2"></i>
+                            <span>輸出: <span class="highlight-text">500億円市場</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-seedling text-green-700 mr-2"></i>
+                            <span>環境: <span class="highlight-text">CO2 60%削減</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg" style="display: flex; flex-direction: column;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-calculator text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>AI開発・実装</span>
+                            <span>800億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>センサー・ドローン</span>
+                            <span>500億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>ロボット・農機</span>
+                            <span>400億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>インフラ整備</span>
+                            <span>300億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">2,000億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">年間収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>システム利用料</span>
+                            <span>2,500億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>収量増加価値</span>
+                            <span>3,000億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>輸出拡大</span>
+                            <span>500億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>年間収益</span>
+                            <span class="highlight-text">6,000億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="flex: 0 0 auto; margin: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 25倍</p>
+                    <p class="text-sm text-gray-700">10年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">3年目で投資回収完了</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※農業の持続可能性向上と食料安全保障への貢献を含む</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

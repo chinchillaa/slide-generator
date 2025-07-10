@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海洋養殖最適化AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
+            box-sizing: border-box;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .example-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">海洋養殖最適化AI</h1>
+                <h2 class="text-4xl font-bold text-green-800">200万体のAIが守る、持続可能な海の恵み</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-fish mr-3 text-green-700"></i>
+                海流・水質・生態系を完全把握し、天然を超える品質を実現
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと具体例 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 海洋と共生する養殖の実現</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="example-box">
+                <h3 class="font-bold text-green-700 mb-3 flex items-center">
+                    <i class="fas fa-water mr-2"></i>
+                    鹿児島・錦江湾のクロマグロ養殖場での革新
+                </h3>
+                <div class="text-sm space-y-2">
+                    <p><i class="fas fa-satellite text-green-600 mr-2"></i>
+                    衛星・ドローン・海中センサーで<span class="highlight-text">海洋環境を3次元リアルタイム監視</span></p>
+                    <p><i class="fas fa-temperature-low text-green-600 mr-2"></i>
+                    AIが警告：<span class="highlight-text">「48時間後に赤潮発生確率87%、緊急対策開始」</span></p>
+                    <p><i class="fas fa-fish text-green-600 mr-2"></i>
+                    自動給餌システム：<span class="highlight-text">魚群の行動から最適な餌量を個体別に調整</span></p>
+                    <p><i class="fas fa-heartbeat text-green-600 mr-2"></i>
+                    健康管理：<span class="highlight-text">水中カメラで泳ぎ方を分析、病気を72時間前に発見</span></p>
+                    <p><i class="fas fa-medal text-green-600 mr-2"></i>
+                    結果：<span class="positive">生存率95%、天然物を超える脂乗り、サステナブル認証取得</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-network-wired text-green-700 mr-3"></i>
+                        200万体のAI海洋管理システム
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">海洋環境AI</span>
+                                <span class="highlight-text">80万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">潮流・水温・塩分を予測制御</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">魚群行動AI</span>
+                                <span class="highlight-text">60万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">個体識別と健康状態を常時把握</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">生態系保護AI</span>
+                                <span class="highlight-text">40万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">周辺環境への影響を最小化</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-trophy text-green-700 mr-3"></i>
+                        革新的な成果
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg" style="display: flex; flex-direction: column;">
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">生産性革命</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>生存率：<span class="highlight-text">50%→95%</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>成長速度：<span class="highlight-text">1.5倍向上</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>飼料効率：<span class="highlight-text">40%改善</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">品質向上</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>脂質含有率：<span class="highlight-text">最適化で一定品質</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>味覚評価：<span class="highlight-text">天然物超え90%</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>安全性：<span class="highlight-text">薬剤不使用</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-100 p-2 rounded text-center" style="flex: 0 0 auto; margin: 0;">
+                            <p class="text-base font-bold text-green-800">海洋保護スコア</p>
+                            <p class="text-2xl font-bold text-green-700">A++</p>
+                            <p class="text-xs text-gray-600">環境影響最小</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 技術アーキテクチャとシステム連携 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">技術アーキテクチャと海洋エコシステム</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-satellite-dish text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">監視精度</h3>
+                    <div class="highlight-number-medium">10cm</div>
+                    <p class="text-xs text-gray-600">個体識別解像度</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-brain text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">予測精度</h3>
+                    <div class="highlight-number-medium">95%</div>
+                    <p class="text-xs text-gray-600">72時間先まで</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-leaf text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">環境負荷</h3>
+                    <div class="highlight-number-medium">-80%</div>
+                    <p class="text-xs text-gray-600">従来比削減</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-microchip text-green-700 mr-3"></i>
+                        海洋センシング技術
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">多層観測システム</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>衛星観測：<span class="highlight-text">海面温度・クロロフィル</span></li>
+                            <li>水中ドローン：<span class="highlight-text">3D魚群マッピング</span></li>
+                            <li>固定センサー：<span class="highlight-text">DO・pH・栄養塩</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">AI予測モデル</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>海況予測：<span class="highlight-text">72時間先の潮流・水温</span></li>
+                            <li>赤潮予測：<span class="highlight-text">7日前に90%精度で警告</span></li>
+                            <li>成長予測：<span class="highlight-text">出荷時期を±3日で予測</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-handshake text-green-700 mr-3"></i>
+                        海洋産業エコシステム
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">研究機関連携</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>水産研究所：<span class="highlight-text">最新養殖技術の実装</span></li>
+                            <li>海洋大学：<span class="highlight-text">海洋生態系モデル構築</span></li>
+                            <li>気象庁：<span class="highlight-text">精密海況データ連携</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">サプライチェーン統合</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>飼料メーカー：<span class="highlight-text">AI連動自動発注</span></li>
+                            <li>流通業者：<span class="highlight-text">出荷予測で在庫最適化</span></li>
+                            <li>レストラン：<span class="highlight-text">品質保証データ提供</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（1年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-fish text-green-700 mr-2"></i>
+                            <span>生存率: <span class="highlight-text">95%達成</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-dollar-sign text-green-700 mr-2"></i>
+                            <span>飼料コスト: <span class="highlight-text">40%削減</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-shield-alt text-green-700 mr-2"></i>
+                            <span>病気損失: <span class="highlight-text">90%削減</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（3年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-award text-green-700 mr-2"></i>
+                            <span>品質: <span class="highlight-text">プレミアム市場参入</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-globe text-green-700 mr-2"></i>
+                            <span>輸出: <span class="highlight-text">EU・米国認証取得</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-leaf text-green-700 mr-2"></i>
+                            <span>環境: <span class="highlight-text">カーボンニュートラル</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（10年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-industry text-green-700 mr-2"></i>
+                            <span>産業規模: <span class="highlight-text">1兆円市場創出</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-fish text-green-700 mr-2"></i>
+                            <span>食料自給: <span class="highlight-text">水産物50%達成</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg" style="display: flex; flex-direction: column;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-calculator text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>AI開発・実装</span>
+                            <span>100億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>センサー・観測機器</span>
+                            <span>60億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>養殖設備改修</span>
+                            <span>40億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>システム統合</span>
+                            <span>20億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">220億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">年間収益改善</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>生産性向上</span>
+                            <span>120億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>高付加価値化</span>
+                            <span>100億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>輸出拡大</span>
+                            <span>80億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>年間効果</span>
+                            <span class="highlight-text">300億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="flex: 0 0 auto; margin: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 22倍</p>
+                    <p class="text-sm text-gray-700">10年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">2年目で投資回収完了</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※持続可能な海洋資源管理による社会的価値を含む</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

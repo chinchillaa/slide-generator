@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIナノロボット医療システム</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
+            box-sizing: border-box;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .example-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">AIナノロボット医療システム</h1>
+                <h2 class="text-4xl font-bold text-green-800">体内からの健康管理</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-microscope mr-3 text-green-700"></i>
+                20億体の微小ナノロボットが血管内を巡回、リアルタイムで診断・治療を実施
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと具体例 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 体内に医療チームを持つ新しい医療</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="example-box">
+                <h3 class="font-bold text-green-700 mb-3 flex items-center">
+                    <i class="fas fa-user-md mr-2"></i>
+                    58歳田中さんのステージ0微小がん治療体験
+                </h3>
+                <div class="text-sm space-y-2">
+                    <p><i class="fas fa-syringe text-green-600 mr-2"></i>
+                    <span class="highlight-text">1億個</span>のナノロボット（直径50nm）を体内に注入</p>
+                    <p><i class="fas fa-search text-green-600 mr-2"></i>
+                    「偵察型」が全身を巡回し、異常細胞を<span class="highlight-text">0.1秒</span>で発見</p>
+                    <p><i class="fas fa-crosshairs text-green-600 mr-2"></i>
+                    「攻撃型」が抗体で正確に標的を定め、<span class="highlight-text">がん細胞のみ</span>に薬剤注入</p>
+                    <p><i class="fas fa-shield-alt text-green-600 mr-2"></i>
+                    「修復型」が周辺の正常細胞を保護、<span class="highlight-text">副作用ゼロ</span></p>
+                    <p><i class="fas fa-check-circle text-green-600 mr-2"></i>
+                    結果：<span class="positive">3週間で完全消滅</span>、入院不要で日常生活継続</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-robot text-green-700 mr-3"></i>
+                        20億体のナノボットAI群
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">診断ナノボットAI</span>
+                                <span class="highlight-text">10億体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">単一細胞レベルで異常検出（感度99.99%）</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">治療ナノボットAI</span>
+                                <span class="highlight-text">8億体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">がん細胞選択的破壊・血栓溶解・組織再生</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">薬物送達AI</span>
+                                <span class="highlight-text">5億体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">血液脳関門突破・時限放出・局所濃度制御</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">免疫強化AI</span>
+                                <span class="highlight-text">4億体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">T細胞活性化・マクロファージ強化5倍</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">統合管理AI</span>
+                                <span class="highlight-text">3億体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">全ロボット位置追跡・緊急回収プロトコル</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                        劇的な効果
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg" style="display: flex; flex-direction: column;">
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">短期効果（2年）</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>早期がん治療：<span class="highlight-text">70%→98%</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>急性期治療：<span class="highlight-text">7日→2日</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>薬物副作用：<span class="highlight-text">30%→3%</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">中期効果（5年）</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>がん死亡率：<span class="highlight-text">75%減少</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>脳卒中後遺症：<span class="highlight-text">80%→20%</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>臓器移植必要数：<span class="highlight-text">50%減</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-100 p-2 rounded text-center" style="flex: 0 0 auto; margin: 0;">
+                            <p class="text-base font-bold text-green-800">平均寿命延伸</p>
+                            <p class="text-2xl font-bold text-green-700">85歳→92歳</p>
+                            <p class="text-xs text-gray-600">突然死90%減少</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 技術アーキテクチャとシステム連携 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">ナノロボット技術とエコシステム</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-atom text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">サイズ</h3>
+                    <div class="highlight-number-medium">50nm</div>
+                    <p class="text-xs text-gray-600">赤血球の1/100</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-bullseye text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">検出精度</h3>
+                    <div class="highlight-number-medium">99.99%</div>
+                    <p class="text-xs text-gray-600">単一細胞レベル</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-clock text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">体外排出</h3>
+                    <div class="highlight-number-medium">48時間</div>
+                    <p class="text-xs text-gray-600">完全排出</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-cogs text-green-700 mr-3"></i>
+                        ナノロボット設計
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">物理設計</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>材質：<span class="highlight-text">生体適合性ポリマー</span></li>
+                            <li>動力源：<span class="highlight-text">血糖バイオ電池</span></li>
+                            <li>通信：<span class="highlight-text">超音波・近接場通信</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">制御システム</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>分散AI：<span class="highlight-text">各ボットに小規模NN</span></li>
+                            <li>群知能：<span class="highlight-text">スワーム協調行動</span></li>
+                            <li>中央制御：<span class="highlight-text">量子コンピュータ最適化</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">安全機構</h3>
+                        <div class="text-sm">
+                            <p><i class="fas fa-arrow-right text-green-600 mr-2"></i>
+                            <span class="highlight-text">外部磁場で即時停止</span></p>
+                            <p><i class="fas fa-arrow-right text-green-600 mr-2"></i>
+                            <span class="highlight-text">生分解性材料で安全排出</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-network-wired text-green-700 mr-3"></i>
+                        エコシステム連携
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">医療機関</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>大学病院と<span class="highlight-text">臨床試験</span></li>
+                            <li>リアルタイム<span class="highlight-text">治療モニタリング</span></li>
+                            <li>医師への<span class="highlight-text">決定支援情報</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">産業連携</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>医療機器メーカー：<span class="highlight-text">製造技術</span></li>
+                            <li>製薬会社：<span class="highlight-text">ナノカプセル薬剤</span></li>
+                            <li>保険会社：<span class="highlight-text">新医療保険設計</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">規制・倫理</h3>
+                        <div class="text-sm">
+                            <p><i class="fas fa-arrow-right text-green-600 mr-2"></i>
+                            <span class="highlight-text">新医療機器カテゴリー策定</span></p>
+                            <p><i class="fas fa-arrow-right text-green-600 mr-2"></i>
+                            <span class="highlight-text">軍事転用防止の国際条約</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（2年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-microscope text-green-700 mr-2"></i>
+                            <span>検査精度: <span class="highlight-text">85%→99.5%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-hospital text-green-700 mr-2"></i>
+                            <span>治療期間: <span class="highlight-text">7日→2日</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-shield-virus text-green-700 mr-2"></i>
+                            <span>副作用発生: <span class="highlight-text">30%→3%</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（5年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-ribbon text-green-700 mr-2"></i>
+                            <span>がん死亡率: <span class="highlight-text">75%減少</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-brain text-green-700 mr-2"></i>
+                            <span>脳卒中後遺症: <span class="highlight-text">重度80%→20%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-procedures text-green-700 mr-2"></i>
+                            <span>慢性疾患管理: <span class="highlight-text">完全自動化60%</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（10年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-heartbeat text-green-700 mr-2"></i>
+                            <span>平均寿命: <span class="highlight-text">92歳達成</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-user-md text-green-700 mr-2"></i>
+                            <span>医療過誤: <span class="highlight-text">99%減少</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-flask text-green-700 mr-2"></i>
+                            <span>新薬開発: <span class="highlight-text">10年→2年</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg" style="display: flex; flex-direction: column;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-calculator text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>ナノロボット開発</span>
+                            <span>1000億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>製造設備</span>
+                            <span>500億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>臨床試験</span>
+                            <span>300億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>制御システム</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>規制対応</span>
+                            <span>100億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">2,100億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>治療費（100万円×200万件）</span>
+                            <span>2兆円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>予防医療サービス</span>
+                            <span>5000億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>海外ライセンス</span>
+                            <span>8000億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>創薬支援データ</span>
+                            <span>2000億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">3.5兆円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="flex: 0 0 auto; margin: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 165倍</p>
+                    <p class="text-sm text-gray-700">10年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">初年度で投資回収完了</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※効果測定値は前臨床試験データに基づく推定値です</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

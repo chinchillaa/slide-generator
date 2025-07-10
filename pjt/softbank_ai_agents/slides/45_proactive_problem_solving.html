@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロアクティブ問題解決AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
+            box-sizing: border-box;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .example-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">プロアクティブ問題解決AI</h1>
+                <h2 class="text-4xl font-bold text-green-800">顧客が問題に気づく前にAIが潜在的問題を検知し、先回りで解決する究極の体験</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-eye mr-3 text-green-700"></i>
+                1億パターンの行動学習により、0.1%の異常も見逃さない予測能力
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと具体例 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 問題化する前の先回り解決</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="example-box">
+                <h3 class="font-bold text-green-700 mb-3 flex items-center">
+                    <i class="fas fa-shopping-cart mr-2"></i>
+                    ECサイト「ショップワールド」山田花子さん（32歳）週末食材購入体験
+                </h3>
+                <div class="text-sm space-y-2">
+                    <p><i class="fas fa-search text-green-600 mr-2"></i>
+                    異常検知：<span class="highlight-text">「通常の3倍時間経過→カート放棄確率87%」瞬時計算</span></p>
+                    <p><i class="fas fa-network-wired text-green-600 mr-2"></i>
+                    原因分析：<span class="highlight-text">「地域ネットワーク遅延特定→高速サーバー切替→2倍速改善」</span></p>
+                    <p><i class="fas fa-gift text-green-600 mr-2"></i>
+                    個別提案：<span class="highlight-text">「来週誕生日→高級チーズケーキ20%オフ→自分へのご褒美」</span></p>
+                    <p><i class="fas fa-truck text-green-600 mr-2"></i>
+                    配送最適化：<span class="highlight-text">「在宅率95%土曜午前→配送直前変更可能」</span></p>
+                    <p><i class="fas fa-star text-green-600 mr-2"></i>
+                    結果：<span class="positive">カート放棄率50%削減、満足度98%、リピート率85%</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-robot text-green-700 mr-3"></i>
+                        2.15万体の予測AI群
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">行動異常検知AI</span>
+                                <span class="highlight-text">6,000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">1億パターン学習・0.1%異常検出</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">予防的介入AI</span>
+                                <span class="highlight-text">5,000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">1秒毎確率計算・500介入方法</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">利用予測AI</span>
+                                <span class="highlight-text">4,000体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">次5アクション90%精度予測</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                        先回り解決能力
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg" style="display: flex; flex-direction: column;">
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">検出・予測</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>問題検出率：<span class="highlight-text">95%以上</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>先回り解決率：<span class="highlight-text">70%</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>誤介入率：<span class="highlight-text">3%以下</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">効果測定</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>問題発生率：<span class="highlight-text">80%削減</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>顧客努力：<span class="highlight-text">2.0→1.2</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>離脱率：<span class="highlight-text">50%削減</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-100 p-2 rounded text-center" style="flex: 0 0 auto; margin: 0;">
+                            <p class="text-base font-bold text-green-800">顧客生涯価値</p>
+                            <p class="text-2xl font-bold text-green-700">3倍向上</p>
+                            <p class="text-xs text-gray-600">3年間で実現</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 技術アーキテクチャとエコシステム -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">技術アーキテクチャと予測分析エコシステム</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-trophy text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">推奨意向</h3>
+                    <div class="highlight-number-medium">業界TOP</div>
+                    <p class="text-xs text-gray-600">顧客ロイヤルティ</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-dollar-sign text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">運用コスト</h3>
+                    <div class="highlight-number-medium">70%削減</div>
+                    <p class="text-xs text-gray-600">効率化達成</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-chart-line text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">新規事業</h3>
+                    <div class="highlight-number-medium">予測販売</div>
+                    <p class="text-xs text-gray-600">データ活用</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-microchip text-green-700 mr-3"></i>
+                        予測分析・介入実行基盤
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">予測分析基盤</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>リアルタイムCEP：<span class="highlight-text">複合イベント処理</span></li>
+                            <li>機械学習：<span class="highlight-text">継続学習・予測更新</span></li>
+                            <li>分散トレーシング：<span class="highlight-text">全システム挙動追跡</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">介入実行システム</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>ルールエンジン：<span class="highlight-text">複雑条件分岐高速処理</span></li>
+                            <li>マイクロサービス：<span class="highlight-text">独立開発・更新</span></li>
+                            <li>オーケストレーション：<span class="highlight-text">協調実行</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-handshake text-green-700 mr-3"></i>
+                        システム連携・分析ツール
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">監視・分析ツール</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>APM：<span class="highlight-text">Datadog、New Relicシステム監視</span></li>
+                            <li>CDN：<span class="highlight-text">Cloudflare、Akamai配信最適化</span></li>
+                            <li>分析：<span class="highlight-text">Amplitude、Mixpanel行動分析</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">通知・決済連携</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>通知：<span class="highlight-text">Twilio、SendGrid最適チャネル</span></li>
+                            <li>決済：<span class="highlight-text">Stripe、PayPal異常検知連携</span></li>
+                            <li>透明性：<span class="highlight-text">介入理由説明・オプトアウト</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（6ヶ月）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-search text-green-700 mr-2"></i>
+                            <span>問題検出率: <span class="highlight-text">95%以上</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-shield-alt text-green-700 mr-2"></i>
+                            <span>先回り解決率: <span class="highlight-text">70%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-exclamation-triangle text-green-700 mr-2"></i>
+                            <span>誤介入率: <span class="highlight-text">3%以下</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（1年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-bug text-green-700 mr-2"></i>
+                            <span>問題発生率: <span class="highlight-text">80%削減</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-user-cog text-green-700 mr-2"></i>
+                            <span>顧客努力指数: <span class="highlight-text">2.0→1.2</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-door-open text-green-700 mr-2"></i>
+                            <span>離脱率: <span class="highlight-text">50%削減</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（3年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-heart text-green-700 mr-2"></i>
+                            <span>顧客生涯価値: <span class="highlight-text">3倍向上</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-thumbs-up text-green-700 mr-2"></i>
+                            <span>推奨意向: <span class="highlight-text">業界トップ</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-database text-green-700 mr-2"></i>
+                            <span>データビジネス: <span class="highlight-text">予測販売等</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg" style="display: flex; flex-direction: column;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-calculator text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>AI開発</span>
+                            <span>50億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>インフラ構築</span>
+                            <span>25億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>システム統合</span>
+                            <span>20億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>データ収集・整備</span>
+                            <span>10億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>テスト・検証</span>
+                            <span>10億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">115億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>サポートコスト削減</span>
+                            <span>120億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>売上向上（離脱防止）</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>アップセル増加</span>
+                            <span>80億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>データビジネス</span>
+                            <span>50億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>年間合計</span>
+                            <span class="highlight-text">450億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="flex: 0 0 auto; margin: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 15倍</p>
+                    <p class="text-sm text-gray-700">5年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">初年度で投資回収</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※予測の公平性・説明可能性を保証した倫理的AI運用</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

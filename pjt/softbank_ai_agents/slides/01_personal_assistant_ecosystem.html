@@ -15,7 +15,7 @@
         }
         .slide-container {
             width: 1280px;
-            height: 720px;
+            height: 850px;
             background-color: white;
             position: relative;
             overflow: hidden;
@@ -196,37 +196,45 @@
             <h1 class="text-3xl font-bold">コンセプト - 一人ひとりに専属AIチーム</h1>
         </div>
         
-        <div class="grid grid-cols-2 gap-x-8" style="margin-left: 40px; margin-right: 40px;">
+        <div class="grid grid-cols-2 gap-6" style="margin-left: 40px; margin-right: 40px;">
             <div>
                 <div class="data-item flex items-start">
                     <div class="icon-circle">
                         <i class="fas fa-users text-green-700 text-xl"></i>
                     </div>
                     <div>
-                        <div class="text-xl font-bold mb-2">パーソナライズされたAIチーム編成</div>
-                        <ul class="list-disc ml-5 text-gray-700">
-                            <li>社員一人につき平均<span class="highlight-text">100体</span>のAIエージェント</li>
-                            <li>業務特性、スキル、性格、作業スタイルに最適化</li>
-                            <li>24時間365日の業務支援体制</li>
-                        </ul>
+                        <div class="text-xl font-bold mb-2">山田さん（営業部）の事例</div>
+                        <div class="feature-box">
+                            <p class="text-sm mb-2"><i class="fas fa-quote-left text-green-700 mr-2"></i>
+                            新規開拓営業3年目、月間訪問件数45件、成約率15%</p>
+                            <ul class="list-disc ml-5 text-sm">
+                                <li>現状：<span class="negative">資料作成に週15時間</span>、商談準備不足</li>
+                                <li>AI導入後：<span class="highlight-text">100体のAI</span>が各業務を分担</li>
+                                <li>効果：資料作成<span class="highlight-text">3時間/週</span>、成約率<span class="highlight-text">25%</span>へ</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <div class="data-item flex items-start mt-6">
+                <div class="data-item flex items-start mt-4">
                     <div class="icon-circle">
                         <i class="fas fa-brain text-green-700 text-xl"></i>
                     </div>
                     <div>
-                        <div class="text-xl font-bold mb-2">インテリジェントな役割分担</div>
-                        <div class="feature-box">
-                            <p class="font-semibold mb-2">営業部門の例：</p>
-                            <p class="text-sm">顧客分析AI、提案書作成AI、スケジュール最適化AI、商談シミュレーションAI、メンタルコーチAIなど</p>
+                        <div class="text-xl font-bold mb-2">山田さんのAIチーム構成</div>
+                        <div class="feature-box mb-3">
+                            <ul class="list-disc ml-5 text-sm">
+                                <li><span class="highlight-text">顧客分析AI（20体）</span>：過去データから最適アプローチを提案</li>
+                                <li><span class="highlight-text">資料作成AI（30体）</span>：業界別にカスタマイズされた提案書を自動生成</li>
+                                <li><span class="highlight-text">商談コーチAI（10体）</span>：リアルタイムで交渉戦略をアドバイス</li>
+                                <li><span class="highlight-text">フォローアップAI（15体）</span>：最適なタイミングで次回アクションを提案</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-gray-50 p-4 rounded-lg">
+            <div class="bg-gray-50 p-4 rounded-lg" style="max-width: 100%; overflow: hidden;">
                 <h2 class="text-xl font-bold mb-3 flex items-center">
                     <i class="fas fa-layer-group text-green-700 mr-3"></i>
                     AI階層構造
@@ -256,7 +264,7 @@
                     </div>
                 </div>
 
-                <div class="segment-box">
+                <div class="segment-box" style="margin-bottom: 0;">
                     <div class="flex items-start">
                         <div class="icon-circle flex-shrink-0">
                             <span class="font-bold text-green-700">89</span>
@@ -277,95 +285,95 @@
             <span class="text-gray-400 mr-2">=</span>SB C&S
         </div>
         
-        <div class="title-box mt-8" style="margin-left: 40px;">
-            <h1 class="text-3xl font-bold">技術アーキテクチャと処理能力</h1>
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">実現する技術と期待効果</h1>
         </div>
         
         <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
-            <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-3 gap-3 mb-4">
                 <div class="segment-box">
-                    <div class="icon-circle mb-3">
+                    <div class="icon-circle mb-2">
                         <i class="fas fa-tachometer-alt text-green-700 text-xl"></i>
                     </div>
-                    <h3 class="font-bold text-green-700 mb-2">処理性能</h3>
+                    <h3 class="font-bold text-green-700 mb-1 text-sm">処理性能</h3>
                     <div class="highlight-number-medium">100万件/秒</div>
-                    <p class="text-sm text-gray-600">マイクロインタラクション処理</p>
+                    <p class="text-xs text-gray-600">同時処理能力</p>
                 </div>
 
                 <div class="segment-box">
-                    <div class="icon-circle mb-3">
+                    <div class="icon-circle mb-2">
                         <i class="fas fa-clock text-green-700 text-xl"></i>
                     </div>
-                    <h3 class="font-bold text-green-700 mb-2">レスポンス時間</h3>
-                    <div class="highlight-number-medium">50ms以内</div>
-                    <p class="text-sm text-gray-600">平均応答時間</p>
+                    <h3 class="font-bold text-green-700 mb-1 text-sm">応答速度</h3>
+                    <div class="highlight-number-medium">50ms</div>
+                    <p class="text-xs text-gray-600">質問への即答</p>
                 </div>
 
                 <div class="segment-box">
-                    <div class="icon-circle mb-3">
+                    <div class="icon-circle mb-2">
                         <i class="fas fa-sync text-green-700 text-xl"></i>
                     </div>
-                    <h3 class="font-bold text-green-700 mb-2">同期速度</h3>
+                    <h3 class="font-bold text-green-700 mb-1 text-sm">学習共有</h3>
                     <div class="highlight-number-medium">0.1秒</div>
-                    <p class="text-sm text-gray-600">全AI間での知見共有</p>
+                    <p class="text-xs text-gray-600">全社ノウハウ同期</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-6">
                 <div>
-                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
                         <i class="fas fa-cogs text-green-700 mr-3"></i>
-                        主要機能
+                        AIチーム編成の仕組み
                     </h2>
                     
-                    <div class="feature-box">
-                        <h3 class="font-bold mb-2">AIマッチングエンジン</h3>
+                    <div class="feature-box mb-3">
+                        <h3 class="font-bold mb-2">初回セットアップ（30分）</h3>
                         <ul class="list-disc ml-5 text-sm">
-                            <li>初回アセスメント（30分）</li>
-                            <li>200項目以上の行動データ分析</li>
-                            <li>10万通りの組み合わせから最適化</li>
-                            <li>週次での動的再編成</li>
+                            <li><span class="highlight-text">業務分析</span>：現在のタスクと時間配分を可視化</li>
+                            <li><span class="highlight-text">スキル診断</span>：強み・弱み・成長希望を把握</li>
+                            <li><span class="highlight-text">性格診断</span>：作業スタイル・コミュニケーション傾向</li>
+                            <li><span class="highlight-text">AI編成</span>：10万パターンから最適な100体を選定</li>
                         </ul>
                     </div>
 
-                    <div class="feature-box">
-                        <h3 class="font-bold mb-2">エージェント間連携</h3>
+                    <div class="feature-box" style="margin-bottom: 0;">
+                        <h3 class="font-bold mb-2">継続的な最適化</h3>
                         <ul class="list-disc ml-5 text-sm">
-                            <li>統合ナレッジベース共有</li>
-                            <li>タスクの自動分解と最適割り当て</li>
-                            <li>協調処理による品質向上</li>
+                            <li>毎日の業務から<span class="highlight-text">学習・進化</span></li>
+                            <li>週次で<span class="highlight-text">AIチーム再編成</span>を提案</li>
+                            <li>成果に基づく<span class="highlight-text">報酬型AI追加</span></li>
                         </ul>
                     </div>
                 </div>
 
                 <div>
-                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
                         <i class="fas fa-shield-alt text-green-700 mr-3"></i>
-                        セキュリティとプライバシー
+                        安心・安全の仕組み
                     </h2>
                     
-                    <div class="segment-box bg-gray-50">
+                    <div class="segment-box bg-gray-50" style="max-width: 100%; overflow: hidden;">
                         <div class="performance-item">
                             <i class="fas fa-lock text-green-700 mr-2"></i>
-                            <span>個人データは暗号化保存</span>
+                            <span><span class="highlight-text">完全個人管理</span>：データは本人のみアクセス可</span>
                         </div>
                         <div class="performance-item">
                             <i class="fas fa-user-shield text-green-700 mr-2"></i>
-                            <span>本人のみアクセス可能</span>
+                            <span><span class="highlight-text">透明性</span>：AIの判断理由を常に説明</span>
                         </div>
                         <div class="performance-item">
                             <i class="fas fa-key text-green-700 mr-2"></i>
-                            <span>ゼロトラストアーキテクチャ</span>
+                            <span><span class="highlight-text">選択権</span>：AIの提案を採用するかは本人次第</span>
                         </div>
-                        <div class="performance-item">
+                        <div class="performance-item" style="margin-bottom: 0;">
                             <i class="fas fa-fingerprint text-green-700 mr-2"></i>
-                            <span>量子暗号通信対応</span>
+                            <span><span class="highlight-text">量子暗号</span>：最高レベルのセキュリティ</span>
                         </div>
                     </div>
 
-                    <div class="mt-4 p-4 bg-green-50 rounded-lg">
+                    <div class="mt-3 p-3 bg-green-50 rounded-lg" style="margin-bottom: 0;">
                         <p class="text-sm"><i class="fas fa-info-circle text-green-700 mr-2"></i>
-                        <span class="font-semibold">倫理的配慮：</span>AIは支援ツールであり、人間の仕事を奪わない設計。全ての判断に透明性を確保。</p>
+                        <span class="font-semibold">基本理念：</span>AIは人間の<span class="highlight-text">能力を拡張</span>するパートナー。仕事を奪うのではなく、<span class="highlight-text">より創造的な業務</span>に集中できる環境を実現。</p>
                     </div>
                 </div>
             </div>
@@ -382,79 +390,70 @@
             <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
         </div>
         
-        <div class="grid grid-cols-2 gap-x-10 mt-4" style="margin-left: 40px; margin-right: 40px;">
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
             <div>
                 <h2 class="text-xl font-bold mb-4 flex items-center">
                     <i class="fas fa-chart-line text-green-700 mr-3"></i>
                     段階的な効果測定
                 </h2>
 
-                <div class="segment-box mb-4">
-                    <h3 class="font-bold text-green-700 mb-2">短期効果（3ヶ月）</h3>
-                    <div class="grid grid-cols-2 gap-2 text-sm">
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">導入3ヶ月後の変化</h3>
+                    <div class="example-box bg-white p-3">
+                        <p class="text-sm mb-2"><i class="fas fa-user-circle text-green-700 mr-2"></i><strong>山田さんの実績</strong></p>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>資料作成：<span class="negative">週15時間</span>→<span class="positive">週3時間</span>（<span class="highlight-text">80%削減</span>）</li>
+                            <li>商談成約率：<span class="negative">15%</span>→<span class="positive">25%</span>（<span class="highlight-text">67%向上</span>）</li>
+                            <li>残業時間：<span class="negative">月45時間</span>→<span class="positive">月20時間</span></li>
+                            <li>新規開拓：月<span class="highlight-text">10件増加</span>（AIが見込み客を自動発掘）</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">1年後の組織変革</h3>
+                    <div class="text-sm">
                         <div class="performance-item">
-                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                            <span>タスク完了時間: <span class="highlight-text">40%短縮</span></span>
+                            <i class="fas fa-lightbulb text-green-700 mr-2"></i>
+                            <span>創造的業務時間：<span class="highlight-text">週20時間確保</span></span>
                         </div>
                         <div class="performance-item">
-                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                            <span>ミス発生率: <span class="highlight-text">75%削減</span></span>
+                            <i class="fas fa-users text-green-700 mr-2"></i>
+                            <span>部門間コラボ：<span class="highlight-text">月50件</span>（AI仲介）</span>
                         </div>
                         <div class="performance-item">
-                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                            <span>残業時間: <span class="highlight-text">50%削減</span></span>
-                        </div>
-                        <div class="performance-item">
-                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                            <span>ストレススコア: <span class="highlight-text">30pt改善</span></span>
+                            <i class="fas fa-graduation-cap text-green-700 mr-2"></i>
+                            <span>スキル習得速度：<span class="highlight-text">3倍</span>（AI個別指導）</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="segment-box mb-4">
-                    <h3 class="font-bold text-green-700 mb-2">中期効果（1年）</h3>
+                <div class="segment-box" style="margin-bottom: 0;">
+                    <h3 class="font-bold text-green-700 mb-2">3年後の到達点</h3>
                     <div class="text-sm">
                         <div class="performance-item">
-                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                            <span>生産性指標: <span class="highlight-text">300%向上</span></span>
+                            <i class="fas fa-trophy text-green-700 mr-2"></i>
+                            <span>働きがい：日本<span class="highlight-text">No.1企業</span>認定</span>
                         </div>
                         <div class="performance-item">
-                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                            <span>イノベーション提案: <span class="highlight-text">5倍増加</span></span>
+                            <i class="fas fa-heart text-green-700 mr-2"></i>
+                            <span>離職率：<span class="negative">15%</span>→<span class="positive">3%</span></span>
                         </div>
-                        <div class="performance-item">
-                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                            <span>社員エンゲージメント: <span class="highlight-text">85%→95%</span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="segment-box">
-                    <h3 class="font-bold text-green-700 mb-2">長期効果（3年）</h3>
-                    <div class="text-sm">
-                        <div class="performance-item">
-                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                            <span>一人当たり売上高: <span class="highlight-text">2.5倍</span></span>
-                        </div>
-                        <div class="performance-item">
-                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                            <span>離職率: <span class="highlight-text">15%→3%</span></span>
-                        </div>
-                        <div class="performance-item">
-                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                            <span>企業価値: <span class="highlight-text">50%向上</span></span>
+                        <div class="performance-item" style="margin-bottom: 0;">
+                            <i class="fas fa-rocket text-green-700 mr-2"></i>
+                            <span>イノベーション：年間<span class="highlight-text">100件</span>の新事業</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-gray-50 p-6 rounded-lg">
+            <div class="bg-gray-50 p-5 rounded-lg" style="max-width: 100%; overflow: hidden;">
                 <h2 class="text-xl font-bold mb-4 flex items-center">
                     <i class="fas fa-yen-sign text-green-700 mr-3"></i>
                     投資対効果分析
                 </h2>
 
-                <div class="mb-6">
+                <div class="mb-4">
                     <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
                     <div class="feature-box bg-white">
                         <div class="flex justify-between text-sm mb-1">
@@ -466,7 +465,7 @@
                             <span>30億円</span>
                         </div>
                         <div class="flex justify-between text-sm mb-1">
-                            <span>導入トレーニング</span>
+                            <span>導入支援</span>
                             <span>20億円</span>
                         </div>
                         <hr class="my-2">
@@ -477,19 +476,19 @@
                     </div>
                 </div>
 
-                <div class="mb-6">
+                <div class="mb-4">
                     <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
                     <div class="feature-box bg-white">
                         <div class="flex justify-between text-sm mb-1">
-                            <span>生産性向上効果</span>
+                            <span>生産性向上</span>
                             <span>500億円</span>
                         </div>
                         <div class="flex justify-between text-sm mb-1">
-                            <span>離職率低下効果</span>
+                            <span>人材定着効果</span>
                             <span>50億円</span>
                         </div>
                         <div class="flex justify-between text-sm mb-1">
-                            <span>イノベーション創出</span>
+                            <span>新規事業創出</span>
                             <span>200億円</span>
                         </div>
                         <hr class="my-2">
@@ -500,9 +499,10 @@
                     </div>
                 </div>
 
-                <div class="bg-green-100 p-4 rounded-lg text-center">
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="margin-bottom: 0;">
                     <p class="text-2xl font-bold text-green-800">ROI: 22.5倍</p>
                     <p class="text-sm text-gray-700">3年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">初年度で黒字化</p>
                 </div>
             </div>
         </div>

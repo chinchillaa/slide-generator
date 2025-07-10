@@ -15,7 +15,7 @@
         }
         .slide-container {
             width: 1280px;
-            height: 720px;
+            height: 850px;
             background-color: white;
             position: relative;
             overflow: hidden;
@@ -208,39 +208,50 @@
             <h1 class="text-3xl font-bold">コンセプト - 組織の集合知を完全活用</h1>
         </div>
         
-        <div class="grid grid-cols-2 gap-x-8" style="margin-left: 40px; margin-right: 40px;">
+        <div class="grid grid-cols-2 gap-6" style="margin-left: 40px; margin-right: 40px;">
             <div>
                 <div class="data-item flex items-start">
                     <div class="icon-circle">
                         <i class="fas fa-brain text-green-700 text-xl"></i>
                     </div>
                     <div>
-                        <div class="text-xl font-bold mb-2">暗黙知の抽出と可視化</div>
-                        <p class="text-gray-700 mb-2">全メール、チャット、会議録音、ドキュメントから組織の知識を自動抽出</p>
+                        <div class="text-xl font-bold mb-2">ある日の佐藤部長の体験</div>
                         <div class="feature-box">
-                            <p class="text-sm"><i class="fas fa-lightbulb text-green-700 mr-2"></i>
-                            例：3年前に別部門が解決済みの技術課題を瞬時に発見し、現状に合わせた改良案まで提案</p>
+                            <p class="text-sm mb-2"><i class="fas fa-quote-left text-green-700 mr-2"></i>
+                            「サーバーの負荷分散手法、前にも誰かが解決した気が...」</p>
+                            <div class="bg-white p-2 rounded">
+                                <p class="text-xs text-gray-600">🤖 AIの回答：</p>
+                                <ul class="list-disc ml-5 text-sm mt-1">
+                                    <li><span class="highlight-text">3年前</span>に開発部の田中さんが解決</li>
+                                    <li>手法：<span class="highlight-text">Kubernetes HPA</span>と独自スクリプト</li>
+                                    <li>当時の資料と<span class="highlight-text">最新版の改良案</span>を提示</li>
+                                    <li>田中さんの<span class="highlight-text">連絡先</span>も表示</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="data-item flex items-start mt-6">
+                <div class="data-item flex items-start mt-4">
                     <div class="icon-circle">
                         <i class="fas fa-users text-green-700 text-xl"></i>
                     </div>
                     <div>
-                        <div class="text-xl font-bold mb-2">知識抽出AI群（1万体）</div>
-                        <ul class="list-disc ml-5 text-gray-700 text-sm">
-                            <li>言語処理AI（5000体）：20言語対応</li>
-                            <li>音声解析AI（2000体）：会議録音を自動要約</li>
-                            <li>画像認識AI（2000体）：図面・グラフから情報抽出</li>
-                            <li>関係推論AI（1000体）：隠れた関係性を推測</li>
-                        </ul>
+                        <div class="text-xl font-bold mb-2">どうやって知識を見つけるのか</div>
+                        <div class="feature-box mb-3">
+                            <h3 class="font-bold mb-2 text-sm">情報収集元（毎日更新）</h3>
+                            <ul class="list-disc ml-5 text-sm">
+                                <li><span class="highlight-text">メール</span>：全社を1日<span class="highlight-text">500万通</span></li>
+                                <li><span class="highlight-text">Slack/Teams</span>：毎日<span class="highlight-text">100万メッセージ</span></li>
+                                <li><span class="highlight-text">会議録</span>：月間<span class="highlight-text">5万時間</span>の音声データ</li>
+                                <li><span class="highlight-text">文書</span>：<span class="highlight-text">1000万ファイル</span>のテキスト・図面</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-gray-50 p-4 rounded-lg" style="max-width: 100%;">
+            <div class="bg-gray-50 p-4 rounded-lg" style="max-width: 100%; overflow: hidden;">
                 <h2 class="text-lg font-bold mb-3 flex items-center">
                     <i class="fas fa-project-diagram text-green-700 mr-2"></i>
                     <span>知識グラフの構成要素</span>
@@ -270,7 +281,7 @@
                     </div>
                 </div>
 
-                <div class="segment-box p-3">
+                <div class="segment-box p-3" style="margin-bottom: 0;">
                     <h3 class="font-bold text-green-700 mb-2 text-sm">グラフ規模</h3>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
@@ -297,45 +308,61 @@
             <span class="text-gray-400 mr-2">=</span>SB C&S
         </div>
         
-        <div class="title-box mt-8" style="margin-left: 40px;">
-            <h1 class="text-3xl font-bold">主要機能と技術仕様</h1>
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">実際に使うとこうなる</h1>
         </div>
         
         <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
-            <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-3 gap-3 mb-4">
                 <div class="segment-box">
-                    <div class="icon-circle mb-3">
+                    <div class="icon-circle mb-2">
                         <i class="fas fa-search text-green-700 text-xl"></i>
                     </div>
-                    <h3 class="font-bold text-green-700 mb-2">専門家推薦</h3>
-                    <p class="text-sm text-gray-600 mb-2">「この技術に詳しい人」を関連度スコア付きで即座に表示</p>
+                    <h3 class="font-bold text-green-700 mb-1 text-sm">専門家推薦</h3>
+                    <div class="example-box bg-white p-2 mb-2">
+                        <p class="text-xs"><i class="fas fa-comment text-green-700 mr-1"></i>「AWSのLambdaに詳しい人」</p>
+                        <p class="text-xs mt-1">👤 鈴木さん（スコア<span class="highlight-text">98</span>）</p>
+                        <p class="text-xs">👤 高橋さん（スコア<span class="highlight-text">92</span>）</p>
+                    </div>
                     <div class="text-center">
-                        <p class="highlight-number-medium">95%</p>
-                        <p class="text-xs text-gray-600">推薦精度</p>
+                        <p class="text-lg font-bold text-green-700">0.3秒</p>
+                        <p class="text-xs text-gray-600">回答速度</p>
                     </div>
                 </div>
 
                 <div class="segment-box">
-                    <div class="icon-circle mb-3">
+                    <div class="icon-circle mb-2">
                         <i class="fas fa-history text-green-700 text-xl"></i>
                     </div>
-                    <h3 class="font-bold text-green-700 mb-2">類似事例検索</h3>
-                    <p class="text-sm text-gray-600 mb-2">過去の類似プロジェクトや課題を高精度で発見</p>
+                    <h3 class="font-bold text-green-700 mb-1 text-sm">類似事例検索</h3>
+                    <div class="example-box bg-white p-2 mb-2">
+                        <p class="text-xs"><i class="fas fa-exclamation-circle text-red-500 mr-1"></i>「ログイン遅延問題」</p>
+                        <ul class="list-disc ml-4 text-xs mt-1">
+                            <li>2年前：<span class="highlight-text">Redisキャッシュ</span>で解決</li>
+                            <li>1年前：<span class="highlight-text">DBインデックス</span>最適化</li>
+                        </ul>
+                    </div>
                     <div class="text-center">
-                        <p class="highlight-number-medium">0.5秒</p>
-                        <p class="text-xs text-gray-600">検索速度</p>
+                        <p class="text-lg font-bold text-green-700">100%</p>
+                        <p class="text-xs text-gray-600">見逃しゼロ</p>
                     </div>
                 </div>
 
                 <div class="segment-box">
-                    <div class="icon-circle mb-3">
+                    <div class="icon-circle mb-2">
                         <i class="fas fa-chart-line text-green-700 text-xl"></i>
                     </div>
-                    <h3 class="font-bold text-green-700 mb-2">知識予測</h3>
-                    <p class="text-sm text-gray-600 mb-2">3ヶ月後に必要になる知識を事前に提示</p>
+                    <h3 class="font-bold text-green-700 mb-1 text-sm">知識予測</h3>
+                    <div class="example-box bg-white p-2 mb-2">
+                        <p class="text-xs"><i class="fas fa-bell text-green-700 mr-1"></i>「3ヶ月後の必要知識」</p>
+                        <ul class="list-disc ml-4 text-xs mt-1">
+                            <li>Python3.12移行<span class="highlight-text">必須</span></li>
+                            <li>React v19の<span class="highlight-text">新機能</span></li>
+                        </ul>
+                    </div>
                     <div class="text-center">
-                        <p class="highlight-number-medium">85%</p>
-                        <p class="text-xs text-gray-600">予測精度</p>
+                        <p class="text-lg font-bold text-green-700">85%</p>
+                        <p class="text-xs text-gray-600">予測的中率</p>
                     </div>
                 </div>
             </div>
@@ -347,31 +374,22 @@
                         データ処理能力
                     </h2>
                     
-                    <div class="feature-box">
-                        <div class="performance-item">
-                            <i class="fas fa-microchip text-green-700 mr-2"></i>
-                            <span>並列処理：<span class="highlight-text">1万体のAI</span>が同時稼働</span>
-                        </div>
-                        <div class="performance-item">
-                            <i class="fas fa-stream text-green-700 mr-2"></i>
-                            <span>ストリーム処理：リアルタイムデータ反映</span>
-                        </div>
-                        <div class="performance-item">
-                            <i class="fas fa-graduation-cap text-green-700 mr-2"></i>
-                            <span>増分学習：新パターンを継続学習</span>
-                        </div>
-                        <div class="performance-item">
-                            <i class="fas fa-language text-green-700 mr-2"></i>
-                            <span>多言語対応：<span class="highlight-text">20言語</span>をネイティブ処理</span>
-                        </div>
+                    <div class="feature-box mb-3">
+                        <h3 class="font-bold mb-2">AI群の役割分担</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li><span class="highlight-text">言語処理AI（5000体）</span>：メール・チャット解析</li>
+                            <li><span class="highlight-text">音声解析AI（2000体）</span>：会議録音をテキスト化</li>
+                            <li><span class="highlight-text">画像認識AI（2000体）</span>：図面・グラフを読み取り</li>
+                            <li><span class="highlight-text">関係推論AI（1000体）</span>：人と知識をつなぐ</li>
+                        </ul>
                     </div>
 
-                    <div class="feature-box">
-                        <h3 class="font-bold mb-2">ストレージ仕様</h3>
+                    <div class="feature-box" style="margin-bottom: 0;">
+                        <h3 class="font-bold mb-2">処理能力</h3>
                         <ul class="list-disc ml-5 text-sm">
-                            <li>分散型グラフDB：<span class="highlight-text">500TB</span></li>
-                            <li>クエリ性能：複雑な探索も<span class="highlight-text">0.5秒以内</span></li>
-                            <li>専門用語辞書：<span class="highlight-text">100万語</span>搭載</li>
+                            <li>同時処理：<span class="highlight-text">1万件/秒</span>のクエリ</li>
+                            <li>即時反映：新情報を<span class="highlight-text">30秒以内</span>に統合</li>
+                            <li>全文検索：<span class="highlight-text">100億文書</span>を瞬時検索</li>
                         </ul>
                     </div>
                 </div>
@@ -382,36 +400,29 @@
                         セキュリティとプライバシー
                     </h2>
                     
-                    <div class="segment-box bg-gray-50">
-                        <h3 class="font-bold text-green-700 mb-2">アクセス制御</h3>
+                    <div class="segment-box bg-gray-50" style="max-width: 100%; overflow: hidden;">
+                        <h3 class="font-bold text-green-700 mb-2">安心の仕組み</h3>
                         <div class="performance-item">
-                            <i class="fas fa-key text-green-700 mr-2"></i>
-                            <span>ゼロトラスト認証</span>
+                            <i class="fas fa-shield-alt text-green-700 mr-2"></i>
+                            <span><span class="highlight-text">部署外秘</span>：権限管理徹底</span>
                         </div>
                         <div class="performance-item">
-                            <i class="fas fa-layer-group text-green-700 mr-2"></i>
-                            <span>5段階の機密度レベル</span>
+                            <i class="fas fa-user-shield text-green-700 mr-2"></i>
+                            <span><span class="highlight-text">個人情報</span>：自動マスキング</span>
                         </div>
                         <div class="performance-item">
-                            <i class="fas fa-file-contract text-green-700 mr-2"></i>
-                            <span>完全な監査ログ</span>
+                            <i class="fas fa-history text-green-700 mr-2"></i>
+                            <span><span class="highlight-text">履歴管理</span>：全アクセス記録</span>
+                        </div>
+                        <div class="performance-item" style="margin-bottom: 0;">
+                            <i class="fas fa-check-circle text-green-700 mr-2"></i>
+                            <span><span class="highlight-text">監査対応</span>：完全トレース可能</span>
                         </div>
                     </div>
 
-                    <div class="segment-box bg-gray-50 mt-4">
-                        <h3 class="font-bold text-green-700 mb-2">プライバシー保護</h3>
-                        <div class="performance-item">
-                            <i class="fas fa-user-shield text-green-700 mr-2"></i>
-                            <span>個人情報自動マスキング</span>
-                        </div>
-                        <div class="performance-item">
-                            <i class="fas fa-ban text-green-700 mr-2"></i>
-                            <span>オプトアウト権利保証</span>
-                        </div>
-                        <div class="performance-item">
-                            <i class="fas fa-eraser text-green-700 mr-2"></i>
-                            <span>忘れられる権利対応</span>
-                        </div>
+                    <div class="mt-3 p-3 bg-green-50 rounded-lg" style="margin-bottom: 0;">
+                        <p class="text-sm"><i class="fas fa-info-circle text-green-700 mr-2"></i>
+                        <span class="font-semibold">重要：</span>「知らないことがわかる」ように<span class="highlight-text">出所明示</span></p>
                     </div>
                 </div>
             </div>
@@ -424,73 +435,74 @@
             <span class="text-gray-400 mr-2">=</span>SB C&S
         </div>
         
-        <div class="title-box mt-8" style="margin-left: 40px;">
-            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">導入効果と投資対効果</h1>
         </div>
         
-        <div class="grid grid-cols-2 gap-x-10 mt-4" style="margin-left: 40px; margin-right: 40px;">
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
             <div>
                 <h2 class="text-xl font-bold mb-4 flex items-center">
                     <i class="fas fa-rocket text-green-700 mr-3"></i>
                     業務効率化効果
                 </h2>
 
-                <div class="segment-box mb-4">
-                    <h3 class="font-bold text-green-700 mb-2">情報探索の効率化</h3>
-                    <div class="performance-item">
-                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                        <span>必要情報の発見時間: <span class="highlight-text">2時間→5分</span>（96%短縮）</span>
-                    </div>
-                    <div class="performance-item">
-                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                        <span>情報の網羅性: <span class="highlight-text">60%→99%</span></span>
-                    </div>
-                    <div class="performance-item">
-                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                        <span>専門家特定精度: <span class="highlight-text">95%以上</span></span>
-                    </div>
-                </div>
-
-                <div class="segment-box mb-4">
-                    <h3 class="font-bold text-green-700 mb-2">ビジネスインパクト</h3>
-                    <div class="performance-item">
-                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                        <span>プロジェクト調査期間: <span class="highlight-text">2週間→2日</span></span>
-                    </div>
-                    <div class="performance-item">
-                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                        <span>重複開発削減: <span class="highlight-text">年間100件</span></span>
-                    </div>
-                    <div class="performance-item">
-                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                        <span>問題解決速度: <span class="highlight-text">80%短縮</span></span>
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">佐藤部長の1日の変化</h3>
+                    <div class="example-box bg-white p-3">
+                        <p class="text-sm mb-2"><strong>Before</strong> 😩</p>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>情報探し：<span class="negative">毎日2時間</span></li>
+                            <li>「これ前にも...」で<span class="negative">途方に暮れる</span></li>
+                            <li>専門家探しに<span class="negative">半日</span>かかる</li>
+                        </ul>
+                        <p class="text-sm mb-2 mt-3"><strong>After</strong> 😄</p>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>必要情報：<span class="positive">5分で発見</span></li>
+                            <li>関連事例を<span class="positive">即座に10件</span>提示</li>
+                            <li>専門家に<span class="positive">すぐ連絡</span>可能</li>
+                        </ul>
                     </div>
                 </div>
 
-                <div class="segment-box">
-                    <h3 class="font-bold text-green-700 mb-2">イノベーション促進</h3>
-                    <div class="performance-item">
-                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                        <span>異分野知識融合: <span class="highlight-text">年間500件</span></span>
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">全社への波及効果</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-copy text-green-700 mr-2"></i>
+                            <span>重複開発：<span class="negative">年100件</span>→<span class="positive">ゼロ</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-clock text-green-700 mr-2"></i>
+                            <span>プロジェクト立ち上げ：<span class="highlight-text">2週間→2日</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-users text-green-700 mr-2"></i>
+                            <span>部門間連携：<span class="highlight-text">10倍増加</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-lightbulb text-green-700 mr-2"></i>
+                            <span>イノベーション：<span class="highlight-text">年500件</span>の新提案</span>
+                        </div>
                     </div>
-                    <div class="performance-item">
-                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                        <span>特許出願数: <span class="highlight-text">30%増加</span></span>
-                    </div>
-                    <div class="performance-item">
-                        <i class="fas fa-angle-right text-green-700 mr-2"></i>
-                        <span>改善提案数: <span class="highlight-text">10倍増加</span></span>
+                </div>
+
+                <div class="segment-box" style="margin-bottom: 0;">
+                    <h3 class="font-bold text-green-700 mb-2">新人の成長加速</h3>
+                    <div class="example-box bg-white p-2">
+                        <p class="text-xs mb-1"><i class="fas fa-user text-green-700 mr-1"></i><strong>田中さん（入社1年目）</strong></p>
+                        <p class="text-xs">「先輩たちの<span class="highlight-text">10年分の知識</span>がすぐに役立つ！」</p>
+                        <p class="text-xs mt-1">→ ベテラン並みの成果を<span class="highlight-text">6ヶ月</span>で達成</p>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-gray-50 p-6 rounded-lg">
+            <div class="bg-gray-50 p-5 rounded-lg" style="max-width: 100%; overflow: hidden;">
                 <h2 class="text-xl font-bold mb-4 flex items-center">
                     <i class="fas fa-yen-sign text-green-700 mr-3"></i>
                     投資対効果分析
                 </h2>
 
-                <div class="mb-6">
+                <div class="mb-4">
                     <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
                     <div class="feature-box bg-white">
                         <div class="flex justify-between text-sm mb-1">
@@ -506,7 +518,7 @@
                             <span>20億円</span>
                         </div>
                         <div class="flex justify-between text-sm mb-1">
-                            <span>セキュリティ対策</span>
+                            <span>セキュリティ</span>
                             <span>15億円</span>
                         </div>
                         <hr class="my-2">
@@ -517,7 +529,7 @@
                     </div>
                 </div>
 
-                <div class="mb-6">
+                <div class="mb-4">
                     <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
                     <div class="feature-box bg-white">
                         <div class="flex justify-between text-sm mb-1">
@@ -529,11 +541,11 @@
                             <span>150億円</span>
                         </div>
                         <div class="flex justify-between text-sm mb-1">
-                            <span>イノベーション創出</span>
+                            <span>イノベーション</span>
                             <span>100億円</span>
                         </div>
                         <div class="flex justify-between text-sm mb-1">
-                            <span>知識継承効率化</span>
+                            <span>知識継承</span>
                             <span>50億円</span>
                         </div>
                         <hr class="my-2">
@@ -544,10 +556,10 @@
                     </div>
                 </div>
 
-                <div class="bg-green-100 p-4 rounded-lg text-center">
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="margin-bottom: 0;">
                     <p class="text-2xl font-bold text-green-800">ROI: 23倍</p>
                     <p class="text-sm text-gray-700">5年間での投資リターン</p>
-                    <p class="text-xs text-gray-600 mt-2">投資回収期間：6ヶ月</p>
+                    <p class="text-xs text-gray-600 mt-1">投資回収：6ヶ月</p>
                 </div>
             </div>
         </div>

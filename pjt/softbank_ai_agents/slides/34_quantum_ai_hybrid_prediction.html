@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量子AIハイブリッド予測エンジン</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
+            box-sizing: border-box;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .example-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">量子AIハイブリッド予測エンジン</h1>
+                <h2 class="text-4xl font-bold text-green-800">100万体のAIと量子コンピュータが未来を読み解く</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-atom mr-3 text-green-700"></i>
+                従来不可能だった長期予測を実現し、経済・自然現象を的確に予測
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと具体例 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 量子の力で未来を正確に読む</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="example-box">
+                <h3 class="font-bold text-green-700 mb-3 flex items-center">
+                    <i class="fas fa-building mr-2"></i>
+                    ソフトバンク・クオンタムタワーでの金融予測
+                </h3>
+                <div class="text-sm space-y-2">
+                    <p><i class="fas fa-chart-line text-green-600 mr-2"></i>
+                    来月の日経平均予測：<span class="highlight-text">「32,450円±230円、確率89%」</span></p>
+                    <p><i class="fas fa-brain text-green-600 mr-2"></i>
+                    予測根拠を透明化：<span class="highlight-text">「1,200万の経済指標から量子もつれで1秒解析」</span></p>
+                    <p><i class="fas fa-cloud-bolt text-green-600 mr-2"></i>
+                    異常気象の影響予測：<span class="highlight-text">「エルニーニョで小麦価格35%上昇、対策で15%に抑制」</span></p>
+                    <p><i class="fas fa-exclamation-triangle text-green-600 mr-2"></i>
+                    ブラックスワン予測：<span class="highlight-text">「リーマンショック級事象を3ヶ月前に察知」</span></p>
+                    <p><i class="fas fa-shield-alt text-green-600 mr-2"></i>
+                    結果：<span class="positive">多くの企業が事前対策、被害を最小限に抑制</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-microchip text-green-700 mr-3"></i>
+                        100万体のAI予測システム
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">多変量因果推論AI</span>
+                                <span class="highlight-text">25万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">因果関係を99.9%精度で特定</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">カオス現象予測AI</span>
+                                <span class="highlight-text">20万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">バタフライ効果を考慮した予測</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">ブラックスワン検知AI</span>
+                                <span class="highlight-text">15万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">100年に1度の事象を90日前予測</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-atom text-green-700 mr-3"></i>
+                        量子コンピューティング基盤
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg" style="display: flex; flex-direction: column;">
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">量子処理能力</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>量子ビット：<span class="highlight-text">5,000個</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>エラー率：<span class="highlight-text">0.01%以下</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>計算時間：<span class="highlight-text">従来の1/1000</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">予測精度</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>株価予測：<span class="highlight-text">65%→85%向上</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>為替予測：<span class="highlight-text">1週間先80%的中</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>GDP予測：<span class="highlight-text">±0.2%精度</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-100 p-2 rounded text-center" style="flex: 0 0 auto; margin: 0;">
+                            <p class="text-base font-bold text-green-800">量子優位性</p>
+                            <p class="text-2xl font-bold text-green-700">10^6倍</p>
+                            <p class="text-xs text-gray-600">計算速度向上</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 技術アーキテクチャとシステム連携 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">技術アーキテクチャと量子古典ハイブリッド</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-database text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">データ処理</h3>
+                    <div class="highlight-number-medium">1TB/秒</div>
+                    <p class="text-xs text-gray-600">リアルタイム解析</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-search text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">履歴データ</h3>
+                    <div class="highlight-number-medium">100PB</div>
+                    <p class="text-xs text-gray-600">高速検索</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-bolt text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">電力削減</h3>
+                    <div class="highlight-number-medium">70%</div>
+                    <p class="text-xs text-gray-600">量子活用効果</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-microchip text-green-700 mr-3"></i>
+                        量子・古典ハイブリッド基盤
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">量子処理システム</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>量子プロセッサー：<span class="highlight-text">5,000量子ビット</span></li>
+                            <li>古典GPU連携：<span class="highlight-text">10,000基のH100</span></li>
+                            <li>量子古典IF：<span class="highlight-text">リアルタイム変換</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">因果推論エンジン</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>QuantumCausalNet：<span class="highlight-text">独自開発</span></li>
+                            <li>時系列DB：<span class="highlight-text">4次元インデックス</span></li>
+                            <li>可視化：<span class="highlight-text">4次元データ表示</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-handshake text-green-700 mr-3"></i>
+                        エコシステム連携
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">金融・政府機関</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>メガバンク：<span class="highlight-text">三菱UFJ、みずほ</span></li>
+                            <li>政府機関：<span class="highlight-text">内閣府、日銀、金融庁</span></li>
+                            <li>証券会社：<span class="highlight-text">野村證券</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">研究・技術連携</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>研究機関：<span class="highlight-text">理研、産総研</span></li>
+                            <li>国際機関：<span class="highlight-text">IMF、世界銀行</span></li>
+                            <li>量子技術：<span class="highlight-text">IBM、Google Quantum</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（6ヶ月）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-chart-bar text-green-700 mr-2"></i>
+                            <span>株価予測精度: <span class="highlight-text">65%→85%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-exchange-alt text-green-700 mr-2"></i>
+                            <span>為替予測: <span class="highlight-text">1週間先80%的中</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-clock text-green-700 mr-2"></i>
+                            <span>計算時間: <span class="highlight-text">1/1000に短縮</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（2年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-coins text-green-700 mr-2"></i>
+                            <span>GDP予測: <span class="highlight-text">±0.2%精度達成</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-exclamation-triangle text-green-700 mr-2"></i>
+                            <span>災害予測: <span class="highlight-text">72時間前確定</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-building text-green-700 mr-2"></i>
+                            <span>企業倒産予測: <span class="highlight-text">95%精度</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（5年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-arrow-up text-green-700 mr-2"></i>
+                            <span>GDP押し上げ: <span class="highlight-text">2%向上</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-shield-alt text-green-700 mr-2"></i>
+                            <span>金融危機回避: <span class="highlight-text">10兆円損失防止</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg" style="display: flex; flex-direction: column;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-calculator text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>量子コンピュータ</span>
+                            <span>500億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>古典計算インフラ</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>ソフトウェア開発</span>
+                            <span>300億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>データ取得・整備</span>
+                            <span>150億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>人材採用・育成</span>
+                            <span>100億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">1,250億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>予測サービス提供</span>
+                            <span>2,000億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>コンサルティング</span>
+                            <span>800億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>API提供</span>
+                            <span>500億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>リスク回避価値</span>
+                            <span>3,000億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>年間合計</span>
+                            <span class="highlight-text">6,300億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="flex: 0 0 auto; margin: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 40倍</p>
+                    <p class="text-sm text-gray-700">5年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">初年度で黒字化達成</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※リスク管理向上による社会的価値を含む</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

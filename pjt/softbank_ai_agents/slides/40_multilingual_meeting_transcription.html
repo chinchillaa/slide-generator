@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リアルタイム多言語議事録生成システム</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
+            box-sizing: border-box;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .example-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">リアルタイム多言語議事録生成システム</h1>
+                <h2 class="text-4xl font-bold text-green-800">50万体のAIが会議・講演を瞬時に多言語で要約・構造化</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-language mr-3 text-green-700"></i>
+                言語の壁を越えた完全な情報共有を実現し、グローバルコラボレーションを促進
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと具体例 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 言語の壁を越えた完全な情報共有</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="example-box">
+                <h3 class="font-bold text-green-700 mb-3 flex items-center">
+                    <i class="fas fa-users mr-2"></i>
+                    国際IT企業戦略会議（日米中印独からの幹部参加）
+                </h3>
+                <div class="text-sm space-y-2">
+                    <p><i class="fas fa-microphone text-green-600 mr-2"></i>
+                    英語発言：<span class="highlight-text">「AI戦略をエッジコンピューティングに転換すべき【重要度：高】」</span></p>
+                    <p><i class="fas fa-chart-line text-green-600 mr-2"></i>
+                    中国語発言：<span class="highlight-text">「売上データ自動換算、グラフ付きで各国通貨表示」</span></p>
+                    <p><i class="fas fa-users-cog text-green-600 mr-2"></i>
+                    複数同時発話：<span class="highlight-text">「音声分離、話者別整理、技術検討タブに自動分類」</span></p>
+                    <p><i class="fas fa-heart text-green-600 mr-2"></i>
+                    感情ニュアンス：<span class="highlight-text">「That's interesting→興味深い（やや懐疑的）」</span></p>
+                    <p><i class="fas fa-rocket text-green-600 mr-2"></i>
+                    結果：<span class="positive">意思決定速度3倍、会議終了と同時に全員が次のアクションに移行</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-robot text-green-700 mr-3"></i>
+                        50万体の議事録生成AI
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">話者識別AI</span>
+                                <span class="highlight-text">15万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">100人同時発話99.9%精度分離</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">要点抽出AI</span>
+                                <span class="highlight-text">12万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">決定事項・アクション5段階スコア</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">文脈補完AI</span>
+                                <span class="highlight-text">10万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">省略語・代名詞95%精度補完</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-globe text-green-700 mr-3"></i>
+                        多言語・リアルタイム処理
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg" style="display: flex; flex-direction: column;">
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">処理性能</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>対応言語：<span class="highlight-text">195言語</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>遅延：<span class="highlight-text">0.3秒以下</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>ノイズ除去：<span class="highlight-text">99%</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">効率化効果</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>議事録作成：<span class="highlight-text">3時間→0分</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>会議時間：<span class="highlight-text">30%短縮</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>理解度：<span class="highlight-text">45%→92%</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-100 p-2 rounded text-center" style="flex: 0 0 auto; margin: 0;">
+                            <p class="text-base font-bold text-green-800">意思決定速度</p>
+                            <p class="text-2xl font-bold text-green-700">3倍</p>
+                            <p class="text-xs text-gray-600">66%短縮</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 技術アーキテクチャとシステム連携 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">技術アーキテクチャとセキュリティ基盤</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-building text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">企業数</h3>
+                    <div class="highlight-number-medium">5,000社</div>
+                    <p class="text-xs text-gray-600">ライセンス契約</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-handshake text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">国際提携</h3>
+                    <div class="highlight-number-medium">15件</div>
+                    <p class="text-xs text-gray-600">年間新規件数</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-chart-line text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">売上増加</h3>
+                    <div class="highlight-number-medium">20%</div>
+                    <p class="text-xs text-gray-600">グローバル売上</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-microchip text-green-700 mr-3"></i>
+                        音声処理・言語処理基盤
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">音声処理基盤</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>音源分離：<span class="highlight-text">ビームフォーミング+AI</span></li>
+                            <li>ノイズ除去：<span class="highlight-text">環境音99%除去</span></li>
+                            <li>リアルタイム：<span class="highlight-text">遅延0.3秒以下</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">言語処理エンジン</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>同時通訳：<span class="highlight-text">ニューラル機械翻訳</span></li>
+                            <li>要約生成：<span class="highlight-text">BERT系重要部分抽出</span></li>
+                            <li>構造化：<span class="highlight-text">自動カテゴリ分類</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-shield-alt text-green-700 mr-3"></i>
+                        セキュリティ・プライバシー保護
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">情報セキュリティ</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>暗号化：<span class="highlight-text">エンドツーエンド</span></li>
+                            <li>アクセス制御：<span class="highlight-text">参加者のみ議事録閲覧</span></li>
+                            <li>監査ログ：<span class="highlight-text">全アクセス記録</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">プライバシー配慮</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>個人情報：<span class="highlight-text">同意なく外部共有しない</span></li>
+                            <li>オフレコ対応：<span class="highlight-text">記録から自動除外</span></li>
+                            <li>編集権限：<span class="highlight-text">発言者の後修正可能</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（3ヶ月）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-file-alt text-green-700 mr-2"></i>
+                            <span>議事録作成: <span class="highlight-text">3時間→0分</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-language text-green-700 mr-2"></i>
+                            <span>翻訳コスト: <span class="highlight-text">10万円→0円</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-clock text-green-700 mr-2"></i>
+                            <span>会議時間: <span class="highlight-text">30%短縮</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（1年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-tachometer-alt text-green-700 mr-2"></i>
+                            <span>意思決定速度: <span class="highlight-text">3日→1日</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-check-circle text-green-700 mr-2"></i>
+                            <span>プロジェクト成功率: <span class="highlight-text">60%→85%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-exclamation-triangle text-green-700 mr-2"></i>
+                            <span>情報共有ミス: <span class="highlight-text">月15件→1件</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（3年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-chart-pie text-green-700 mr-2"></i>
+                            <span>グローバル売上: <span class="highlight-text">20%増加</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-handshake text-green-700 mr-2"></i>
+                            <span>国際提携: <span class="highlight-text">年5件→15件</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-lightbulb text-green-700 mr-2"></i>
+                            <span>国際共同特許: <span class="highlight-text">3倍増</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg" style="display: flex; flex-direction: column;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-calculator text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>システム開発</span>
+                            <span>120億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>多言語対応</span>
+                            <span>80億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>音声処理技術</span>
+                            <span>60億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>セキュリティ</span>
+                            <span>40億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>導入支援</span>
+                            <span>30億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">330億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>企業ライセンス</span>
+                            <span>600億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>会議単位利用</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>API提供</span>
+                            <span>150億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>コンサルティング</span>
+                            <span>100億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>年間合計</span>
+                            <span class="highlight-text">1,050億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="flex: 0 0 auto; margin: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 20倍</p>
+                    <p class="text-sm text-gray-700">5年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">初年度で投資回収</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※グローバルコラボレーション促進による価値を含む</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

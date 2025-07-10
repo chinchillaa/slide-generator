@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完全没入型言語習得メタバース</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
+            box-sizing: border-box;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .example-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">完全没入型言語習得メタバース</h1>
+                <h2 class="text-4xl font-bold text-green-800">留学と同等以上の学習効果</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-vr-cardboard mr-3 text-green-700"></i>
+                VR空間で母語話者のAIアバター1000体と生活しながら言語を自然習得
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと具体例 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - 仮想留学で自然な言語習得</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="example-box">
+                <h3 class="font-bold text-green-700 mb-3 flex items-center">
+                    <i class="fas fa-user mr-2"></i>
+                    東京在住・田中さん（35歳・会社員）の英語習得体験
+                </h3>
+                <div class="text-sm space-y-2">
+                    <p><i class="fas fa-bed text-green-600 mr-2"></i>
+                    毎朝6時、VRヘッドセットを装着すると<span class="highlight-text">ニューヨークのアパートで目覚める</span></p>
+                    <p><i class="fas fa-coffee text-green-600 mr-2"></i>
+                    ルームメイトAI「マイク」：<span class="highlight-text">「Good morning! Did you sleep well?」</span>自然な会話</p>
+                    <p><i class="fas fa-tv text-green-600 mr-2"></i>
+                    朝食時のニュース番組：<span class="highlight-text">難しい単語は日本語注釈付きで表示</span></p>
+                    <p><i class="fas fa-subway text-green-600 mr-2"></i>
+                    通勤電車で隣のAIと会話：<span class="highlight-text">「What do you do?」から仕事の話題へ発展</span></p>
+                    <p><i class="fas fa-check-circle text-green-600 mr-2"></i>
+                    1年後：<span class="positive">TOEIC 400点→890点、海外出張で自信満々にプレゼン</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-robot text-green-700 mr-3"></i>
+                        1000体のAI母語話者による学習環境
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">文脈理解AI</span>
+                                <span class="highlight-text">300体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">i+1理論・5000シチュエーション・興味ベース選択</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">発音矯正AI</span>
+                                <span class="highlight-text">200体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">3D口腔内可視化・音素単位分析・母語別最適化</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">文化学習AI</span>
+                                <span class="highlight-text">250体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">ビジネスマナー・慣用句・タブー回避・ユーモア理解</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">記憶定着AI</span>
+                                <span class="highlight-text">150体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">忘却曲線ベース・睡眠中復習・ストーリー記憶法</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">モチベーション維持AI</span>
+                                <span class="highlight-text">100体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">性格別動機付け・マイルストーン演出・スランプ対策</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                        劇的な効果
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg" style="display: flex; flex-direction: column;">
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">短期効果（3ヶ月）</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>基礎会話：<span class="highlight-text">A1→B1レベル</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>語彙数：<span class="highlight-text">500語→3000語</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>発音精度：<span class="highlight-text">40%→75%</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">中期効果（1年）</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>TOEIC：<span class="highlight-text">400→800点</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>流暢さ：<span class="highlight-text">60→150語/分</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>継続率：<span class="highlight-text">90%（従来20%）</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-100 p-2 rounded text-center" style="flex: 0 0 auto; margin: 0;">
+                            <p class="text-base font-bold text-green-800">学習効率</p>
+                            <p class="text-2xl font-bold text-green-700">従来の50%</p>
+                            <p class="text-xs text-gray-600">同等効果達成時間</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 技術アーキテクチャとシステム連携 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">VR技術基盤とエコシステム</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-globe text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">対応言語</h3>
+                    <div class="highlight-number-medium">10言語</div>
+                    <p class="text-xs text-gray-600">主要言語カバー</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-microphone text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">音声認識</h3>
+                    <div class="highlight-number-medium">99%</div>
+                    <p class="text-xs text-gray-600">認識精度</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-brain text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">適応学習</h3>
+                    <div class="highlight-number-medium">個別化</div>
+                    <p class="text-xs text-gray-600">性格・興味対応</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-vr-cardboard text-green-700 mr-3"></i>
+                        VR/メタバース基盤
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">没入型環境構築</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>フォトリアリスティック：<span class="highlight-text">NY、ロンドン、パリ等</span></li>
+                            <li>360度立体音響：<span class="highlight-text">没入感最大化</span></li>
+                            <li>ハプティクス：<span class="highlight-text">握手の触覚フィードバック</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">AI言語処理</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>大規模言語モデル：<span class="highlight-text">自然な会話生成</span></li>
+                            <li>感情認識：<span class="highlight-text">ストレスレベル推定</span></li>
+                            <li>適応的カリキュラム：<span class="highlight-text">強化学習で最適化</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">VR依存対策</h3>
+                        <div class="text-sm">
+                            <p><i class="fas fa-arrow-right text-green-600 mr-2"></i>
+                            <span class="highlight-text">1日最大2時間の推奨利用</span></p>
+                            <p><i class="fas fa-arrow-right text-green-600 mr-2"></i>
+                            <span class="highlight-text">現実世界との接続維持</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-handshake text-green-700 mr-3"></i>
+                        エコシステム連携
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">教育機関連携</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>大学：<span class="highlight-text">第二外国語教育採用</span></li>
+                            <li>企業研修：<span class="highlight-text">グローバル人材育成</span></li>
+                            <li>語学試験：<span class="highlight-text">TOEIC、TOEFL連携</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">業界連携</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>ネイティブ講師：<span class="highlight-text">補完的役割分担</span></li>
+                            <li>旅行業界：<span class="highlight-text">渡航前準備プログラム</span></li>
+                            <li>国際機関：<span class="highlight-text">多言語人材育成</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">文化的配慮</h3>
+                        <div class="text-sm">
+                            <p><i class="fas fa-arrow-right text-green-600 mr-2"></i>
+                            <span class="highlight-text">ステレオタイプ回避</span></p>
+                            <p><i class="fas fa-arrow-right text-green-600 mr-2"></i>
+                            <span class="highlight-text">多様な人物像・文化尊重</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（3ヶ月）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-comments text-green-700 mr-2"></i>
+                            <span>日常会話: <span class="highlight-text">A1→B1達成</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-book text-green-700 mr-2"></i>
+                            <span>語彙数: <span class="highlight-text">6倍増加</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-microphone text-green-700 mr-2"></i>
+                            <span>発音: <span class="highlight-text">ネイティブ75%</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（1年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-award text-green-700 mr-2"></i>
+                            <span>TOEIC: <span class="highlight-text">平均400点UP</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-tachometer-alt text-green-700 mr-2"></i>
+                            <span>流暢さ: <span class="highlight-text">150語/分</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-check text-green-700 mr-2"></i>
+                            <span>継続率: <span class="highlight-text">90%（業界最高）</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（3年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-globe text-green-700 mr-2"></i>
+                            <span>マルチリンガル: <span class="highlight-text">人口30%達成</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-briefcase text-green-700 mr-2"></i>
+                            <span>国際ビジネス: <span class="highlight-text">機会損失80%減</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-graduation-cap text-green-700 mr-2"></i>
+                            <span>留学代替: <span class="highlight-text">年100万人</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg" style="display: flex; flex-direction: column;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-calculator text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>VRコンテンツ開発</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>AI開発・学習</span>
+                            <span>150億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>多言語対応（10言語）</span>
+                            <span>100億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>インフラ構築</span>
+                            <span>50億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>コンテンツ制作</span>
+                            <span>100億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">600億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">年間収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>個人向け（月1万円×200万人）</span>
+                            <span>2,400億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>企業向けライセンス</span>
+                            <span>800億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>教育機関向け</span>
+                            <span>400億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>海外展開</span>
+                            <span>1,200億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>年間収益</span>
+                            <span class="highlight-text">5,000億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="flex: 0 0 auto; margin: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 30倍</p>
+                    <p class="text-sm text-gray-700">5年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-1">初年度で投資回収</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※語学産業市場規模5兆円創出効果を含む</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

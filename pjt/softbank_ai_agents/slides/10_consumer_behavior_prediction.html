@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI消費者行動完全予測システム</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .data-item {
+            margin-bottom: 25px;
+            padding-left: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+        .prediction-bar {
+            height: 12px;
+            background-color: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .prediction-fill {
+            height: 100%;
+            background-color: #22c55e;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">AI消費者行動</h1>
+                <h2 class="text-4xl font-bold text-green-800">完全予測システム</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-shopping-cart mr-3 text-green-700"></i>
+                1000万体のAIが個人の購買を99%の精度で予測
+            </div>
+            
+            <div class="flex items-center mt-8 text-gray-600">
+                <div class="icon-circle pulse">
+                    <i class="fas fa-brain text-green-700 text-xl"></i>
+                </div>
+                <span class="text-lg">「次に何を買うか」を購入前に把握</span>
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと概要 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">山田マーケティング部長の売上予測革命</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6" style="margin-left: 40px; margin-right: 40px; margin-top: 20px;">
+            <div>
+                <div class="data-item flex items-start">
+                    <div class="icon-circle">
+                        <i class="fas fa-user-tie text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold mb-2">山田マーケティング部長（食品メーカー）の実体験</div>
+                        <div class="feature-box">
+                            <p class="text-sm mb-2"><strong>Before（従来の予測システム）</strong> 😩</p>
+                            <ul class="list-disc ml-5 text-sm mb-2">
+                                <li>売上予測が<span class="negative">外れる</span>、無駄な在庫増加</li>
+                                <li>顧客ニーズの<span class="negative">把握困難</span>、機会損失</li>
+                                <li>新商品の<span class="negative">失敗率高い</span>（60%）</li>
+                            </ul>
+                            <p class="text-sm mb-2"><strong>After（AI予測システム）</strong> 😄</p>
+                            <ul class="list-disc ml-5 text-sm">
+                                <li>個人別購買予測で<span class="highlight-text">99%精度</span>を実現</li>
+                                <li>売上予測精度が<span class="highlight-text">65%→95%</span>に向上</li>
+                                <li>在庫回転率が<span class="highlight-text">300%改善</span></li>
+                                <li>新商品成功率が<span class="highlight-text">60%→85%</span>に向上</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-item flex items-start mt-4">
+                    <div class="icon-circle">
+                        <i class="fas fa-chart-pie text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold mb-2">実際の成功例：新商品プロテインバー</div>
+                        <div class="feature-box">
+                            <p class="text-sm mb-2"><i class="fas fa-quote-left text-green-700 mr-2"></i>
+                            「健康志向の高まりを個人レベルで予測」</p>
+                            <div class="bg-white p-2 rounded mt-2">
+                                <p class="text-xs">✅ AI予測：佐藤さん（30代会社員）が<span class="highlight-text">来週水曜日</span>に購入</p>
+                                <p class="text-xs">✅ 実績：予測通り水曜日に購入、<span class="highlight-text">87%的中</span></p>
+                                <p class="text-xs">✅ 山田部長：「個人の行動変化が<span class="highlight-text">手に取るように</span>分かる」</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg" style="max-width: 100%; overflow: hidden;">
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                    AI群の構成と予測精度
+                </h2>
+                
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">予測精度</h3>
+                    <div class="mb-3">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>購買予測</span>
+                            <span class="highlight-text">99%</span>
+                        </div>
+                        <div class="prediction-bar">
+                            <div class="prediction-fill" style="width: 99%;"></div>
+                        </div>
+                    </div>
+                    <div class="performance-item">
+                        <i class="fas fa-clock text-green-700 mr-2"></i>
+                        <span class="text-sm">タイミング精度：<span class="highlight-text">±2日以内</span></span>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">AI群構成</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-brain text-green-700 mr-2"></i>
+                            <span>購買意思決定AI：<span class="highlight-text">3000万体</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-calendar-alt text-green-700 mr-2"></i>
+                            <span>ライフイベント予測AI：<span class="highlight-text">2000万体</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-dollar-sign text-green-700 mr-2"></i>
+                            <span>価格感度分析AI：<span class="highlight-text">1500万体</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-exchange-alt text-green-700 mr-2"></i>
+                            <span>クロスセル予測AI：<span class="highlight-text">2000万体</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box bg-green-50" style="margin-bottom: 0;">
+                    <h3 class="font-bold text-green-700 mb-2">10万ブランド対応</h3>
+                    <p class="text-sm">各ブランドへの好感度を5段階で数値化し、購買確率を個人別に算出</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 主要機能と技術仕様 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">AI群の詳細機能と処理能力</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="segment-box">
+                    <div class="icon-circle mb-3">
+                        <i class="fas fa-brain text-green-700 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 mb-2">脳波分析</h3>
+                    <div class="highlight-number-medium">0.1秒</div>
+                    <p class="text-xs text-gray-600">購買欲求の検知速度</p>
+                </div>
+
+                <div class="segment-box">
+                    <div class="icon-circle mb-3">
+                        <i class="fas fa-dollar-sign text-green-700 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 mb-2">価格感度</h3>
+                    <div class="highlight-number-medium">個別化</div>
+                    <p class="text-xs text-gray-600">人×商品×時間で変動</p>
+                </div>
+
+                <div class="segment-box">
+                    <div class="icon-circle mb-3">
+                        <i class="fas fa-sync text-green-700 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 mb-2">リピート予測</h3>
+                    <div class="highlight-number-medium">95%</div>
+                    <p class="text-xs text-gray-600">再購入タイミング精度</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-robot text-green-700 mr-3"></i>
+                        購買意思決定AI（3000万体）
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <ul class="list-disc ml-5 text-sm">
+                            <li><span class="highlight-text">EEGセンサー連携</span>：スマートウォッチから脳波検出</li>
+                            <li><span class="highlight-text">情動・論理バランス</span>：衝動買い vs 計画購買をスコア化</li>
+                            <li><span class="highlight-text">ソーシャル影響度</span>：友人の購買が与える影響を数値化</li>
+                            <li><span class="highlight-text">購買タイミング</span>：給料日、ストレスレベルから算出</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">ライフイベント予測AI（2000万体）</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>SNS投稿から結婚確率を予測</li>
+                            <li>位置情報から引越しを<span class="highlight-text">3ヶ月前</span>に予測</li>
+                            <li>健康データから妊娠可能性を推定</li>
+                            <li>転職サイト閲覧からキャリア変化予測</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-database text-green-700 mr-3"></i>
+                        技術アーキテクチャ
+                    </h2>
+                    
+                    <div class="segment-box bg-gray-50 mb-4">
+                        <h3 class="font-bold text-green-700 mb-2">データ統合基盤</h3>
+                        <div class="text-sm">
+                            <div class="performance-item">
+                                <i class="fas fa-link text-green-700 mr-2"></i>
+                                <span>マルチソース統合：EC・店舗・アプリ・IoT</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-id-card text-green-700 mr-2"></i>
+                                <span>リアルタイムID統合：<span class="highlight-text">0.1秒</span>で名寄せ</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-project-diagram text-green-700 mr-2"></i>
+                                <span>グラフDB：<span class="highlight-text">10億ノード</span>処理</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="segment-box bg-gray-50">
+                        <h3 class="font-bold text-green-700 mb-2">AIモデル構成</h3>
+                        <div class="text-sm">
+                            <div class="performance-item">
+                                <i class="fas fa-layer-group text-green-700 mr-2"></i>
+                                <span>アンサンブル学習：<span class="highlight-text">1000種類</span>統合</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-brain text-green-700 mr-2"></i>
+                                <span>深層強化学習：長期価値最大化</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-shield-alt text-green-700 mr-2"></i>
+                                <span>連合学習：プライバシー保護分散処理</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 期待効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-chart-bar text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-4">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（6ヶ月）</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>売上予測精度: <span class="highlight-text">80%→95%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>レコメンドクリック率: <span class="highlight-text">15%→35%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>カート放棄率: <span class="highlight-text">70%→40%</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-4">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（2年）</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>顧客生涯価値（LTV）: <span class="highlight-text">200%向上</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>リピート率: <span class="highlight-text">40%→70%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>顧客獲得コスト: <span class="highlight-text">50%削減</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（5年）</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>市場シェア: <span class="highlight-text">業界TOP3</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>在庫回転率: <span class="highlight-text">300%改善</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>廃棄ロス: <span class="highlight-text">80%削減</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-6 rounded-lg">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-yen-sign text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>AIモデル開発</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>データ基盤構築</span>
+                            <span>100億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>システム統合</span>
+                            <span>80億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>導入支援</span>
+                            <span>20億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">400億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>小売業向けサービス</span>
+                            <span>500億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>EC事業者向け</span>
+                            <span>300億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>メーカー向け分析</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>データ販売</span>
+                            <span>100億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">1,100億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-4 rounded-lg text-center">
+                    <p class="text-2xl font-bold text-green-800">ROI: 8.3倍</p>
+                    <p class="text-sm text-gray-700">3年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-2">初年度で黒字化</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※明示的同意に基づくデータ利用、価格差別の禁止など倫理的配慮を徹底</p>
+        </div>
+    </div>
+
+    <!-- スライド5: エコシステム連携と倫理的配慮 -->
+    <div class="slide-container" id="slide-5">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">エコシステム連携と倫理的配慮</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-link text-green-700 mr-3"></i>
+                    エコシステム連携
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">ECプラットフォーム</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-shopping-cart text-green-700 mr-2"></i>
+                            <span>Amazon、楽天、Yahoo!ショッピング</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-mobile-alt text-green-700 mr-2"></i>
+                            <span>メルカリ、ZOZOTOWN等のアプリ連携</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">決済・物流連携</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-credit-card text-green-700 mr-2"></i>
+                            <span>PayPay、メルペイ、クレジットカード各社</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-truck text-green-700 mr-2"></i>
+                            <span>ヤマト、佐川、日本郵便との配送最適化</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-store text-green-700 mr-2"></i>
+                            <span>コンビニ、スーパー、ドラッグストア</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-box bg-green-50">
+                    <h3 class="font-bold text-green-700 mb-2">データ活用範囲</h3>
+                    <p class="text-sm">購買行動の予測と最適化に限定。個人の監視や不当な価格操作は一切行わない。</p>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-balance-scale text-green-700 mr-3"></i>
+                    リスク管理と倫理的配慮
+                </h2>
+
+                <div class="segment-box bg-gray-50 mb-3" style="max-width: 100%; overflow: hidden;">
+                    <h3 class="font-bold text-green-700 mb-2">データプライバシー</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-user-shield text-green-700 mr-2"></i>
+                            <span><span class="highlight-text">明示的同意</span>：分かりやすい説明と同意取得</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-minimize text-green-700 mr-2"></i>
+                            <span>データ最小化：必要最小限のデータのみ使用</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-door-open text-green-700 mr-2"></i>
+                            <span>オプトアウト：いつでもデータ利用停止可能</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-exchange-alt text-green-700 mr-2"></i>
+                            <span>データポータビリティ：他サービスへの移行権</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box bg-gray-50" style="margin-bottom: 0;">
+                    <h3 class="font-bold text-green-700 mb-2">公正性の確保</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-ban text-red-500 mr-2"></i>
+                            <span>価格差別の禁止：同一商品の不当な価格差を排除</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-eye text-green-700 mr-2"></i>
+                            <span>アルゴリズム透明性：予測ロジックの説明機能</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-equals text-green-700 mr-2"></i>
+                            <span>公平な機会：全ての顧客に平等なサービス提供</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-gavel text-green-700 mr-2"></i>
+                            <span>倫理委員会：外部専門家による定期監査</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 5</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 5;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

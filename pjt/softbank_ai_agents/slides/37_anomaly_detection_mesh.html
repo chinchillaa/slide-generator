@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>異常検知AIメッシュネットワーク</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
+            box-sizing: border-box;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .example-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">異常検知AIメッシュネットワーク</h1>
+                <h2 class="text-4xl font-bold text-green-800">80万体のAIが全領域を監視し、社会の安全を守る</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-shield-alt mr-3 text-green-700"></i>
+                サイバー攻撃から設備故障、健康異常まで包括的に監視・予防
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと具体例 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">コンセプト - あらゆる異常を即座に検知</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="example-box">
+                <h3 class="font-bold text-green-700 mb-3 flex items-center">
+                    <i class="fas fa-industry mr-2"></i>
+                    大手製造業での設備故障予測・健康異常・金融不正検知
+                </h3>
+                <div class="text-sm space-y-2">
+                    <p><i class="fas fa-cogs text-green-600 mr-2"></i>
+                    設備異常検知：<span class="highlight-text">「工場B製造ライン#3で0.1mm振動変化検知」</span></p>
+                    <p><i class="fas fa-wrench text-green-600 mr-2"></i>
+                    72時間先予測：<span class="highlight-text">「ベアリング破損リスク85%、潤滑油劣化が原因」</span></p>
+                    <p><i class="fas fa-heartbeat text-green-600 mr-2"></i>
+                    健康異常発見：<span class="highlight-text">「田中さんの心拍変動15%乖離、心房細動の前兆」</span></p>
+                    <p><i class="fas fa-money-bill-wave text-green-600 mr-2"></i>
+                    金融不正阻止：<span class="highlight-text">「送金パターン0.01%異常、なりすまし可能性62%」</span></p>
+                    <p><i class="fas fa-check-circle text-green-600 mr-2"></i>
+                    結果：<span class="positive">1億円損失回避、重篤化防止、月間10億円被害阻止</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-network-wired text-green-700 mr-3"></i>
+                        80万体の異常検知AI
+                    </h2>
+                    
+                    <div class="space-y-2">
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">パターン学習AI</span>
+                                <span class="highlight-text">25万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">0.001%の異常も見逃さない感度</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">相関分析AI</span>
+                                <span class="highlight-text">20万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">1,000種類データソース横断分析</p>
+                        </div>
+
+                        <div class="segment-box p-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-green-700">予兆検知AI</span>
+                                <span class="highlight-text">15万体</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">数日前から予兆を捉え予防措置提案</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-tachometer-alt text-green-700 mr-3"></i>
+                        驚異的な検知性能
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg" style="display: flex; flex-direction: column;">
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">検知精度・速度</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>検知精度：<span class="highlight-text">92%（誤検知8%）</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>検知速度：<span class="highlight-text">平均0.5秒</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>予兆検知：<span class="highlight-text">24時間前60%発見</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="feature-box bg-white mb-2" style="flex: 0 0 auto;">
+                            <h3 class="font-bold text-green-700 mb-1 text-sm">効果実績</h3>
+                            <ul class="text-xs space-y-1">
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>システム障害：<span class="highlight-text">80%削減</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>サイバー攻撃：<span class="highlight-text">90%被害減少</span></li>
+                                <li><i class="fas fa-check text-green-600 mr-1"></i>設備稼働率：<span class="highlight-text">85%→97%</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-100 p-2 rounded text-center" style="flex: 0 0 auto; margin: 0;">
+                            <p class="text-base font-bold text-green-800">社会インフラ信頼性</p>
+                            <p class="text-2xl font-bold text-green-700">99.99%</p>
+                            <p class="text-xs text-gray-600">3年後達成目標</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 技術アーキテクチャとシステム連携 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">技術アーキテクチャと分散処理基盤</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-cloud text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">エッジノード</h3>
+                    <div class="highlight-number-medium">10万箇所</div>
+                    <p class="text-xs text-gray-600">配置エッジAI</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-signal text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">5G/6G活用</h3>
+                    <div class="highlight-number-medium">超低遅延</div>
+                    <p class="text-xs text-gray-600">リアルタイム検知</p>
+                </div>
+
+                <div class="segment-box text-center">
+                    <div class="icon-circle mx-auto mb-2">
+                        <i class="fas fa-brain text-green-700"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 text-sm mb-1">アンサンブル学習</h3>
+                    <div class="highlight-number-medium">15種類</div>
+                    <p class="text-xs text-gray-600">アルゴリズム統合</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-microchip text-green-700 mr-3"></i>
+                        分散処理基盤
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">エッジ・フォグ・クラウド統合</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>エッジノード：<span class="highlight-text">10万箇所配置</span></li>
+                            <li>フォグ層：<span class="highlight-text">地域ごと中間処理</span></li>
+                            <li>クラウド統合：<span class="highlight-text">全体最適化と相関分析</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">異常検知エンジン</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>オンライン学習：<span class="highlight-text">リアルタイムモデル更新</span></li>
+                            <li>説明可能AI：<span class="highlight-text">異常の理由を可視化</span></li>
+                            <li>フェデレーション：<span class="highlight-text">組織超越学習</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-3 flex items-center">
+                        <i class="fas fa-handshake text-green-700 mr-3"></i>
+                        産業エコシステム連携
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">製造業・インフラ</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>製造業：<span class="highlight-text">トヨタ、日立、三菱重工</span></li>
+                            <li>インフラ：<span class="highlight-text">電力、ガス、水道、通信</span></li>
+                            <li>医療：<span class="highlight-text">大学病院、健診センター</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">金融・行政連携</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>金融：<span class="highlight-text">メガバンク、証券会社</span></li>
+                            <li>行政：<span class="highlight-text">警察、消防、自治体</span></li>
+                            <li>セキュリティ：<span class="highlight-text">量子暗号で通信保護</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-chart-line text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（3ヶ月）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-search text-green-700 mr-2"></i>
+                            <span>検知精度: <span class="highlight-text">92%達成</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-bolt text-green-700 mr-2"></i>
+                            <span>検知速度: <span class="highlight-text">平均0.5秒</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-eye text-green-700 mr-2"></i>
+                            <span>カバレッジ: <span class="highlight-text">85%導入</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（1年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-exclamation-triangle text-green-700 mr-2"></i>
+                            <span>システム障害: <span class="highlight-text">80%削減</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-shield-alt text-green-700 mr-2"></i>
+                            <span>サイバー攻撃: <span class="highlight-text">90%被害減少</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-chart-bar text-green-700 mr-2"></i>
+                            <span>設備稼働率: <span class="highlight-text">85%→97%</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（3年）</h3>
+                    <div class="text-sm space-y-1">
+                        <div class="performance-item">
+                            <i class="fas fa-check-circle text-green-700 mr-2"></i>
+                            <span>信頼性: <span class="highlight-text">99.99%達成</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-heartbeat text-green-700 mr-2"></i>
+                            <span>健康寿命: <span class="highlight-text">2年延長</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-truck text-green-700 mr-2"></i>
+                            <span>サプライチェーン: <span class="highlight-text">95%途絶削減</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-lg" style="display: flex; flex-direction: column;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-calculator text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>エッジデバイス</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>AIシステム開発</span>
+                            <span>180億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>ネットワーク構築</span>
+                            <span>120億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>セキュリティ</span>
+                            <span>80億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>導入支援</span>
+                            <span>70億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">650億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4" style="flex: 0 0 auto;">
+                    <h3 class="font-bold text-gray-700 mb-2">年間価値創出</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>障害回避価値</span>
+                            <span>3,000億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>サイバー攻撃防御</span>
+                            <span>1,500億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>予防保全効果</span>
+                            <span>800億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>健康医療費削減</span>
+                            <span>500億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>保険料削減</span>
+                            <span>200億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>年間合計</span>
+                            <span class="highlight-text">6,000億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-3 rounded-lg text-center" style="flex: 0 0 auto; margin: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 30倍</p>
+                    <p class="text-sm text-gray-700">継続的な年間価値創出</p>
+                    <p class="text-xs text-gray-600 mt-1">初年度で投資回収完了</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※社会全体の安定性向上による価値を含む</p>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 4</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

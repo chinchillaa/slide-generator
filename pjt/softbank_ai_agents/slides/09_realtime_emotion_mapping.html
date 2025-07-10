@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全国民感情リアルタイムマッピング</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .data-item {
+            margin-bottom: 25px;
+            padding-left: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e;
+        }
+        .performance-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .highlight-text {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: rgba(34, 197, 94, 0.05);
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">全国民感情</h1>
+                <h2 class="text-4xl font-bold text-green-800">リアルタイムマッピング</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="fas fa-map-marked-alt mr-3 text-green-700"></i>
+                「今、日本人が何を感じているか」を瞬時に可視化
+            </div>
+            
+            <div class="flex items-center mt-8 text-gray-600">
+                <div class="icon-circle pulse">
+                    <i class="fas fa-heartbeat text-green-700 text-xl"></i>
+                </div>
+                <span class="text-lg">1億個のセンシングポイントから社会の感情を捉える</span>
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: コンセプトと概要 -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">伊藤政策室長の公共政策変革体験</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6" style="margin-left: 40px; margin-right: 40px; margin-top: 20px;">
+            <div>
+                <div class="data-item flex items-start">
+                    <div class="icon-circle">
+                        <i class="fas fa-user-tie text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold mb-2">伊藤政策室長（内閣府）の実体験</div>
+                        <div class="feature-box">
+                            <p class="text-sm mb-2"><strong>Before（従来の政策立案）</strong> 😩</p>
+                            <ul class="list-disc ml-5 text-sm mb-2">
+                                <li>反対率高い政策を<span class="negative">後から知る</span></li>
+                                <li>世論調査では<span class="negative">具体的原因不明</span></li>
+                                <li>対策が<span class="negative">後手後手</span>になりがち</li>
+                            </ul>
+                            <p class="text-sm mb-2"><strong>After（リアルタイムマッピング）</strong> 😄</p>
+                            <ul class="list-disc ml-5 text-sm">
+                                <li>政策発表前に<span class="highlight-text">反対率を予測</span>、必要に応じて修正</li>
+                                <li>地域・世代別の<span class="highlight-text">詳細反応</span>を把握</li>
+                                <li>政策満足度が<span class="highlight-text">45%→ 65%</span>に向上</li>
+                                <li>政治への信頼度が<span class="highlight-text">30%→ 70%</span>に大幅改善</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-item flex items-start mt-6">
+                    <div class="icon-circle">
+                        <i class="fas fa-exclamation-triangle text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold mb-2">実際の成功例：炭素税導入政策</div>
+                        <div class="feature-box">
+                            <p class="text-sm mb-2"><i class="fas fa-quote-left text-green-700 mr-2"></i>
+                            「きっと家計負担が増える」と印象を持っていたことを事前に把握</p>
+                            <div class="bg-white p-2 rounded mt-2">
+                                <p class="text-xs">✅ 対策：<span class="highlight-text">防災・子育て支援</span>とセットで発表</p>
+                                <p class="text-xs">✅ 結果：反対率を<span class="highlight-text">70%→ 35%</span>に抑制</p>
+                                <p class="text-xs">✅ 伊藤室長：「国民感情を先取りできて良かった」</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg" style="max-width: 100%; overflow: hidden;">
+                <h2 class="text-xl font-bold mb-3 flex items-center">
+                    <i class="fas fa-map text-green-700 mr-3"></i>
+                    感情マッピング機能
+                </h2>
+                
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">地域感情マッピング</h3>
+                    <div class="performance-item">
+                        <i class="fas fa-city text-green-700 mr-2"></i>
+                        <span class="text-sm">市区町村単位（<span class="highlight-text">1741地域</span>）</span>
+                    </div>
+                    <div class="performance-item">
+                        <i class="fas fa-clock text-green-700 mr-2"></i>
+                        <span class="text-sm">1時間ごとの感情変化追跡</span>
+                    </div>
+                    <div class="performance-item">
+                        <i class="fas fa-cube text-green-700 mr-2"></i>
+                        <span class="text-sm">3Dヒートマップ（高度別分布）</span>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">トレンド予測</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-crystal-ball text-green-700 mr-2"></i>
+                            <span>ブーム予測：<span class="highlight-text">最大6ヶ月前</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-sync text-green-700 mr-2"></i>
+                            <span>世代間伝播速度の計測</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-search text-green-700 mr-2"></i>
+                            <span>マイクロトレンド早期発見</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box bg-green-50" style="margin-bottom: 0;">
+                    <h3 class="font-bold text-green-700 mb-2">72種類の感情分類</h3>
+                    <p class="text-sm">喜び、悲しみ、怒り、恐れ、驚き、嫌悪の基本6感情を細分化し、日本人特有の感情も含む72種類で分析</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 主要機能と技術仕様 -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">AI群の詳細機能と処理能力</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="segment-box">
+                    <div class="icon-circle mb-3">
+                        <i class="fas fa-tachometer-alt text-green-700 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 mb-2">処理能力</h3>
+                    <div class="highlight-number-medium">1PB/秒</div>
+                    <p class="text-xs text-gray-600">リアルタイムデータ処理</p>
+                </div>
+
+                <div class="segment-box">
+                    <div class="icon-circle mb-3">
+                        <i class="fas fa-exclamation-triangle text-green-700 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 mb-2">炎上予測</h3>
+                    <div class="highlight-number-medium">6時間前</div>
+                    <p class="text-xs text-gray-600">SNS炎上を事前検知</p>
+                </div>
+
+                <div class="segment-box">
+                    <div class="icon-circle mb-3">
+                        <i class="fas fa-bullseye text-green-700 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-green-700 mb-2">予測精度</h3>
+                    <div class="highlight-number-medium">90%</div>
+                    <p class="text-xs text-gray-600">政策反応予測（±5%）</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-shield-alt text-green-700 mr-3"></i>
+                        異常検知AI（1000体）
+                    </h2>
+                    
+                    <div class="feature-box">
+                        <ul class="list-disc ml-5 text-sm">
+                            <li><span class="highlight-text">集団パニック指標</span>：急激な感情変化を検知</li>
+                            <li><span class="highlight-text">デマ拡散追跡</span>：虚偽情報をリアルタイム追跡</li>
+                            <li><span class="highlight-text">群集心理分析</span>：同調圧力の強さを数値化</li>
+                            <li><span class="highlight-text">早期警告</span>：関係機関への自動通報</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3 class="font-bold mb-2">政策影響評価AI（500体）</h3>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>政策発表前シミュレーション</li>
+                            <li>1分ごとのリアルタイムフィードバック</li>
+                            <li>セグメント別（年齢・職業・地域）影響度</li>
+                            <li>最適コミュニケーション戦略の自動生成</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-database text-green-700 mr-3"></i>
+                        技術アーキテクチャ
+                    </h2>
+                    
+                    <div class="segment-box bg-gray-50 mb-4" style="max-width: 100%; overflow: hidden;">
+                        <h3 class="font-bold text-green-700 mb-2">データ処理基盤</h3>
+                        <div class="text-sm">
+                            <div class="performance-item">
+                                <i class="fas fa-lock text-green-700 mr-2"></i>
+                                <span>差分プライバシー・k-匿名性</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-server text-green-700 mr-2"></i>
+                                <span>全国<span class="highlight-text">1万拠点</span>のエッジ処理</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-stream text-green-700 mr-2"></i>
+                                <span>Apache Kafka/Flink高速処理</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="segment-box bg-gray-50" style="margin-bottom: 0;">
+                        <h3 class="font-bold text-green-700 mb-2">AIモデル構成</h3>
+                        <div class="text-sm">
+                            <div class="performance-item">
+                                <i class="fas fa-layer-group text-green-700 mr-2"></i>
+                                <span>マルチモーダル統合分析</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-project-diagram text-green-700 mr-2"></i>
+                                <span>因果グラフ＋反事実推論</span>
+                            </div>
+                            <div class="performance-item">
+                                <i class="fas fa-robot text-green-700 mr-2"></i>
+                                <span>Transformerベース予測モデル</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: 期待効果とROI -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">期待効果と投資対効果</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-chart-bar text-green-700 mr-3"></i>
+                    段階的な効果測定
+                </h2>
+
+                <div class="segment-box mb-4">
+                    <h3 class="font-bold text-green-700 mb-2">短期効果（3ヶ月）</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>社会問題早期発見率: <span class="highlight-text">85%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>トレンド予測的中率: <span class="highlight-text">75%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>デマ拡散阻止率: <span class="highlight-text">80%</span>（24時間以内）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-4">
+                    <h3 class="font-bold text-green-700 mb-2">中期効果（1年）</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>マーケティングROI: <span class="highlight-text">300%向上</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>社会不安事案: <span class="highlight-text">60%減少</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>政策満足度: <span class="highlight-text">45%→65%</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box">
+                    <h3 class="font-bold text-green-700 mb-2">長期効果（3年）</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>国民幸福度指数: <span class="highlight-text">15ポイント上昇</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>政治への信頼度: <span class="highlight-text">30%→70%</span></span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-angle-right text-green-700 mr-2"></i>
+                            <span>社会的分断: <span class="highlight-text">50%緩和</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-6 rounded-lg" style="max-width: 100%; overflow: hidden;">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-yen-sign text-green-700 mr-3"></i>
+                    投資対効果分析
+                </h2>
+
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-700 mb-2">初期投資</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>システム開発</span>
+                            <span>150億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>センサー・インフラ整備</span>
+                            <span>100億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>AIモデル開発</span>
+                            <span>80億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>パートナー連携</span>
+                            <span>20億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">350億円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-700 mb-2">年間期待収益</h3>
+                    <div class="feature-box bg-white">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>政府向けサービス</span>
+                            <span>200億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>企業向け分析</span>
+                            <span>400億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>匿名化データ販売</span>
+                            <span>150億円</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>コンサルティング</span>
+                            <span>50億円</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-bold">
+                            <span>合計</span>
+                            <span class="highlight-text">800億円/年</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-100 p-4 rounded-lg text-center" style="margin-bottom: 0;">
+                    <p class="text-2xl font-bold text-green-800">ROI: 7.1倍</p>
+                    <p class="text-sm text-gray-700">3年間での投資リターン</p>
+                    <p class="text-xs text-gray-600 mt-2">初年度で投資回収</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-600" style="position: absolute; bottom: 80px; left: 40px;">
+            <p>※プライバシー保護を最優先に、個人を特定しない集団傾向の把握に限定</p>
+        </div>
+    </div>
+
+    <!-- スライド5: エコシステム連携と倫理的配慮 -->
+    <div class="slide-container" id="slide-5">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-4" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">エコシステム連携と倫理的配慮</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-link text-green-700 mr-3"></i>
+                    エコシステム連携
+                </h2>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">プラットフォーマー連携</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-hashtag text-green-700 mr-2"></i>
+                            <span>Twitter、Facebook、Instagram、TikTok</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-mobile-alt text-green-700 mr-2"></i>
+                            <span>通信キャリア3社の位置情報連携</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box mb-3">
+                    <h3 class="font-bold text-green-700 mb-2">政府・メディア連携</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-landmark text-green-700 mr-2"></i>
+                            <span>内閣府、総務省、経産省との政策連携</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-tv text-green-700 mr-2"></i>
+                            <span>NHK、民放各社との視聴データ共有</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-university text-green-700 mr-2"></i>
+                            <span>大学・研究機関との共同研究</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-box bg-green-50">
+                    <h3 class="font-bold text-green-700 mb-2">データ活用範囲</h3>
+                    <p class="text-sm">集団傾向の把握と社会課題の早期発見に限定。個人の監視や世論操作は一切行わない。</p>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-balance-scale text-green-700 mr-3"></i>
+                    リスク管理と倫理的配慮
+                </h2>
+
+                <div class="segment-box bg-gray-50 mb-3" style="max-width: 100%; overflow: hidden;">
+                    <h3 class="font-bold text-green-700 mb-2">プライバシー保護</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-user-shield text-green-700 mr-2"></i>
+                            <span><span class="highlight-text">完全匿名化</span>：個人特定不可能</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-check-circle text-green-700 mr-2"></i>
+                            <span>明示的同意のあるデータのみ使用</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-compress text-green-700 mr-2"></i>
+                            <span>データ最小化原則の徹底</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-search text-green-700 mr-2"></i>
+                            <span>第三者機関による定期監査</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segment-box bg-gray-50" style="margin-bottom: 0;">
+                    <h3 class="font-bold text-green-700 mb-2">倫理的運用</h3>
+                    <div class="text-sm">
+                        <div class="performance-item">
+                            <i class="fas fa-eye text-green-700 mr-2"></i>
+                            <span>透明性：使用目的・方法の公開</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-balance-scale-right text-green-700 mr-2"></i>
+                            <span>バイアス除去の継続的監視</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-vote-yea text-green-700 mr-2"></i>
+                            <span>民主主義：健全な議論の促進</span>
+                        </div>
+                        <div class="performance-item">
+                            <i class="fas fa-ban text-red-500 mr-2"></i>
+                            <span>監視社会化の完全回避</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 5</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 5;
+
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        initializeIndicators();
+        updateSlideDisplay();
+    </script>
+</body>
+</html>
