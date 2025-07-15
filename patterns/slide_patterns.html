@@ -1,0 +1,2451 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スライドデザインパターン集 - 全19パターン</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .slide-container {
+            width: 1280px;
+            height: 850px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .slide-container.active {
+            display: block;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            color: #888;
+            font-size: 24px;
+        }
+        .green-accent {
+            background-color: #22c55e;
+        }
+        .title-box {
+            border-left: 8px solid #22c55e;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-weight: 500;
+        }
+        .bottom-line {
+            height: 3px;
+            background: linear-gradient(to right, #22c55e, #86efac);
+            margin-top: -10px;
+        }
+        .highlight-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .highlight-number-medium {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #22c55e;
+        }
+        .improvement {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .negative {
+            color: #e53e3e;
+        }
+        .positive {
+            color: #22c55e;
+        }
+        .data-item {
+            margin-bottom: 35px;
+            padding: 25px 15px;
+            background-color: #fafafa;
+            border-radius: 8px;
+            border-left: 4px solid #22c55e;
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 160px;
+        }
+        .segment-box:hover {
+            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+        }
+        .segment-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .segment-title {
+            color: #22c55e;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .feature-item {
+            background-color: #fafafa;
+            border-radius: 12px;
+            padding: 40px 30px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            min-height: 250px;
+        }
+        .feature-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+        .team-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .team-card:hover {
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+            transform: translateY(-5px);
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 30px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: -30px;
+            width: 2px;
+            background-color: #22c55e;
+        }
+        .timeline-item:last-child::before {
+            bottom: 0;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #22c55e;
+        }
+        .pricing-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .pricing-card.recommended {
+            border-color: #22c55e;
+            transform: scale(1.05);
+        }
+        .pricing-card.recommended::before {
+            content: 'おすすめ';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #22c55e;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .comparison-table th {
+            background-color: #22c55e;
+            color: white;
+            font-weight: bold;
+        }
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .progress-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background-color: #22c55e;
+            z-index: 1;
+        }
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #22c55e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* ナビゲーション */
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .nav-button {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: #16a34a;
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+        }
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+        }
+        .indicator-dot.active {
+            background-color: #22c55e;
+            transform: scale(1.2);
+        }
+        .slide-number {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        /* サイドバー目次 */
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 60vh;
+            overflow-y: auto;
+            z-index: 10;
+            width: 200px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .sidebar-title {
+            font-weight: bold;
+            color: #22c55e;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .toc-item {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .toc-item:hover {
+            background-color: #f3f4f6;
+            padding-left: 16px;
+        }
+        .toc-item.active {
+            background-color: #22c55e;
+            color: white;
+        }
+        
+        /* コンテンツラッパー */
+        .content-wrapper {
+            min-height: calc(100vh - 100px);
+            padding-left: 240px;
+            padding-top: 40px;
+            padding-bottom: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chart-container {
+            position: relative;
+            height: 380px;
+            width: 100%;
+        }
+        
+        /* スライド4（縦並び）専用のスペーシング調整 */
+        #slide-4 .space-y-3 > * + * {
+            margin-top: 30px;
+        }
+        
+        /* フォントサイズの調整 */
+        .segment-box h3,
+        .feature-item h2,
+        .feature-item h3 {
+            font-size: 1.3rem;
+            line-height: 1.4;
+        }
+        
+        .feature-item p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- サイドバー目次 -->
+    <div class="sidebar">
+        <div class="sidebar-title">デザインパターン集</div>
+        <div class="toc-item active" onclick="goToSlide(1)">1. タイトルページ</div>
+        <div class="toc-item" onclick="goToSlide(2)">2. 2カラム比較</div>
+        <div class="toc-item" onclick="goToSlide(3)">3. 3項目横並び</div>
+        <div class="toc-item" onclick="goToSlide(4)">4. 3項目縦並び</div>
+        <div class="toc-item" onclick="goToSlide(5)">5. 財務データ表示</div>
+        <div class="toc-item" onclick="goToSlide(6)">6. KPIダッシュボード</div>
+        <div class="toc-item" onclick="goToSlide(7)">7. プロセスフロー</div>
+        <div class="toc-item" onclick="goToSlide(8)">8. チーム紹介</div>
+        <div class="toc-item" onclick="goToSlide(9)">9. 機能グリッド</div>
+        <div class="toc-item" onclick="goToSlide(10)">10. タイムライン</div>
+        <div class="toc-item" onclick="goToSlide(11)">11. 料金プラン</div>
+        <div class="toc-item" onclick="goToSlide(12)">12. 競合比較</div>
+        <div class="toc-item" onclick="goToSlide(13)">13. 2×2マトリックス</div>
+        <div class="toc-item" onclick="goToSlide(14)">14. KPIダッシュボード</div>
+        <div class="toc-item" onclick="goToSlide(15)">15. プロセスフロー</div>
+        <div class="toc-item" onclick="goToSlide(16)">16. SWOT分析</div>
+        <div class="toc-item" onclick="goToSlide(17)">17. タイムライン</div>
+        <div class="toc-item" onclick="goToSlide(18)">18. 組織階層</div>
+        <div class="toc-item" onclick="goToSlide(19)">19. 円形配置</div>
+    </div>
+
+    <!-- コンテンツラッパー -->
+    <div class="content-wrapper">
+    
+    <!-- スライド1: タイトルページパターン -->
+    <div class="slide-container active" id="slide-1">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="flex flex-col justify-center h-full px-20 py-16">
+            <div class="green-accent h-1 w-full mb-10"></div>
+            
+            <div class="title-box mb-8">
+                <h1 class="text-5xl font-bold mb-6">プレゼンテーション</h1>
+                <h2 class="text-4xl font-bold text-green-800">タイトルパターン</h2>
+            </div>
+            
+            <div class="subtitle text-2xl mt-10">
+                <i class="far fa-calendar-alt mr-3 text-green-700"></i>
+                2024年12月 | 説明文やサブタイトルを記載
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bottom-line w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: 2カラム比較レイアウト -->
+    <div class="slide-container" id="slide-2">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">Before vs After</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- Before -->
+            <div class="segment-box bg-red-50">
+                <div class="flex items-center mb-4">
+                    <div class="icon-circle" style="background-color: rgba(239, 68, 68, 0.15);">
+                        <i class="fas fa-times text-red-600 text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-red-700">Before（改善前）</h2>
+                </div>
+                <div class="ml-12">
+                    <div class="data-item">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
+                            <span>問題点1：処理時間が長い</span>
+                        </div>
+                        <p class="text-gray-600 text-sm ml-6">平均処理時間: 5分30秒</p>
+                    </div>
+                    <div class="data-item">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
+                            <span>問題点2：エラー率が高い</span>
+                        </div>
+                        <p class="text-gray-600 text-sm ml-6">エラー発生率: 12%</p>
+                    </div>
+                    <div class="data-item">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
+                            <span>問題点3：手動作業が多い</span>
+                        </div>
+                        <p class="text-gray-600 text-sm ml-6">自動化率: 30%</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- After -->
+            <div class="segment-box bg-green-50">
+                <div class="flex items-center mb-4">
+                    <div class="icon-circle">
+                        <i class="fas fa-check text-green-700 text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-green-700">After（改善後）</h2>
+                </div>
+                <div class="ml-12">
+                    <div class="data-item">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-rocket text-green-600 mr-2"></i>
+                            <span>改善1：処理時間を大幅短縮</span>
+                        </div>
+                        <p class="text-gray-600 text-sm ml-6">平均処理時間: <span class="font-bold text-green-600">1分15秒</span> (-77%)</p>
+                    </div>
+                    <div class="data-item">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-shield-alt text-green-600 mr-2"></i>
+                            <span>改善2：エラー率を大幅削減</span>
+                        </div>
+                        <p class="text-gray-600 text-sm ml-6">エラー発生率: <span class="font-bold text-green-600">0.5%</span> (-96%)</p>
+                    </div>
+                    <div class="data-item">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-cogs text-green-600 mr-2"></i>
+                            <span>改善3：自動化を大幅推進</span>
+                        </div>
+                        <p class="text-gray-600 text-sm ml-6">自動化率: <span class="font-bold text-green-600">95%</span> (+65%)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-sm text-gray-600 pt-4" style="position: absolute; bottom: 20px; left: 40px;">
+            <p>※数値は実測値に基づく結果です</p>
+        </div>
+    </div>
+
+    <!-- スライド3: 3項目横並びレイアウト -->
+    <div class="slide-container" id="slide-3">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">サービスの3つの特徴</h1>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-4 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- 特徴1 -->
+            <div class="feature-item text-center">
+                <div class="segment-icon mx-auto mb-3" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fas fa-bolt text-white text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold mb-3 text-green-800">高速処理</h3>
+                <p class="text-gray-600 text-sm mb-3">
+                    最新のアルゴリズムを採用し、従来比<span class="font-bold text-green-600">10倍</span>の高速処理を実現
+                </p>
+                <ul class="text-xs text-gray-500 space-y-1">
+                    <li>• 並列処理対応</li>
+                    <li>• キャッシュ最適化</li>
+                    <li>• リアルタイム処理</li>
+                </ul>
+            </div>
+            
+            <!-- 特徴2 -->
+            <div class="feature-item text-center">
+                <div class="segment-icon mx-auto mb-3" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fas fa-shield-alt text-white text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold mb-3 text-green-800">高セキュリティ</h3>
+                <p class="text-gray-600 text-sm mb-3">
+                    エンタープライズレベルのセキュリティで<span class="font-bold text-green-600">100%</span>のデータ保護を保証
+                </p>
+                <ul class="text-xs text-gray-500 space-y-1">
+                    <li>• エンドツーエンド暗号化</li>
+                    <li>• 多要素認証</li>
+                    <li>• 24時間監視</li>
+                </ul>
+            </div>
+            
+            <!-- 特徴3 -->
+            <div class="feature-item text-center">
+                <div class="segment-icon mx-auto mb-3" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fas fa-chart-line text-white text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold mb-3 text-green-800">スケーラブル</h3>
+                <p class="text-gray-600 text-sm mb-3">
+                    需要に応じて自動スケーリング、<span class="font-bold text-green-600">1000万</span>ユーザーまで対応可能
+                </p>
+                <ul class="text-xs text-gray-500 space-y-1">
+                    <li>• 自動スケーリング</li>
+                    <li>• 負荷分散</li>
+                    <li>• 無制限拡張</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="text-sm text-gray-600 pt-4" style="position: absolute; bottom: 20px; left: 40px;">
+            <p>※機能詳細についてはお気軽にお問い合わせください</p>
+        </div>
+    </div>
+
+    <!-- スライド4: 3項目縦並びレイアウト -->
+    <div class="slide-container" id="slide-4">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-6" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">導入効果</h1>
+        </div>
+        
+        <div class="space-y-3 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- 効果1 -->
+            <div class="feature-item">
+                <div class="flex items-start">
+                    <div class="segment-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                        <i class="fas fa-chart-bar text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1 ml-4">
+                        <h2 class="text-lg font-bold mb-2 text-green-800">
+                            生産性向上
+                        </h2>
+                        <p class="text-gray-600 text-sm mb-2">
+                            作業効率が大幅に改善され、従業員の生産性が平均<span class="font-bold text-green-600">150%</span>向上しました。
+                        </p>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                            <span>作業時間削減・品質向上・満足度アップ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 効果2 -->
+            <div class="feature-item">
+                <div class="flex items-start">
+                    <div class="segment-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                        <i class="fas fa-piggy-bank text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1 ml-4">
+                        <h2 class="text-lg font-bold mb-2 text-green-800">
+                            コスト削減
+                        </h2>
+                        <p class="text-gray-600 text-sm mb-2">
+                            運用コストを年間<span class="font-bold text-green-600">3,000万円</span>削減し、ROI<span class="font-bold text-green-600">300%</span>を達成しました。
+                        </p>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                            <span>人件費削減・システム効率化・メンテナンス費用削減</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 効果3 -->
+            <div class="feature-item" style="margin-bottom: 0;">
+                <div class="flex items-start">
+                    <div class="segment-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                        <i class="fas fa-users text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1 ml-4">
+                        <h2 class="text-lg font-bold mb-2 text-green-800">
+                            顧客満足度向上
+                        </h2>
+                        <p class="text-gray-600 text-sm mb-2">
+                            サービス品質の向上により、顧客満足度が<span class="font-bold text-green-600">95%</span>に達しました。
+                        </p>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                            <span>応答時間短縮・エラー削減・サポート品質向上</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-sm text-gray-600 pt-4" style="position: absolute; bottom: 20px; left: 40px;">
+            <p>※効果測定期間：導入後6ヶ月</p>
+        </div>
+    </div>
+
+    <!-- スライド5: 財務データ表示パターン -->
+    <div class="slide-container" id="slide-5">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">財務ハイライト</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- 主要指標 -->
+            <div>
+                <div class="data-item flex items-start mb-4">
+                    <div class="icon-circle">
+                        <i class="fas fa-chart-line text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-baseline">
+                            <span class="text-lg font-bold mr-3">売上高:</span>
+                            <span class="highlight-number">1,250億円</span>
+                        </div>
+                        <div class="text-gray-600 ml-2 mt-1">
+                            <span class="improvement">（前年同期比 +15.2%）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-item flex items-start mb-4">
+                    <div class="icon-circle">
+                        <i class="fas fa-calculator text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-baseline">
+                            <span class="text-lg font-bold mr-3">営業利益:</span>
+                            <span class="highlight-number">185億円</span>
+                        </div>
+                        <div class="text-gray-600 ml-2 mt-1">
+                            <span class="improvement">（前年同期比 +22.8%）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-item flex items-start">
+                    <div class="icon-circle">
+                        <i class="fas fa-money-bill-wave text-green-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-baseline">
+                            <span class="text-lg font-bold mr-3">純利益:</span>
+                            <span class="highlight-number">125億円</span>
+                        </div>
+                        <div class="text-gray-600 ml-2 mt-1">
+                            <span class="improvement">（前年同期比 +28.5%）</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- セグメント別業績 -->
+            <div class="bg-gray-50 p-4 rounded-lg" style="max-width: 100%; overflow: hidden;">
+                <h2 class="text-lg font-bold mb-4 flex items-center">
+                    <i class="fas fa-chart-pie text-green-700 mr-3"></i>
+                    セグメント別売上構成
+                </h2>
+
+                <div class="chart-container">
+                    <canvas id="revenueBreakdownChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-sm text-gray-600 pt-4" style="position: absolute; bottom: 20px; left: 40px;">
+            <p>※2024年第3四半期実績（2024年7月～9月）</p>
+        </div>
+    </div>
+
+    <!-- スライド6: KPIダッシュボードパターン -->
+    <div class="slide-container" id="slide-6">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">パフォーマンス指標</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- 左上：システム稼働率 -->
+            <div class="segment-box text-center bg-green-50">
+                <div class="segment-icon mx-auto mb-2">
+                    <i class="fas fa-server text-green-700 text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-green-800 mb-1">システム稼働率</h3>
+                <div class="highlight-number">99.98%</div>
+                <div class="text-xs text-gray-600 mt-1">
+                    <i class="fas fa-arrow-up text-green-600 mr-1"></i>
+                    前月比 +0.02%
+                </div>
+            </div>
+            
+            <!-- 右上：レスポンス時間 -->
+            <div class="segment-box text-center bg-blue-50">
+                <div class="segment-icon mx-auto mb-2" style="background-color: rgba(59, 130, 246, 0.15);">
+                    <i class="fas fa-tachometer-alt text-blue-700 text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-blue-800 mb-1">平均レスポンス時間</h3>
+                <div class="highlight-number-medium text-blue-600">120ms</div>
+                <div class="text-xs text-gray-600 mt-1">
+                    <i class="fas fa-arrow-down text-green-600 mr-1"></i>
+                    前月比 -15ms
+                </div>
+            </div>
+            
+            <!-- 左下：ユーザー満足度 -->
+            <div class="segment-box text-center bg-purple-50">
+                <div class="segment-icon mx-auto mb-2" style="background-color: rgba(147, 51, 234, 0.15);">
+                    <i class="fas fa-smile text-purple-700 text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-purple-800 mb-1">ユーザー満足度</h3>
+                <div class="highlight-number-medium text-purple-600">4.8/5.0</div>
+                <div class="text-xs text-gray-600 mt-1">
+                    <i class="fas fa-arrow-up text-green-600 mr-1"></i>
+                    前月比 +0.1pt
+                </div>
+            </div>
+            
+            <!-- 右下：エラー率 -->
+            <div class="segment-box text-center bg-orange-50">
+                <div class="segment-icon mx-auto mb-2" style="background-color: rgba(251, 146, 60, 0.15);">
+                    <i class="fas fa-exclamation-triangle text-orange-700 text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-orange-800 mb-1">エラー率</h3>
+                <div class="highlight-number-medium text-orange-600">0.02%</div>
+                <div class="text-xs text-gray-600 mt-1">
+                    <i class="fas fa-arrow-down text-green-600 mr-1"></i>
+                    前月比 -0.01%
+                </div>
+            </div>
+        </div>
+        
+        <!-- 下部の詳細情報 -->
+        <div class="mt-4 bg-gray-50 p-3 rounded-lg" style="margin-left: 40px; margin-right: 40px; max-width: 100%; overflow: hidden;">
+            <h3 class="font-bold text-gray-800 mb-2">
+                <i class="fas fa-info-circle text-green-700 mr-2"></i>
+                主要な改善施策
+            </h3>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <div class="text-green-700 font-semibold">• サーバー増強</div>
+                    <div class="text-green-700 font-semibold">• キャッシュ最適化</div>
+                </div>
+                <div>
+                    <div class="text-green-700 font-semibold">• 監視システム強化</div>
+                    <div class="text-green-700 font-semibold">• UI/UX改善</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-sm text-gray-600 pt-4" style="position: absolute; bottom: 20px; left: 40px;">
+            <p>※データ更新日時：2024年12月14日 09:00</p>
+        </div>
+    </div>
+
+    <!-- スライド7: プロセスフローパターン -->
+    <div class="slide-container" id="slide-7">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">導入プロセス</h1>
+        </div>
+        
+        <div class="flex items-center justify-between mt-6" style="margin-left: 60px; margin-right: 60px;">
+            <!-- ステップ1 -->
+            <div class="progress-step">
+                <div class="step-circle">1</div>
+                <h3 class="font-bold text-green-800 mb-2">要件定義</h3>
+                <div class="text-sm text-gray-600">
+                    <div class="mb-1">• 現状分析</div>
+                    <div class="mb-1">• 課題抽出</div>
+                    <div>• 要件整理</div>
+                </div>
+                <div class="text-xs text-green-600 font-semibold mt-2">期間：2週間</div>
+            </div>
+            
+            <!-- ステップ2 -->
+            <div class="progress-step">
+                <div class="step-circle">2</div>
+                <h3 class="font-bold text-green-800 mb-2">設計・開発</h3>
+                <div class="text-sm text-gray-600">
+                    <div class="mb-1">• システム設計</div>
+                    <div class="mb-1">• 開発・構築</div>
+                    <div>• 単体テスト</div>
+                </div>
+                <div class="text-xs text-green-600 font-semibold mt-2">期間：6週間</div>
+            </div>
+            
+            <!-- ステップ3 -->
+            <div class="progress-step">
+                <div class="step-circle">3</div>
+                <h3 class="font-bold text-green-800 mb-2">テスト・検証</h3>
+                <div class="text-sm text-gray-600">
+                    <div class="mb-1">• 結合テスト</div>
+                    <div class="mb-1">• 性能テスト</div>
+                    <div>• ユーザー受入テスト</div>
+                </div>
+                <div class="text-xs text-green-600 font-semibold mt-2">期間：3週間</div>
+            </div>
+            
+            <!-- ステップ4 -->
+            <div class="progress-step">
+                <div class="step-circle">4</div>
+                <h3 class="font-bold text-green-800 mb-2">リリース・運用</h3>
+                <div class="text-sm text-gray-600">
+                    <div class="mb-1">• 本番環境展開</div>
+                    <div class="mb-1">• 運用開始</div>
+                    <div>• サポート</div>
+                </div>
+                <div class="text-xs text-green-600 font-semibold mt-2">期間：1週間～</div>
+            </div>
+        </div>
+        
+        <!-- 下部の詳細情報 -->
+        <div class="mt-8 grid grid-cols-2 gap-6" style="margin-left: 40px; margin-right: 40px;">
+            <div class="segment-box">
+                <h3 class="font-bold text-green-800 mb-3">
+                    <i class="fas fa-calendar-check text-green-700 mr-2"></i>
+                    プロジェクト期間
+                </h3>
+                <div class="text-lg">
+                    <span class="highlight-number-medium">12週間</span>
+                    <span class="text-gray-600 ml-2">（約3ヶ月）</span>
+                </div>
+            </div>
+            
+            <div class="segment-box">
+                <h3 class="font-bold text-green-800 mb-3">
+                    <i class="fas fa-handshake text-green-700 mr-2"></i>
+                    サポート体制
+                </h3>
+                <div class="text-sm text-gray-600">
+                    <div>• 専任プロジェクトマネージャー配置</div>
+                    <div>• 24時間365日の技術サポート</div>
+                    <div>• 定期的な進捗報告・相談</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-sm text-gray-600 pt-4" style="position: absolute; bottom: 20px; left: 40px;">
+            <p>※期間は標準的なケースです。プロジェクト規模により調整いたします</p>
+        </div>
+    </div>
+
+    <!-- スライド8: チーム紹介パターン -->
+    <div class="slide-container" id="slide-8">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">プロジェクトチーム</h1>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-4 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- メンバー1 -->
+            <div class="team-card">
+                <div class="avatar">
+                    田中
+                </div>
+                <h3 class="font-bold text-lg text-gray-800 mb-1">田中 太郎</h3>
+                <div class="text-green-600 font-semibold mb-2">プロジェクトマネージャー</div>
+                <div class="text-sm text-gray-600 mb-3">
+                    15年の経験を持つPMP資格保有者。大規模システム導入のスペシャリスト。
+                </div>
+                <div class="text-xs text-gray-500">
+                    <div>• PMP認定</div>
+                    <div>• ITサービスマネージャー</div>
+                </div>
+            </div>
+            
+            <!-- メンバー2 -->
+            <div class="team-card">
+                <div class="avatar">
+                    佐藤
+                </div>
+                <h3 class="font-bold text-lg text-gray-800 mb-1">佐藤 花子</h3>
+                <div class="text-green-600 font-semibold mb-2">システムアーキテクト</div>
+                <div class="text-sm text-gray-600 mb-3">
+                    クラウドアーキテクチャ設計のエキスパート。AWS・Azure認定資格保有。
+                </div>
+                <div class="text-xs text-gray-500">
+                    <div>• AWS Solutions Architect</div>
+                    <div>• Azure Solutions Architect</div>
+                </div>
+            </div>
+            
+            <!-- メンバー3 -->
+            <div class="team-card">
+                <div class="avatar">
+                    山田
+                </div>
+                <h3 class="font-bold text-lg text-gray-800 mb-1">山田 次郎</h3>
+                <div class="text-green-600 font-semibold mb-2">セキュリティスペシャリスト</div>
+                <div class="text-sm text-gray-600 mb-3">
+                    情報セキュリティのプロフェッショナル。CISSP資格保有。
+                </div>
+                <div class="text-xs text-gray-500">
+                    <div>• CISSP認定</div>
+                    <div>• 情報処理安全確保支援士</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- チーム体制 -->
+        <div class="mt-4 bg-gray-50 p-4 rounded-lg" style="margin-left: 40px; margin-right: 40px; max-width: 100%; overflow: hidden;">
+            <h3 class="font-bold text-green-800 mb-3">
+                <i class="fas fa-users text-green-700 mr-2"></i>
+                サポート体制
+            </h3>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <i class="fas fa-user-tie text-green-600 mr-2"></i>
+                        <span><strong>プロジェクト責任者</strong>：部長クラス</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-code text-blue-600 mr-2"></i>
+                        <span><strong>開発チーム</strong>：5名体制</span>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <i class="fas fa-headset text-purple-600 mr-2"></i>
+                        <span><strong>運用サポート</strong>：24時間365日</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-graduation-cap text-orange-600 mr-2"></i>
+                        <span><strong>トレーニング</strong>：専任講師</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-sm text-gray-600 pt-4" style="position: absolute; bottom: 20px; left: 40px;">
+            <p>※チーム構成はプロジェクト規模に応じて最適化いたします</p>
+        </div>
+    </div>
+
+    <!-- スライド9: 機能グリッドパターン -->
+    <div class="slide-container" id="slide-9">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">主要機能一覧</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- 機能1 -->
+            <div class="segment-box">
+                <div class="flex items-start mb-3">
+                    <div class="segment-icon">
+                        <i class="fas fa-database text-green-700 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="segment-title">データ管理</h3>
+                        <p class="text-gray-600 text-sm mb-2">
+                            大量データの効率的な管理・検索・分析機能
+                        </p>
+                        <div class="text-xs text-gray-500">
+                            <div>• リアルタイムデータ処理</div>
+                            <div>• 高速検索エンジン</div>
+                            <div>• データバックアップ・復旧</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 機能2 -->
+            <div class="segment-box">
+                <div class="flex items-start mb-3">
+                    <div class="segment-icon">
+                        <i class="fas fa-chart-bar text-green-700 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="segment-title">レポート・分析</h3>
+                        <p class="text-gray-600 text-sm mb-2">
+                            多角的なデータ分析とカスタムレポート生成
+                        </p>
+                        <div class="text-xs text-gray-500">
+                            <div>• ドラッグ&ドロップレポート作成</div>
+                            <div>• リアルタイムダッシュボード</div>
+                            <div>• データエクスポート（Excel/CSV）</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 機能3 -->
+            <div class="segment-box">
+                <div class="flex items-start mb-3">
+                    <div class="segment-icon">
+                        <i class="fas fa-users text-green-700 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="segment-title">ユーザー管理</h3>
+                        <p class="text-gray-600 text-sm mb-2">
+                            柔軟な権限管理とシングルサインオン対応
+                        </p>
+                        <div class="text-xs text-gray-500">
+                            <div>• 多階層権限設定</div>
+                            <div>• SAML/OAuth対応</div>
+                            <div>• 二要素認証</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 機能4 -->
+            <div class="segment-box">
+                <div class="flex items-start mb-3">
+                    <div class="segment-icon">
+                        <i class="fas fa-mobile-alt text-green-700 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="segment-title">モバイル対応</h3>
+                        <p class="text-gray-600 text-sm mb-2">
+                            スマートフォン・タブレット完全対応
+                        </p>
+                        <div class="text-xs text-gray-500">
+                            <div>• レスポンシブデザイン</div>
+                            <div>• オフライン同期</div>
+                            <div>• プッシュ通知</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 機能5 -->
+            <div class="segment-box">
+                <div class="flex items-start mb-3">
+                    <div class="segment-icon">
+                        <i class="fas fa-link text-green-700 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="segment-title">API連携</h3>
+                        <p class="text-gray-600 text-sm mb-2">
+                            既存システムとの柔軟な連携・統合
+                        </p>
+                        <div class="text-xs text-gray-500">
+                            <div>• RESTful API提供</div>
+                            <div>• Webhook対応</div>
+                            <div>• カスタムコネクタ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 機能6 -->
+            <div class="segment-box">
+                <div class="flex items-start mb-3">
+                    <div class="segment-icon">
+                        <i class="fas fa-shield-alt text-green-700 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="segment-title">セキュリティ</h3>
+                        <p class="text-gray-600 text-sm mb-2">
+                            エンタープライズ級のセキュリティ機能
+                        </p>
+                        <div class="text-xs text-gray-500">
+                            <div>• エンドツーエンド暗号化</div>
+                            <div>• 監査ログ・アクセス履歴</div>
+                            <div>• 脆弱性スキャン</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-sm text-gray-600 pt-4" style="position: absolute; bottom: 20px; left: 40px;">
+            <p>※詳細機能についてはデモンストレーションでご確認いただけます</p>
+        </div>
+    </div>
+
+    <!-- スライド10: タイムラインパターン -->
+    <div class="slide-container" id="slide-10">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">開発ロードマップ</h1>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-8 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- 左カラム -->
+            <div>
+                <!-- Q1 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-green-50 p-3 rounded-lg">
+                        <div class="font-bold text-green-800 mb-1">2024年 Q1</div>
+                        <h3 class="font-bold text-gray-800 mb-2">基盤機能リリース</h3>
+                        <div class="text-sm text-gray-600">
+                            <div>• コア機能の実装完了</div>
+                            <div>• ユーザー管理システム</div>
+                            <div>• 基本的なレポート機能</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Q2 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <div class="font-bold text-blue-800 mb-1">2024年 Q2</div>
+                        <h3 class="font-bold text-gray-800 mb-2">AI機能追加</h3>
+                        <div class="text-sm text-gray-600">
+                            <div>• 機械学習モデル統合</div>
+                            <div>• 予測分析機能</div>
+                            <div>• 自動レポート生成</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Q3 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-purple-50 p-3 rounded-lg">
+                        <div class="font-bold text-purple-800 mb-1">2024年 Q3</div>
+                        <h3 class="font-bold text-gray-800 mb-2">モバイル対応強化</h3>
+                        <div class="text-sm text-gray-600">
+                            <div>• ネイティブアプリリリース</div>
+                            <div>• オフライン機能</div>
+                            <div>• プッシュ通知システム</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右カラム -->
+            <div>
+                <!-- Q4 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-orange-50 p-3 rounded-lg">
+                        <div class="font-bold text-orange-800 mb-1">2024年 Q4</div>
+                        <h3 class="font-bold text-gray-800 mb-2">セキュリティ強化</h3>
+                        <div class="text-sm text-gray-600">
+                            <div>• ゼロトラスト アーキテクチャ</div>
+                            <div>• 高度な脅威検知</div>
+                            <div>• コンプライアンス対応</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Q1 (次年度) -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-red-50 p-3 rounded-lg">
+                        <div class="font-bold text-red-800 mb-1">2025年 Q1</div>
+                        <h3 class="font-bold text-gray-800 mb-2">グローバル展開</h3>
+                        <div class="text-sm text-gray-600">
+                            <div>• 多言語対応（10言語）</div>
+                            <div>• 海外データセンター</div>
+                            <div>• 現地法規制対応</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Q2 (次年度) -->
+                <div class="timeline-item" style="margin-bottom: 0;">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-indigo-50 p-3 rounded-lg">
+                        <div class="font-bold text-indigo-800 mb-1">2025年 Q2</div>
+                        <h3 class="font-bold text-gray-800 mb-2">次世代機能</h3>
+                        <div class="text-sm text-gray-600">
+                            <div>• AR/VR ダッシュボード</div>
+                            <div>• ブロックチェーン連携</div>
+                            <div>• 量子コンピューティング対応</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-sm text-gray-600 pt-4" style="position: absolute; bottom: 20px; left: 40px;">
+            <p>※開発スケジュールは市場環境により調整される場合があります</p>
+        </div>
+    </div>
+
+    <!-- スライド11: 料金プランパターン -->
+    <div class="slide-container" id="slide-11">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">料金プラン</h1>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-4 mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- スタータープラン -->
+            <div class="pricing-card">
+                <div class="text-lg font-bold text-gray-800 mb-2">スタータープラン</div>
+                <div class="text-3xl font-bold text-green-600 mb-1">¥29,800</div>
+                <div class="text-sm text-gray-600 mb-4">/月額（税別）</div>
+                
+                <div class="space-y-2 text-sm mb-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>ユーザー数：最大10名</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>ストレージ：100GB</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>基本レポート機能</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>メールサポート</span>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-300 transition">
+                    詳細を見る
+                </button>
+            </div>
+            
+            <!-- ビジネスプラン（おすすめ） -->
+            <div class="pricing-card recommended">
+                <div class="text-lg font-bold text-gray-800 mb-2">ビジネスプラン</div>
+                <div class="text-3xl font-bold text-green-600 mb-1">¥89,800</div>
+                <div class="text-sm text-gray-600 mb-4">/月額（税別）</div>
+                
+                <div class="space-y-2 text-sm mb-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>ユーザー数：最大100名</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>ストレージ：1TB</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>高度な分析機能</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>API連携</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>電話・チャットサポート</span>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition">
+                    無料トライアル
+                </button>
+            </div>
+            
+            <!-- エンタープライズプラン -->
+            <div class="pricing-card">
+                <div class="text-lg font-bold text-gray-800 mb-2">エンタープライズプラン</div>
+                <div class="text-3xl font-bold text-green-600 mb-1">カスタム</div>
+                <div class="text-sm text-gray-600 mb-4">お見積もり</div>
+                
+                <div class="space-y-2 text-sm mb-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>ユーザー数：無制限</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>ストレージ：無制限</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>カスタム機能開発</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>オンプレミス対応</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check text-green-600 mr-2"></i>
+                        <span>専任サポート</span>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-300 transition">
+                    お問い合わせ
+                </button>
+            </div>
+        </div>
+        
+        <!-- 下部の注釈 -->
+        <div class="mt-4 bg-gray-50 p-3 rounded-lg" style="margin-left: 40px; margin-right: 40px; max-width: 100%; overflow: hidden;">
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <h4 class="font-bold text-green-800 mb-2">
+                        <i class="fas fa-gift text-green-700 mr-2"></i>
+                        特典・オプション
+                    </h4>
+                    <div class="text-gray-600 space-y-1">
+                        <div>• 年間契約で20%割引</div>
+                        <div>• 導入支援サービス（有料）</div>
+                        <div>• カスタムトレーニング（有料）</div>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-green-800 mb-2">
+                        <i class="fas fa-info-circle text-green-700 mr-2"></i>
+                        ご注意事項
+                    </h4>
+                    <div class="text-gray-600 space-y-1">
+                        <div>• 初期費用別途</div>
+                        <div>• データ移行サポート別途</div>
+                        <div>• 契約期間：最低12ヶ月</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-sm text-gray-600 pt-4" style="position: absolute; bottom: 20px; left: 40px;">
+            <p>※価格は予告なく変更される場合があります。詳細はお問い合わせください</p>
+        </div>
+    </div>
+
+    <!-- スライド12: 比較表パターン（統合版） -->
+    <div class="slide-container" id="slide-12">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">競合サービス比較</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <table class="comparison-table w-full">
+                <thead>
+                    <tr>
+                        <th class="text-left p-4">機能・特徴</th>
+                        <th class="p-4">当社サービス</th>
+                        <th class="p-4">競合A社</th>
+                        <th class="p-4">競合B社</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-left p-4 font-semibold">導入期間</td>
+                        <td class="p-4">
+                            <span class="text-green-600 font-bold">2週間</span>
+                            <div class="text-xs text-gray-600">クイックスタート対応</div>
+                        </td>
+                        <td class="p-4">
+                            <span class="text-orange-600">6週間</span>
+                            <div class="text-xs text-gray-600">標準的な期間</div>
+                        </td>
+                        <td class="p-4">
+                            <span class="text-red-600">12週間</span>
+                            <div class="text-xs text-gray-600">カスタマイズ必須</div>
+                        </td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="text-left p-4 font-semibold">初期費用</td>
+                        <td class="p-4">
+                            <span class="text-green-600 font-bold">無料</span>
+                            <div class="text-xs text-gray-600">設定サポート込み</div>
+                        </td>
+                        <td class="p-4">
+                            <span class="text-orange-600">50万円</span>
+                            <div class="text-xs text-gray-600">基本設定のみ</div>
+                        </td>
+                        <td class="p-4">
+                            <span class="text-red-600">200万円</span>
+                            <div class="text-xs text-gray-600">カスタマイズ費用</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left p-4 font-semibold">月額料金</td>
+                        <td class="p-4"><span class="text-green-600 font-bold">¥9,800</span></td>
+                        <td class="p-4">¥12,000</td>
+                        <td class="p-4">¥15,000</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="text-left p-4 font-semibold">ストレージ容量</td>
+                        <td class="p-4"><span class="text-green-600 font-bold">無制限</span></td>
+                        <td class="p-4">100GB</td>
+                        <td class="p-4">500GB</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left p-4 font-semibold">ユーザー数</td>
+                        <td class="p-4"><span class="text-green-600 font-bold">無制限</span></td>
+                        <td class="p-4">50名まで</td>
+                        <td class="p-4">100名まで</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="text-left p-4 font-semibold">API連携</td>
+                        <td class="p-4"><i class="fas fa-check-circle text-green-600 text-xl"></i></td>
+                        <td class="p-4"><i class="fas fa-check-circle text-green-600 text-xl"></i></td>
+                        <td class="p-4"><i class="fas fa-times-circle text-gray-400 text-xl"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left p-4 font-semibold">AI機能</td>
+                        <td class="p-4"><i class="fas fa-check-circle text-green-600 text-xl"></i></td>
+                        <td class="p-4"><i class="fas fa-times-circle text-gray-400 text-xl"></i></td>
+                        <td class="p-4"><i class="fas fa-check-circle text-green-600 text-xl"></i></td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="text-left p-4 font-semibold">モバイル対応</td>
+                        <td class="p-4">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            <div class="text-xs text-gray-600">iOS/Android</div>
+                        </td>
+                        <td class="p-4">
+                            <i class="fas fa-check-circle text-orange-600 text-xl"></i>
+                            <div class="text-xs text-gray-600">Webアプリのみ</div>
+                        </td>
+                        <td class="p-4">
+                            <i class="fas fa-times-circle text-gray-400 text-xl"></i>
+                            <div class="text-xs text-gray-600">PC専用</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left p-4 font-semibold">24時間サポート</td>
+                        <td class="p-4"><i class="fas fa-check-circle text-green-600 text-xl"></i></td>
+                        <td class="p-4"><i class="fas fa-check-circle text-green-600 text-xl"></i></td>
+                        <td class="p-4"><i class="fas fa-times-circle text-gray-400 text-xl"></i></td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="text-left p-4 font-semibold">カスタマイズ性</td>
+                        <td class="p-4"><span class="text-green-600">★★★★★</span></td>
+                        <td class="p-4"><span class="text-gray-600">★★★☆☆</span></td>
+                        <td class="p-4"><span class="text-gray-600">★★★★☆</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="mt-4 bg-green-50 rounded-lg p-4">
+                <p class="text-green-700 font-semibold">
+                    <i class="fas fa-trophy mr-2"></i>
+                    当社サービスの優位点：最短導入期間とコストパフォーマンスで業界最高水準
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド13: 2×2マトリックス（4象限分析） -->
+    <div class="slide-container" id="slide-13">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">2×2マトリックス分析</h1>
+        </div>
+        
+        <div class="mt-6" style="margin-left: 40px; margin-right: 40px;">
+            <div class="relative" style="height: 500px;">
+                <!-- 軸ラベル -->
+                <div class="absolute" style="top: -20px; left: 50%; transform: translateX(-50%);">
+                    <span class="text-sm font-bold text-gray-600">影響度</span>
+                    <i class="fas fa-arrow-up ml-2 text-green-600"></i>
+                </div>
+                <div class="absolute" style="bottom: 50%; right: -30px; transform: translateY(50%);">
+                    <span class="text-sm font-bold text-gray-600">実現性</span>
+                    <i class="fas fa-arrow-right ml-2 text-green-600"></i>
+                </div>
+                
+                <!-- 中央の軸線 -->
+                <div class="absolute bg-gray-300" style="top: 50%; left: 0; right: 0; height: 2px;"></div>
+                <div class="absolute bg-gray-300" style="left: 50%; top: 0; bottom: 0; width: 2px;"></div>
+                
+                <!-- 4象限 -->
+                <div class="grid grid-cols-2 gap-3" style="height: 100%;">
+                    <!-- 左上：高影響度・低実現性 -->
+                    <div class="bg-yellow-50 rounded-lg p-4 relative">
+                        <h3 class="font-bold text-yellow-700 mb-3">要検討エリア</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
+                                <span class="text-sm">AI完全自動化</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
+                                <span class="text-sm">グローバル展開</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div>
+                                <span class="text-sm">新規事業開発</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右上：高影響度・高実現性 -->
+                    <div class="bg-green-50 rounded-lg p-4 relative">
+                        <h3 class="font-bold text-green-700 mb-3">優先実施エリア</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
+                                <span class="text-sm">業務プロセス改善</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
+                                <span class="text-sm">システム統合</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
+                                <span class="text-sm">顧客体験向上</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 左下：低影響度・低実現性 -->
+                    <div class="bg-gray-50 rounded-lg p-4 relative">
+                        <h3 class="font-bold text-gray-700 mb-3">保留エリア</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-gray-500 rounded-full mr-2"></div>
+                                <span class="text-sm">レガシー更新</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-gray-500 rounded-full mr-2"></div>
+                                <span class="text-sm">小規模改修</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右下：低影響度・高実現性 -->
+                    <div class="bg-blue-50 rounded-lg p-4 relative">
+                        <h3 class="font-bold text-blue-700 mb-3">即実行エリア</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
+                                <span class="text-sm">ツール導入</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
+                                <span class="text-sm">研修実施</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
+                                <span class="text-sm">文書整備</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- スライド14: KPIダッシュボード（複数指標の一覧） -->
+    <div class="slide-container" id="slide-14">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">KPIダッシュボード</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- 上段：主要KPI -->
+            <div class="grid grid-cols-4 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center">
+                    <i class="fas fa-users text-green-600 text-2xl mb-2"></i>
+                    <h3 class="text-sm text-gray-600 mb-1">アクティブユーザー</h3>
+                    <p class="text-2xl font-bold text-green-700">125,430</p>
+                    <p class="text-xs text-green-600 mt-1">
+                        <i class="fas fa-arrow-up mr-1"></i>+12.5%
+                    </p>
+                </div>
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center">
+                    <i class="fas fa-chart-line text-blue-600 text-2xl mb-2"></i>
+                    <h3 class="text-sm text-gray-600 mb-1">月間売上</h3>
+                    <p class="text-2xl font-bold text-blue-700">¥8.2M</p>
+                    <p class="text-xs text-blue-600 mt-1">
+                        <i class="fas fa-arrow-up mr-1"></i>+8.3%
+                    </p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center">
+                    <i class="fas fa-percentage text-purple-600 text-2xl mb-2"></i>
+                    <h3 class="text-sm text-gray-600 mb-1">コンバージョン率</h3>
+                    <p class="text-2xl font-bold text-purple-700">3.8%</p>
+                    <p class="text-xs text-purple-600 mt-1">
+                        <i class="fas fa-arrow-up mr-1"></i>+0.5pt
+                    </p>
+                </div>
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 text-center">
+                    <i class="fas fa-star text-orange-600 text-2xl mb-2"></i>
+                    <h3 class="text-sm text-gray-600 mb-1">顧客満足度</h3>
+                    <p class="text-2xl font-bold text-orange-700">4.6/5.0</p>
+                    <p class="text-xs text-orange-600 mt-1">
+                        <i class="fas fa-arrow-up mr-1"></i>+0.2
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 中段：詳細指標 -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                    <h3 class="font-bold text-gray-700 mb-3 flex items-center">
+                        <i class="fas fa-clock text-green-600 mr-2"></i>
+                        リアルタイム指標
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm">現在のアクティブセッション</span>
+                            <span class="font-bold text-green-600">2,341</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm">平均セッション時間</span>
+                            <span class="font-bold">8:45</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm">直帰率</span>
+                            <span class="font-bold text-red-600">42.3%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                    <h3 class="font-bold text-gray-700 mb-3 flex items-center">
+                        <i class="fas fa-chart-bar text-green-600 mr-2"></i>
+                        週間トレンド
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm">新規ユーザー獲得</span>
+                            <span class="font-bold text-green-600">+1,234</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm">リピート率</span>
+                            <span class="font-bold">68.5%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm">平均購入単価</span>
+                            <span class="font-bold">¥12,450</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 下段：進捗バー -->
+            <div class="bg-gray-50 rounded-lg p-4">
+                <h3 class="font-bold text-gray-700 mb-3">四半期目標達成率</h3>
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>売上目標</span>
+                            <span class="font-bold">78%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-600 h-2 rounded-full" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>新規顧客獲得</span>
+                            <span class="font-bold">92%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-600 h-2 rounded-full" style="width: 92%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド15: フローチャート/プロセス図 -->
+    <div class="slide-container" id="slide-15">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">業務プロセスフロー</h1>
+        </div>
+        
+        <div class="mt-6" style="margin-left: 40px; margin-right: 40px;">
+            <div class="flex items-center justify-between relative">
+                <!-- ステップ1 -->
+                <div class="text-center" style="width: 160px;">
+                    <div class="bg-green-100 rounded-lg p-4 mb-3 relative">
+                        <div class="absolute -top-3 -left-3 w-8 h-8 bg-green-600 rounded-full text-white flex items-center justify-center font-bold text-sm">1</div>
+                        <i class="fas fa-file-import text-green-600 text-3xl mb-2"></i>
+                        <h3 class="font-bold text-sm">申請受付</h3>
+                    </div>
+                    <p class="text-xs text-gray-600">顧客からの申請を<br/>システムに登録</p>
+                </div>
+                
+                <!-- 矢印1 -->
+                <div class="flex-1 relative" style="height: 2px; background-color: #22c55e;">
+                    <i class="fas fa-chevron-right absolute right-0 top-1/2 transform -translate-y-1/2 text-green-600"></i>
+                </div>
+                
+                <!-- ステップ2 -->
+                <div class="text-center" style="width: 160px;">
+                    <div class="bg-blue-100 rounded-lg p-4 mb-3 relative">
+                        <div class="absolute -top-3 -left-3 w-8 h-8 bg-blue-600 rounded-full text-white flex items-center justify-center font-bold text-sm">2</div>
+                        <i class="fas fa-search text-blue-600 text-3xl mb-2"></i>
+                        <h3 class="font-bold text-sm">内容確認</h3>
+                    </div>
+                    <p class="text-xs text-gray-600">担当者による<br/>申請内容の精査</p>
+                </div>
+                
+                <!-- 矢印2 -->
+                <div class="flex-1 relative" style="height: 2px; background-color: #3b82f6;">
+                    <i class="fas fa-chevron-right absolute right-0 top-1/2 transform -translate-y-1/2 text-blue-600"></i>
+                </div>
+                
+                <!-- ステップ3 -->
+                <div class="text-center" style="width: 160px;">
+                    <div class="bg-purple-100 rounded-lg p-4 mb-3 relative">
+                        <div class="absolute -top-3 -left-3 w-8 h-8 bg-purple-600 rounded-full text-white flex items-center justify-center font-bold text-sm">3</div>
+                        <i class="fas fa-stamp text-purple-600 text-3xl mb-2"></i>
+                        <h3 class="font-bold text-sm">承認処理</h3>
+                    </div>
+                    <p class="text-xs text-gray-600">管理者による<br/>最終承認</p>
+                </div>
+                
+                <!-- 矢印3 -->
+                <div class="flex-1 relative" style="height: 2px; background-color: #9333ea;">
+                    <i class="fas fa-chevron-right absolute right-0 top-1/2 transform -translate-y-1/2 text-purple-600"></i>
+                </div>
+                
+                <!-- ステップ4 -->
+                <div class="text-center" style="width: 160px;">
+                    <div class="bg-orange-100 rounded-lg p-4 mb-3 relative">
+                        <div class="absolute -top-3 -left-3 w-8 h-8 bg-orange-600 rounded-full text-white flex items-center justify-center font-bold text-sm">4</div>
+                        <i class="fas fa-paper-plane text-orange-600 text-3xl mb-2"></i>
+                        <h3 class="font-bold text-sm">実行・通知</h3>
+                    </div>
+                    <p class="text-xs text-gray-600">処理実行と<br/>結果の通知</p>
+                </div>
+            </div>
+            
+            <!-- 分岐処理 -->
+            <div class="mt-8 bg-gray-50 rounded-lg p-4">
+                <h3 class="font-bold text-gray-700 mb-3">
+                    <i class="fas fa-code-branch text-green-600 mr-2"></i>
+                    条件分岐
+                </h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white rounded p-3 border-l-4 border-green-500">
+                        <p class="text-sm font-semibold text-green-700">承認の場合</p>
+                        <p class="text-xs text-gray-600 mt-1">→ 自動処理開始、関係者へ通知</p>
+                    </div>
+                    <div class="bg-white rounded p-3 border-l-4 border-red-500">
+                        <p class="text-sm font-semibold text-red-700">却下の場合</p>
+                        <p class="text-xs text-gray-600 mt-1">→ 申請者へ理由を添えて返却</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 flex items-center justify-center text-sm text-gray-600">
+                <i class="fas fa-info-circle mr-2"></i>
+                平均処理時間：2営業日以内
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド16: SWOT分析 -->
+    <div class="slide-container" id="slide-16">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">SWOT分析</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Strengths -->
+                <div class="bg-green-50 rounded-lg p-5">
+                    <h3 class="font-bold text-green-700 text-lg mb-3 flex items-center">
+                        <i class="fas fa-plus-circle mr-2"></i>
+                        Strengths（強み）
+                    </h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-600 mr-2 mt-1"></i>
+                            <span class="text-sm">業界シェアNo.1の実績</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-600 mr-2 mt-1"></i>
+                            <span class="text-sm">高度な技術力と専門知識</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-600 mr-2 mt-1"></i>
+                            <span class="text-sm">充実したサポート体制</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-600 mr-2 mt-1"></i>
+                            <span class="text-sm">豊富な導入実績</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Weaknesses -->
+                <div class="bg-red-50 rounded-lg p-5">
+                    <h3 class="font-bold text-red-700 text-lg mb-3 flex items-center">
+                        <i class="fas fa-minus-circle mr-2"></i>
+                        Weaknesses（弱み）
+                    </h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-600 mr-2 mt-1"></i>
+                            <span class="text-sm">初期導入コストが高い</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-600 mr-2 mt-1"></i>
+                            <span class="text-sm">海外展開の遅れ</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-600 mr-2 mt-1"></i>
+                            <span class="text-sm">UI/UXの改善余地</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-600 mr-2 mt-1"></i>
+                            <span class="text-sm">レガシーシステムの存在</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Opportunities -->
+                <div class="bg-blue-50 rounded-lg p-5">
+                    <h3 class="font-bold text-blue-700 text-lg mb-3 flex items-center">
+                        <i class="fas fa-arrow-up-right-dots mr-2"></i>
+                        Opportunities（機会）
+                    </h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-blue-600 mr-2 mt-1"></i>
+                            <span class="text-sm">DX市場の急速な拡大</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-blue-600 mr-2 mt-1"></i>
+                            <span class="text-sm">AI技術の進化と活用</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-blue-600 mr-2 mt-1"></i>
+                            <span class="text-sm">アジア市場への進出</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-blue-600 mr-2 mt-1"></i>
+                            <span class="text-sm">新規パートナーシップ</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Threats -->
+                <div class="bg-yellow-50 rounded-lg p-5">
+                    <h3 class="font-bold text-yellow-700 text-lg mb-3 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Threats（脅威）
+                    </h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-alert text-yellow-600 mr-2 mt-1"></i>
+                            <span class="text-sm">新規参入企業の増加</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-alert text-yellow-600 mr-2 mt-1"></i>
+                            <span class="text-sm">価格競争の激化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-alert text-yellow-600 mr-2 mt-1"></i>
+                            <span class="text-sm">技術革新のスピード</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-alert text-yellow-600 mr-2 mt-1"></i>
+                            <span class="text-sm">規制強化の可能性</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-6 bg-gray-100 rounded-lg p-4 text-center">
+                <p class="text-sm font-semibold text-gray-700">
+                    <i class="fas fa-lightbulb text-green-600 mr-2"></i>
+                    戦略的示唆：強みを活かしたDX市場でのリーダーシップ確立と、弱みの早期改善
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド17: ガントチャート風タイムライン -->
+    <div class="slide-container" id="slide-17">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">プロジェクトタイムライン</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px;">
+            <!-- 月ヘッダー -->
+            <div class="grid grid-cols-12 gap-1 mb-4 text-xs text-center font-semibold">
+                <div class="col-span-3"></div>
+                <div class="bg-gray-100 rounded p-1">1月</div>
+                <div class="bg-gray-100 rounded p-1">2月</div>
+                <div class="bg-gray-100 rounded p-1">3月</div>
+                <div class="bg-gray-100 rounded p-1">4月</div>
+                <div class="bg-gray-100 rounded p-1">5月</div>
+                <div class="bg-gray-100 rounded p-1">6月</div>
+                <div class="bg-gray-100 rounded p-1">7月</div>
+                <div class="bg-gray-100 rounded p-1">8月</div>
+                <div class="bg-gray-100 rounded p-1">9月</div>
+            </div>
+            
+            <!-- タスク行 -->
+            <div class="space-y-3">
+                <!-- フェーズ1 -->
+                <div class="grid grid-cols-12 gap-1 items-center">
+                    <div class="col-span-3 text-sm font-semibold pr-2">要件定義</div>
+                    <div class="col-span-2 bg-green-500 rounded h-8 flex items-center justify-center text-white text-xs">100%</div>
+                    <div class="col-span-7"></div>
+                </div>
+                
+                <!-- フェーズ2 -->
+                <div class="grid grid-cols-12 gap-1 items-center">
+                    <div class="col-span-3 text-sm font-semibold pr-2">基本設計</div>
+                    <div class="col-span-1"></div>
+                    <div class="col-span-3 bg-green-500 rounded h-8 flex items-center justify-center text-white text-xs">100%</div>
+                    <div class="col-span-5"></div>
+                </div>
+                
+                <!-- フェーズ3 -->
+                <div class="grid grid-cols-12 gap-1 items-center">
+                    <div class="col-span-3 text-sm font-semibold pr-2">詳細設計</div>
+                    <div class="col-span-2"></div>
+                    <div class="col-span-3 bg-blue-500 rounded h-8 flex items-center justify-center text-white text-xs">75%</div>
+                    <div class="col-span-4"></div>
+                </div>
+                
+                <!-- フェーズ4 -->
+                <div class="grid grid-cols-12 gap-1 items-center">
+                    <div class="col-span-3 text-sm font-semibold pr-2">開発・実装</div>
+                    <div class="col-span-3"></div>
+                    <div class="col-span-4 bg-blue-500 rounded h-8 flex items-center justify-center text-white text-xs">進行中</div>
+                    <div class="col-span-2"></div>
+                </div>
+                
+                <!-- フェーズ5 -->
+                <div class="grid grid-cols-12 gap-1 items-center">
+                    <div class="col-span-3 text-sm font-semibold pr-2">テスト</div>
+                    <div class="col-span-6"></div>
+                    <div class="col-span-2 bg-gray-300 rounded h-8 flex items-center justify-center text-gray-600 text-xs">予定</div>
+                    <div class="col-span-1"></div>
+                </div>
+                
+                <!-- フェーズ6 -->
+                <div class="grid grid-cols-12 gap-1 items-center">
+                    <div class="col-span-3 text-sm font-semibold pr-2">本番リリース</div>
+                    <div class="col-span-8"></div>
+                    <div class="col-span-1 bg-gray-300 rounded h-8 flex items-center justify-center text-gray-600 text-xs">9月</div>
+                </div>
+            </div>
+            
+            <!-- マイルストーン -->
+            <div class="mt-6 bg-gray-50 rounded-lg p-4">
+                <h3 class="font-bold text-gray-700 mb-3">
+                    <i class="fas fa-flag text-green-600 mr-2"></i>
+                    主要マイルストーン
+                </h3>
+                <div class="grid grid-cols-3 gap-4 text-sm">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                        <span>3月末：基本設計完了</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                        <span>6月末：開発完了</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
+                        <span>9月初：本番稼働</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 text-center text-sm text-gray-600">
+                <i class="fas fa-info-circle mr-2"></i>
+                現在の進捗率：全体の65%完了
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド18: ピラミッド図（階層構造） -->
+    <div class="slide-container" id="slide-18">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">組織階層構造</h1>
+        </div>
+        
+        <div class="mt-6" style="margin-left: 40px; margin-right: 40px;">
+            <div class="flex flex-col items-center space-y-4">
+                <!-- トップ層 -->
+                <div class="w-48 bg-green-600 text-white rounded-lg p-4 text-center shadow-lg">
+                    <h3 class="font-bold text-lg">経営層</h3>
+                    <p class="text-sm mt-1">CEO / CTO / CFO</p>
+                    <p class="text-xs mt-1 opacity-80">5名</p>
+                </div>
+                
+                <!-- 矢印 -->
+                <i class="fas fa-chevron-down text-green-600 text-xl"></i>
+                
+                <!-- 部長層 -->
+                <div class="w-80 bg-green-500 text-white rounded-lg p-4 text-center shadow-lg">
+                    <h3 class="font-bold text-lg">部門長・事業部長</h3>
+                    <p class="text-sm mt-1">営業・開発・マーケティング・管理</p>
+                    <p class="text-xs mt-1 opacity-80">20名</p>
+                </div>
+                
+                <!-- 矢印 -->
+                <i class="fas fa-chevron-down text-green-500 text-xl"></i>
+                
+                <!-- マネージャー層 -->
+                <div class="w-96 bg-green-400 text-white rounded-lg p-4 text-center shadow-lg">
+                    <h3 class="font-bold text-lg">マネージャー・チームリーダー</h3>
+                    <p class="text-sm mt-1">各部門のチーム管理・プロジェクト推進</p>
+                    <p class="text-xs mt-1 opacity-80">80名</p>
+                </div>
+                
+                <!-- 矢印 -->
+                <i class="fas fa-chevron-down text-green-400 text-xl"></i>
+                
+                <!-- スタッフ層 -->
+                <div class="w-full bg-green-300 text-gray-800 rounded-lg p-4 text-center shadow-lg">
+                    <h3 class="font-bold text-lg">スペシャリスト・一般社員</h3>
+                    <p class="text-sm mt-1">エンジニア・営業・マーケター・バックオフィス</p>
+                    <p class="text-xs mt-1">400名</p>
+                </div>
+            </div>
+            
+            <!-- サマリー情報 -->
+            <div class="mt-6 grid grid-cols-3 gap-4 text-center">
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <p class="text-2xl font-bold text-green-600">505名</p>
+                    <p class="text-sm text-gray-600">総従業員数</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <p class="text-2xl font-bold text-green-600">1:5</p>
+                    <p class="text-sm text-gray-600">管理職比率</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <p class="text-2xl font-bold text-green-600">4層</p>
+                    <p class="text-sm text-gray-600">組織階層</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド19: 円形配置レイアウト（中心から放射状） -->
+    <div class="slide-container" id="slide-19">
+        <div class="logo flex items-center">
+            <span class="text-gray-400 mr-2">=</span>SB C&S
+        </div>
+        
+        <div class="title-box mt-8" style="margin-left: 40px;">
+            <h1 class="text-3xl font-bold">統合ソリューション</h1>
+        </div>
+        
+        <div class="mt-4" style="margin-left: 40px; margin-right: 40px; position: relative; height: 480px;">
+            <!-- 中心のコア -->
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-green-600 rounded-full flex items-center justify-center text-white text-center shadow-xl z-10">
+                <div>
+                    <i class="fas fa-hub text-3xl mb-2"></i>
+                    <h3 class="font-bold text-lg">統合プラットフォーム</h3>
+                </div>
+            </div>
+            
+            <!-- 周囲の要素（8つ） -->
+            <!-- 上 -->
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-blue-100 rounded-full flex items-center justify-center text-center shadow-lg">
+                <div>
+                    <i class="fas fa-cloud text-blue-600 text-2xl mb-1"></i>
+                    <p class="text-sm font-semibold">クラウド基盤</p>
+                </div>
+            </div>
+            
+            <!-- 右上 -->
+            <div class="absolute top-16 right-20 w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center text-center shadow-lg">
+                <div>
+                    <i class="fas fa-brain text-purple-600 text-2xl mb-1"></i>
+                    <p class="text-sm font-semibold">AI/ML</p>
+                </div>
+            </div>
+            
+            <!-- 右 -->
+            <div class="absolute top-1/2 right-0 transform -translate-y-1/2 w-32 h-32 bg-orange-100 rounded-full flex items-center justify-center text-center shadow-lg">
+                <div>
+                    <i class="fas fa-chart-line text-orange-600 text-2xl mb-1"></i>
+                    <p class="text-sm font-semibold">分析ツール</p>
+                </div>
+            </div>
+            
+            <!-- 右下 -->
+            <div class="absolute bottom-16 right-20 w-32 h-32 bg-red-100 rounded-full flex items-center justify-center text-center shadow-lg">
+                <div>
+                    <i class="fas fa-shield-alt text-red-600 text-2xl mb-1"></i>
+                    <p class="text-sm font-semibold">セキュリティ</p>
+                </div>
+            </div>
+            
+            <!-- 下 -->
+            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-yellow-100 rounded-full flex items-center justify-center text-center shadow-lg">
+                <div>
+                    <i class="fas fa-database text-yellow-600 text-2xl mb-1"></i>
+                    <p class="text-sm font-semibold">データベース</p>
+                </div>
+            </div>
+            
+            <!-- 左下 -->
+            <div class="absolute bottom-16 left-20 w-32 h-32 bg-indigo-100 rounded-full flex items-center justify-center text-center shadow-lg">
+                <div>
+                    <i class="fas fa-cogs text-indigo-600 text-2xl mb-1"></i>
+                    <p class="text-sm font-semibold">自動化</p>
+                </div>
+            </div>
+            
+            <!-- 左 -->
+            <div class="absolute top-1/2 left-0 transform -translate-y-1/2 w-32 h-32 bg-pink-100 rounded-full flex items-center justify-center text-center shadow-lg">
+                <div>
+                    <i class="fas fa-users text-pink-600 text-2xl mb-1"></i>
+                    <p class="text-sm font-semibold">コラボ</p>
+                </div>
+            </div>
+            
+            <!-- 左上 -->
+            <div class="absolute top-16 left-20 w-32 h-32 bg-teal-100 rounded-full flex items-center justify-center text-center shadow-lg">
+                <div>
+                    <i class="fas fa-mobile-alt text-teal-600 text-2xl mb-1"></i>
+                    <p class="text-sm font-semibold">モバイル</p>
+                </div>
+            </div>
+            
+            <!-- 接続線（CSS） -->
+            <style>
+                .slide-container#slide-19::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 380px;
+                    height: 380px;
+                    border: 2px dashed rgba(34, 197, 94, 0.3);
+                    border-radius: 50%;
+                    transform: translate(-50%, -50%);
+                }
+            </style>
+        </div>
+    </div>
+    
+    </div> <!-- content-wrapper終了 -->
+
+    <!-- ナビゲーション -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> 前へ
+        </button>
+        
+        <div class="slide-indicator" id="slideIndicator">
+            <!-- インジケーターはJavaScriptで生成 -->
+        </div>
+        
+        <span class="slide-number" id="slideNumber">1 / 19</span>
+        
+        <button class="nav-button" id="nextBtn" onclick="nextSlide()">
+            次へ <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 19;
+
+        // インジケーターの初期化
+        function initializeIndicators() {
+            const indicatorContainer = document.getElementById('slideIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.onclick = () => goToSlide(i);
+                indicatorContainer.appendChild(dot);
+            }
+        }
+
+        // スライド表示更新
+        function updateSlideDisplay() {
+            // すべてのスライドを非表示
+            document.querySelectorAll('.slide-container').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // 現在のスライドを表示
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            
+            // スライド番号更新
+            document.getElementById('slideNumber').textContent = `${currentSlide} / ${totalSlides}`;
+            
+            // ボタンの有効/無効
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            // インジケーター更新
+            document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+            
+            // 目次の更新
+            document.querySelectorAll('.toc-item').forEach((item, index) => {
+                item.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+
+        // 次のスライド
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+
+        // 前のスライド
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+
+        // 特定のスライドへ移動
+        function goToSlide(slideNumber) {
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+        }
+
+        // キーボードナビゲーション
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // スワイプ対応（タッチデバイス）
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) previousSlide();
+        }
+
+        // ドーナツグラフの初期化
+        function initializeChart() {
+            const breakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+            new Chart(breakdownCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['クラウド事業', 'AI・データ事業', 'セキュリティ事業'],
+                    datasets: [{
+                        data: [49.6, 30.0, 20.4],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(147, 51, 234, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(147, 51, 234, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 11,
+                                    family: "'Hiragino Sans', 'Meiryo', sans-serif"
+                                },
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'セグメント別売上構成（%）',
+                            font: {
+                                size: 14,
+                                weight: 'bold',
+                                family: "'Hiragino Sans', 'Meiryo', sans-serif"
+                            },
+                            color: '#1f2937'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const amount = Math.round((value / 100) * 1250); // 総売上1,250億円から計算
+                                    return label + ': ' + value + '% (' + amount + '億円)';
+                                }
+                            },
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#1f2937',
+                            bodyColor: '#1f2937',
+                            borderColor: '#e5e7eb',
+                            borderWidth: 1,
+                            font: {
+                                family: "'Hiragino Sans', 'Meiryo', sans-serif"
+                            }
+                        }
+                    },
+                    cutout: '60%',
+                    elements: {
+                        arc: {
+                            borderWidth: 2
+                        }
+                    }
+                }
+            });
+        }
+
+        // 初期化
+        initializeIndicators();
+        updateSlideDisplay();
+        
+        // チャートの初期化（DOMが読み込まれてから実行）
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeChart();
+        });
+        
+        // もしDOMContentLoadedが既に発火している場合の対策
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeChart);
+        } else {
+            initializeChart();
+        }
+    </script>
+</body>
+</html>
